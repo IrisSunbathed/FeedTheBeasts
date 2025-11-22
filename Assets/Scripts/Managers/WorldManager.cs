@@ -88,7 +88,7 @@ namespace FeedTheBeasts.Scripts
             if (lives == 0)
             {
                 uIManager.GameOver();
-                playerController.CanMove = false;
+                playerController.SetDeathState();
                 spawnManager.StopSpawning();
                 foodSelectorManager.Init();
 
