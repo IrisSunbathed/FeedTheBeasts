@@ -8,17 +8,19 @@ namespace FeedTheBeasts.Scripts
 {
     public class WorldManager : MonoBehaviour
     {
+        [Header("Player references")]
         [SerializeField] PlayerController playerController;
+        [SerializeField] Player player;
+         [Header("Other managers references")]
         [SerializeField] UIManager uIManager;
-
         [SerializeField] SpawnManager spawnManager;
         [SerializeField] ParticleSystemManager particleSystemManager;
         [SerializeField] FoodSelectorManager foodSelectorManager;
+        [Header("Others")]
+        [SerializeField] GameObject[] foodProviders;
         [SerializeField] CameraShaker cameraShaker;
-        [SerializeField] Player player;
         [SerializeField] Shooter shooter;
         [SerializeField] ProjectilePool projectilePool;
-        [SerializeField] GameObject[] foodProviders;
 
 
 
@@ -83,7 +85,6 @@ namespace FeedTheBeasts.Scripts
 
         private void OnLoseLivePlayerActionCallback(int lives)
         {
-            cameraShaker.ShakeCamera(lives / 0.5f);
             uIManager.ManageLives(lives);
             if (lives == 0)
             {
@@ -91,7 +92,15 @@ namespace FeedTheBeasts.Scripts
                 playerController.SetDeathState();
                 spawnManager.StopSpawning();
                 foodSelectorManager.Init();
-
+                GameObject[] animals = GameObject.FindGameObjectsWithTag(Constants.ANIMAL_TAG);
+                foreach (var animal in animals)
+                {
+                    animal.SetActive(false);
+                }
+            }
+            else
+            {
+                cameraShaker.ShakeCamera(lives / 0.5f);
             }
         }
 

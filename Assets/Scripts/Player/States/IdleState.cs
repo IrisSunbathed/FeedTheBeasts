@@ -8,13 +8,14 @@ namespace FeedTheBeasts.Scripts
 
         public override void Enter()
         {
-            animator.SetInteger("Animation_int", 1);
+            animator.SetBool(Constants.ANIM_BOOL_DEATH, false);
+            animator.SetInteger(Constants.ANIM_INT_IDLE, 1);
         }
         public override void Do()
         {
             if (input.HorizontalInput != 0 | input.VerticalInput != 0)
             {
-                animator.SetInteger("Animation_int", 0);
+                animator.SetInteger(Constants.ANIM_INT_IDLE, 0);
                 IsStateComplete = true;
             }
 

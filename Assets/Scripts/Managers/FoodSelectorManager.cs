@@ -68,7 +68,7 @@ namespace FeedTheBeasts.Scripts
 
             for (int i = 0; i < itemsInventory.Length; i++)
             {
-                itemsInventory[i].SetActive(true);
+                itemsInventory[i].SetActive(false);
                 IShootable shootable = itemsInventory[i].GetComponent<IShootable>();
                 txtBulletsLeft[i].text = shootable.GetBullets().ToString();
             }

@@ -6,17 +6,20 @@ namespace FeedTheBeasts.Scripts
 
     public class DeathState : States
     {
+      
+
         public override void Enter()
         {
-            animator.SetBool("death_b", true);
+            animator.SetBool(Constants.ANIM_BOOL_DEATH, true);
             int animation = Random.Range(1, 3);
-            animator.SetInteger("deathType_int", animation);
+            animator.SetInteger(Constants.ANIM_INT_DEATHTYPE, animation);
         }
         public override void Do()
         {
+            input.SetOriginalPosition();
             if (input.CanMove)
             {
-                  animator.SetBool("death_b", false);
+                animator.SetBool(Constants.ANIM_BOOL_DEATH, false);
             }
         }
         public override void Exit()

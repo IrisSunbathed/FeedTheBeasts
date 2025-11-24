@@ -34,13 +34,15 @@ namespace FeedTheBeasts.Scripts
         public float HorizontalInput { get; private set; }
         public float VerticalInput { get; private set; }
 
+        Vector3 originalPosition;
+
         Rigidbody rbPlayer;
         [Header("Character States")]
 
         States states;
         public RunState runState;
-        public States idleState;
-        public States deathState;
+        public IdleState idleState;
+        public DeathState deathState;
 
         Animator animator;
         [Header("Shoot Properties")]
@@ -52,13 +54,26 @@ namespace FeedTheBeasts.Scripts
 
         MeshRenderer meshRenderer;
 
-        Camera mainCam;
-
-        float lengthCam;
-
         float characterXBounds;
 
         float characterXBoundsSign;
+        #region Camera information
+
+        CamerasManager camerasManager;
+
+        float orthographicSize;
+
+        float lengthCam;
+        #endregion
+
+
+        void Start()
+        {
+            camerasManager = CamerasManager.Instance;
+            orthographicSize = camerasManager.OrthographicSize;
+            lengthCam = camerasManager.GetCameraLength();
+
+        }
 
         void Awake()
         {
@@ -71,8 +86,7 @@ namespace FeedTheBeasts.Scripts
             #endregion
             #region SET VARIABLES
             characterXBounds = meshRenderer.bounds.max.x;
-            mainCam = Camera.main;
-            lengthCam = mainCam.orthographicSize * mainCam.aspect;
+            originalPosition = transform.position;
             #endregion
             SetpUpStates();
 
@@ -89,6 +103,7 @@ namespace FeedTheBeasts.Scripts
         internal void Init()
         {
             states = idleState;
+
             CanMove = true;
         }
 
@@ -145,7 +160,7 @@ namespace FeedTheBeasts.Scripts
             {
                 states = runState;
             }
-            Debug.Log(states);
+       //     Debug.Log(states);
             states.Enter();
         }
 
@@ -158,7 +173,8 @@ namespace FeedTheBeasts.Scripts
         private void LookAtMousePosition()
         {
             Vector3 mousePosition = Input.mousePosition;
-            Vector3 mouseToWorld = mainCam.ScreenToWorldPoint(mousePosition);
+            Vector3 mouseToWorld = camerasManager.GetScreenToWorldPoint(mousePosition);
+          
             lookAngle = AngleBetweenTwoPoints(transform.position, mouseToWorld) + 180;
             transform.eulerAngles = new Vector3(0, lookAngle, 0);
         }
@@ -176,11 +192,12 @@ namespace FeedTheBeasts.Scripts
 
         private void CheckOutOfBoundsZ()
         {
-            if (transform.position.z < -mainCam.orthographicSize
-                | transform.position.z > mainCam.orthographicSize)
+
+            if (transform.position.z < -orthographicSize
+                | transform.position.z > orthographicSize)
             {
                 transform.position = new Vector3(transform.position.x
-                                               , transform.position.y, mainCam.orthographicSize * Mathf.Sign(transform.position.z));
+                                               , transform.position.y, orthographicSize * Mathf.Sign(transform.position.z));
             }
         }
 
@@ -196,6 +213,15 @@ namespace FeedTheBeasts.Scripts
             }
         }
 
+        internal void SetOriginalPosition()
+        {
+            transform.position = originalPosition;
+        }
+
+        internal States GetCurrentState()
+        {
+            return states;
+        }
     }
 
 }
