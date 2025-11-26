@@ -18,6 +18,7 @@ namespace FeedTheBeasts.Scripts
         {
             navMeshAgent = GetComponent<NavMeshAgent>();
             traPlayer = GameObject.FindWithTag(Constants.PLAYER_TAG).GetComponent<Transform>();
+            tag = Constants.ANIMAL_TAG;
 
         }
 

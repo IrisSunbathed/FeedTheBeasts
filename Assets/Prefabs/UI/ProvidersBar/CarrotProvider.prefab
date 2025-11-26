@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 4320497380410622876}
   - component: {fileID: 7046362600934302966}
   - component: {fileID: 6613490232661296084}
-  - component: {fileID: -387507694937525322}
   - component: {fileID: 6131622476542787328}
   - component: {fileID: 7564486464110549776}
   m_Layer: 0
@@ -30,7 +29,7 @@ RectTransform:
   m_GameObject: {fileID: 3032862633986404171}
   m_LocalRotation: {x: -0.6716731, y: 0.7028475, z: -0.05456058, w: -0.22778034}
   m_LocalPosition: {x: 0, y: 0, z: -0.04}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 41.984447, y: 41.984467, z: 41.984467}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -93,27 +92,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &-387507694937525322
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3032862633986404171}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.14170074, y: 0.141707, z: 0.61012447}
-  m_Center: {x: 0, y: 0.0708535, z: -0.000000059604645}
 --- !u!114 &6131622476542787328
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -146,9 +124,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41b5729bfd75901419015a72cef806cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rechargingTime: 5
-  cooldown: 0
-  shootCooldown: 0
+  rechargingTime: 2
+  cooldown: 0.05
+  shootCooldown: 0.3
   projectilesPerRecharge: 5
   projectilePool: {fileID: 0}
   foodTypes: 0

@@ -13,13 +13,19 @@ namespace FeedTheBeasts.Scripts
 
         void Awake()
         {
+            Init();
+        }
+
+        public override void Init()
+        {
             canShoot = true;
+            currentProjectiles = projectilesPerRecharge;
         }
 
         public void IncreaseShootCount()
         {
             shootCount++;
-            if (shootCount == projectilesPerRecharge)
+            if (shootCount == currentProjectiles)
             {
                 StartCoroutine(ReloadCoroutine());
                 OnRechargeEvent?.Invoke(rechargingTime);
@@ -40,7 +46,7 @@ namespace FeedTheBeasts.Scripts
             if (canShoot & !IsRecharging)
             {
                 projectilePool.GetProjectile();
-                if (shootCount == projectilesPerRecharge)
+                if (shootCount == currentProjectiles)
                 {
                     shootCooldown = rechargingTime;
 
@@ -70,7 +76,7 @@ namespace FeedTheBeasts.Scripts
             }
             else
             {
-                return projectilesPerRecharge - shootCount;
+                return currentProjectiles - shootCount;
             }
 
         }

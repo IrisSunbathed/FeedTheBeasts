@@ -27,6 +27,7 @@ namespace FeedTheBeasts.Scripts
                 {
                     HorizontalInput = 0;
                     VerticalInput = 0;
+                    Debug.Log($"Win: {HorizontalInput} and {VerticalInput}");
                 }
             }
         }
@@ -43,6 +44,7 @@ namespace FeedTheBeasts.Scripts
         public RunState runState;
         public IdleState idleState;
         public DeathState deathState;
+        public WinState winState;
 
         Animator animator;
         [Header("Shoot Properties")]
@@ -97,13 +99,13 @@ namespace FeedTheBeasts.Scripts
             runState.Setup(rbPlayer, animator, this);
             idleState.Setup(rbPlayer, animator, this);
             deathState.Setup(rbPlayer, animator, this);
+            winState.Setup(rbPlayer, animator, this);
             states = idleState;
         }
 
         internal void Init()
         {
             states = idleState;
-
             CanMove = true;
         }
 
@@ -221,6 +223,13 @@ namespace FeedTheBeasts.Scripts
         internal States GetCurrentState()
         {
             return states;
+        }
+
+        internal void WinState()
+        {
+            CanMove = false;
+            states = winState;
+            states.Enter();
         }
     }
 

@@ -14,20 +14,23 @@ namespace FeedTheBeasts.Scripts
         float upperLimitCamera;
 
         public event Action OnLoseLifeEvent;
+        bool flag;
 
 
         void Awake()
         {
             mainCam = Camera.main;
             upperLimitCamera = mainCam.orthographicSize;
+            flag = false;
 
         }
         void Update()
         {
-            if (transform.position.z < -upperLimitCamera & gameObject.CompareTag(Constants.ANIMAL_TAG))
+            if (transform.position.z < -upperLimitCamera & gameObject.CompareTag(Constants.ANIMAL_TAG) & !flag)
             {
-                Destroy(gameObject);
+                flag = true;
                 OnLoseLifeEvent?.Invoke();
+                Destroy(gameObject);
             }
         }
     }

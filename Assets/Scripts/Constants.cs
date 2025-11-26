@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace FeedTheBeasts.Scripts
@@ -15,6 +17,8 @@ namespace FeedTheBeasts.Scripts
         public const string START_BUTTON_TEXT = "PLAY!";
         public const string GAMEOVER_BUTTON_TEXT = "TRY AGAIN";
         public const string GAMEOVER_TEXT = "GAME OVER";
+        public const string VICTORY_TEXT = "YOU WIN!";
+        public const string VICTORY_BUTTON_TEXT = "PLAY AGAIN!";
         #endregion
         #region AXIS
         public const string HORIZONTAL_AXIS = "Horizontal";
@@ -29,9 +33,26 @@ namespace FeedTheBeasts.Scripts
 
         #endregion
 
+    }
 
+    public enum MusicThemes
+    {
+        MainMenu,
+        InGame,
+        Win,
+        Lose
+    }
 
-
+    public enum FXTypes
+    {
+        ClickOnButton,
+        AnimalFed,
+        Shot,
+        LoseLife,
+        Wolf,
+        Dog,
+        Cow,
+        Chicken
     }
 
     public enum FoodTypes
@@ -39,11 +60,30 @@ namespace FeedTheBeasts.Scripts
         Carrot,
         Beef
     }
+    public enum Levels
+    {
+        Level1,
+        Level2,
+        Level3,
+        Level4
+    }
     [Serializable]
     public class FoodItemTransparent
     {
         public FoodTypes foodTypes;
         public GameObject goFood;
 
+    }
+    [Serializable]
+    public class MusicItem
+    {
+        public MusicThemes musicThemes;
+        public AudioClip audioClip;
+    }
+    [Serializable]
+    public class FXItem
+    {
+        public FXTypes fxType;
+        public AudioClip audioClip;
     }
 }

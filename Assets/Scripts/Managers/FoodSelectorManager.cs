@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using NUnit.Framework;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using RangeAttribute = UnityEngine.RangeAttribute;
 using Vector3 = UnityEngine.Vector3;
@@ -48,7 +49,6 @@ namespace FeedTheBeasts.Scripts
             uIManager.OnRechargeCompleteEvent += OnRechargeCompleCallBack;
             rectTransform = itemsInventory[0].GetComponent<RectTransform>();
             originalPositionY = rectTransform.localPosition.y;
-            Debug.Log(originalPositionY);
             Init();
 
         }
@@ -69,7 +69,12 @@ namespace FeedTheBeasts.Scripts
             for (int i = 0; i < itemsInventory.Length; i++)
             {
                 itemsInventory[i].SetActive(false);
+
+                FoodProvider foodProvider = itemsInventory[i].GetComponent<FoodProvider>();
+                foodProvider.Init();
+
                 IShootable shootable = itemsInventory[i].GetComponent<IShootable>();
+                
                 txtBulletsLeft[i].text = shootable.GetBullets().ToString();
             }
 
@@ -83,6 +88,8 @@ namespace FeedTheBeasts.Scripts
             {
                 item.SetActive(true);
             }
+             OnSelectedItemInventoryCallBack(0);
+           
         }
 
         private void OnSelectedItemInventoryCallBack(int index)
@@ -95,7 +102,7 @@ namespace FeedTheBeasts.Scripts
 
         IEnumerator SelectionEffectCoroutine()
         {
-            rectTransform = selectedGameObject.GetComponent<RectTransform>();
+            RectTransform rectTransform = selectedGameObject.GetComponent<RectTransform>();
 
             pointObjective = originalPositionY + offset;
             float newYPosition = 0;

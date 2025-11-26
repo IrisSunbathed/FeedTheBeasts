@@ -124,6 +124,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b57ef045c6f00545b59263155756ac1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rechargingTime: 0
-  projectilesPerRecharge: 0
-  foodTypes: 0
+  rechargingTime: 5
+  cooldown: 0.05
+  shootCooldown: 0.5
+  projectilesPerRecharge: 5
+  projectilePool: {fileID: 0}
+  foodTypes: 1

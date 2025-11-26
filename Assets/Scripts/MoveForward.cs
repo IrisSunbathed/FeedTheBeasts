@@ -6,7 +6,7 @@ namespace FeedTheBeasts.Scripts
     public class MoveForward : MonoBehaviour
     {
 
-        [SerializeField] float speed = 10;
+        public float speed = 10;
 
         float currentSpeed;
 

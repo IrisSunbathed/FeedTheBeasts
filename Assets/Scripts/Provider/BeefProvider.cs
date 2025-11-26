@@ -13,10 +13,14 @@ namespace FeedTheBeasts.Scripts
 
         void Awake()
         {
-            canShoot = true;
+            Init();
         }
 
-
+        public override void Init()
+        {
+            canShoot = true;
+            currentProjectiles = projectilesPerRecharge;
+        }
 
         public IEnumerator ReloadCoroutine()
         {
@@ -31,7 +35,7 @@ namespace FeedTheBeasts.Scripts
             {
                 projectilePool.GetProjectile();
 
-                if (shootCount == projectilesPerRecharge)
+                if (shootCount == currentProjectiles)
                 {
                     shootCooldown = rechargingTime;
                 }
@@ -50,7 +54,7 @@ namespace FeedTheBeasts.Scripts
         public void IncreaseShootCount()
         {
             shootCount++;
-            if (shootCount == projectilesPerRecharge)
+            if (shootCount == currentProjectiles)
             {
                 TryReload();
             }
@@ -75,7 +79,7 @@ namespace FeedTheBeasts.Scripts
 
         public int GetBullets()
         {
-            return projectilesPerRecharge - shootCount;
+            return currentProjectiles - shootCount;
         }
     }
 

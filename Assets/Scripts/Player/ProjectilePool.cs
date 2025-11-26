@@ -40,11 +40,30 @@ namespace FeedTheBeasts.Scripts
         private void ConfigureProjectile(GameObject projectile)
         {
             projectile.SetActive(true);
-            projectile.transform.SetPositionAndRotation(transform.position, transform.rotation);
+            SetTransform(projectile);
+            SetSpeed(projectile);
+            SetMesh(projectile);
             projectile.tag = projectileTag;
+
+        }
+
+        private void SetMesh(GameObject projectile)
+        {
             MeshFilter meshProjectile = projectile.GetComponent<MeshFilter>();
             meshProjectile.sharedMesh = meshNewProjectile.sharedMesh;
+        }
 
+        private void SetSpeed(GameObject projectile)
+        {
+            MoveForward moveForward = projectile.GetComponent<MoveForward>();
+            MoveForward moveForwardEq = goEquippedProjectile.GetComponent<MoveForward>();
+            moveForward.SetSpeed(moveForwardEq.speed);
+        }
+
+        private void SetTransform(GameObject projectile)
+        {
+            projectile.transform.SetPositionAndRotation(transform.position, transform.rotation);
+            projectile.transform.localScale = goEquippedProjectile.transform.localScale;
         }
 
         private void CreateProjectiles()

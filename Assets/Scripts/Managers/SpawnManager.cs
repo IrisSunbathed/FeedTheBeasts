@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using FeedTheBeasts;
 using NUnit.Framework;
 using Unity.Mathematics;
@@ -13,14 +14,8 @@ namespace FeedTheBeasts.Scripts
         [Header("Prefabs to spawn")]
         [SerializeField] GameObject[] goPrefabs;
         [SerializeField] GameObject goAggresiveAnimal;
-        [Header("Manage time to spawn")]
-        [SerializeField] float startDelay = 2f;
-
-        [SerializeField] float intervalSpawnMin = 2f;
-
-        [SerializeField] float intervalSpawnMax = 10f;
-        [SerializeField] float intervalSpawnAggressiveMin = 10f;
-        [SerializeField] float intervalSpawnAggresiveMax = 20f;
+        [Header("References")]
+        [SerializeField] DifficultyManager difficultyManager;
 
         #region Cameras
 
@@ -40,6 +35,11 @@ namespace FeedTheBeasts.Scripts
 
         GameObject lastAnimalSpawned;
         GameObject lastAggresiveAnimalSpawned;
+        delegate void MyMethodDelegate();
+
+        Coroutine coroutineAnimals;
+        Coroutine coroutineAggressiveAnimals;
+
 
         void Start()
         {
@@ -48,6 +48,7 @@ namespace FeedTheBeasts.Scripts
         void Awake()
         {
             Assert.IsTrue(goPrefabs.Length > 0, "ERROR: no game objects were added to the array in SpawnManager");
+            Assert.IsNotNull(difficultyManager, "ERROR: difficultyManager was not added to SpawnManager");
         }
 
 
@@ -60,12 +61,9 @@ namespace FeedTheBeasts.Scripts
                                                 camerasManager.UpperLimitCamera + offset * -Mathf.Sign(camerasManager.UpperLimitCamera));
 
             lastAnimalSpawned = Instantiate(goPrefabs[index], spawnPosition, goPrefabs[index].transform.rotation);
-            
+
 
             OnAnimalSpawnEvent?.Invoke(lastAnimalSpawned);
-
-            
-
 
         }
 
@@ -81,31 +79,73 @@ namespace FeedTheBeasts.Scripts
                                                 randomZValue);
 
             lastAggresiveAnimalSpawned = Instantiate(goAggresiveAnimal, spawnPosition, goPrefabs[index].transform.rotation);
-            
+
             OnAnimalSpawnEvent?.Invoke(lastAggresiveAnimalSpawned);
         }
 
         internal void StopSpawning()
         {
-            CancelInvoke(nameof(SpawnRandomAnimal));
-            CancelInvoke(nameof(SpawnAggresiveAnimal));
-            MoveForward moveForward = lastAnimalSpawned.GetComponent<MoveForward>();
-            moveForward.SetSpeed(0f);
+            // CancelInvoke(nameof(SpawnRandomAnimal));
+            // CancelInvoke(nameof(SpawnAggresiveAnimal));
+            StopAllCoroutines();
+            coroutineAnimals = null;
+            coroutineAggressiveAnimals = null;
+            
 
+            DestroyAnimals();
+        }
 
+        private static void DestroyAnimals()
+        {
+            foreach (var animals in GameObject.FindGameObjectsWithTag(Constants.ANIMAL_TAG))
+            {
+                Destroy(animals);
+            }
         }
 
         internal void Init()
         {
+            Debug.Log("Init SpawnManager");
             ConfigureCameraExtremes();
-            InvokeRepeating(nameof(SpawnRandomAnimal), startDelay, Random.Range(intervalSpawnMin, intervalSpawnMin));
-            InvokeRepeating(nameof(SpawnAggresiveAnimal), startDelay, Random.Range(intervalSpawnAggressiveMin, intervalSpawnAggresiveMax));
+            StartCouroutines();
+
             foreach (var animals in GameObject.FindGameObjectsWithTag(Constants.ANIMAL_TAG))
             {
                 Destroy(animals);
             }
 
 
+        }
+
+        private void StartCouroutines()
+        {
+            coroutineAnimals ??= StartCoroutine(SpawnRandomAnimalCoroutine(difficultyManager.StartDelay,
+                                                                      difficultyManager.IntervalSpawnMin,
+                                                                      difficultyManager.IntervalSpawnMax,
+                                                                      SpawnRandomAnimal));
+            coroutineAggressiveAnimals ??= StartCoroutine(SpawnRandomAnimalCoroutine(difficultyManager.StartDelayAggressiveAnimals,
+                                                      difficultyManager.IntervalSpawnAggressiveMin,
+                                                      difficultyManager.IntervalSpawnAggressiveMin,
+                                                      SpawnAggresiveAnimal));
+        }
+
+        IEnumerator SpawnRandomAnimalCoroutine(float startDelay, float intervalMin, float intervalMax, MyMethodDelegate myMethodDelegate, bool startInizilized = false)
+        {
+            Debug.Log("coroutine " + myMethodDelegate.Method);
+            float interval = Random.Range(intervalMin, intervalMax);
+
+            if (!startInizilized)
+            {
+                yield return new WaitForSeconds(startDelay);
+                myMethodDelegate();
+
+            }
+            else
+            {
+                yield return new WaitForSeconds(interval);
+                myMethodDelegate();
+            }
+            StartCoroutine(SpawnRandomAnimalCoroutine(0, intervalMin, intervalMax, SpawnRandomAnimal, true));
         }
 
         private void ConfigureCameraExtremes()

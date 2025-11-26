@@ -19,11 +19,14 @@ namespace FeedTheBeasts.Scripts
         [SerializeField] TMP_Text txtPointsStr;
         [SerializeField] GameObject goLives;
         [SerializeField] RectTransform lifeContainer;
+        [SerializeField] ShakeController shakeController;
         List<GameObject> lifeList;
+
         int previousNumberOfLifes;
         [Header("Start/Game Over Menu references")]
         [SerializeField] MenuUI menuUI;
         CamerasManager camerasManager;
+        [SerializeField] Canvas canvas;
         [Header("Food Selector references")]
         [SerializeField] Image[] imagesFoodSelector;
         [SerializeField] Sprite selectedItemImage;
@@ -40,7 +43,7 @@ namespace FeedTheBeasts.Scripts
         void Start()
         {
             camerasManager = CamerasManager.Instance;
-             camerasManager.SwitchCameras(isGameplayCamera: false);
+            camerasManager.SwitchCameras(isGameplayCamera: false);
         }
 
         void Awake()
@@ -54,6 +57,7 @@ namespace FeedTheBeasts.Scripts
             Assert.IsNotNull(goLives, "ERROR: lifes game object is empty on UIManager");
             Assert.IsNotNull(lifeContainer, "ERROR: life container is empty on UIManager");
             Assert.IsNotNull(menuUI, "ERROR: Menu UI is empty on UIManager");
+            Assert.IsNotNull(shakeController, "ERROR: shakeController is empty on UIManager");
             Assert.IsTrue(imgRechargeBar.Length > 0, "ERROR: rechargeBar is empty on UIManager");
             #endregion
             lifeList = new List<GameObject>();
@@ -72,9 +76,9 @@ namespace FeedTheBeasts.Scripts
 
             ActivateElementsOnMenu(isActive: false);
             InventorySelect(1);
-           // camerasManager.SetUpMenuCamera();
-            menuUI.Init();
             
+            menuUI.Init();
+
         }
 
         void Update()
@@ -119,16 +123,22 @@ namespace FeedTheBeasts.Scripts
 
         internal void ManageLives(int lives)
         {
-            //  if (lives >= 0)
+            Debug.Log($"previousNumberOfLifes {previousNumberOfLifes} > lives {lives}");
             if (previousNumberOfLifes > lives)
             {
+                int lifesToDestroy = previousNumberOfLifes - lives;
+                lifesToDestroy = Mathf.Min(lifesToDestroy, lifeList.Count);
+                for (int i = lifesToDestroy; i > 0; i--)
+                {
+                    int lastIndex = lifeList.Count - 1;
+                    GameObject go = lifeList[lastIndex];
+                    Destroy(go);
+                    lifeList.RemoveAt(lastIndex);
+                }
 
-                int index = lives <= 0 ? 0 : lives - 1;
-                Debug.Log(index);
-                GameObject life = lifeList[index];
-                Destroy(life);
             }
-            else
+            if (previousNumberOfLifes < lives)
+
             {
                 for (int i = previousNumberOfLifes; i < lives; i++)
                 {
@@ -138,12 +148,14 @@ namespace FeedTheBeasts.Scripts
 
             }
             previousNumberOfLifes = lives;
+            Debug.Log(previousNumberOfLifes);
         }
 
         internal void GameOver()
         {
             ActivateElementsOnMenu(false);
             menuUI.GameOver();
+            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
             camerasManager.SwitchCameras(isGameplayCamera: false);
         }
 
@@ -155,12 +167,26 @@ namespace FeedTheBeasts.Scripts
             }
             txtPoints.gameObject.SetActive(isActive);
             txtPointsStr.gameObject.SetActive(isActive);
+            if (lifeList != null)
+            {
+                foreach (var item in lifeList)
+                {
+                    if (item != null)
+                    {
+                        item.SetActive(isActive);
+
+                    }
+                }
+
+            }
         }
 
         private void StartGame()
         {
             ActivateElementsOnMenu(true);
             camerasManager.SwitchCameras(isGameplayCamera: true);
+            canvas.renderMode = RenderMode.ScreenSpaceCamera;
+
             RestartGameEvent?.Invoke();
         }
 
@@ -189,5 +215,17 @@ namespace FeedTheBeasts.Scripts
             imgRechargeBar[currentReloadProjectile].fillAmount = 0;
         }
 
+        // internal void NextLevel()
+        // {
+        //     throw new NotImplementedException();
+        // }
+
+        internal void Win()
+        {
+            ActivateElementsOnMenu(false);
+            menuUI.Win();
+            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            camerasManager.SwitchCameras(isGameplayCamera: false);
+        }
     }
 }
