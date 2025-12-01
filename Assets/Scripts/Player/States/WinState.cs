@@ -6,10 +6,12 @@ public class WinState : States
     public override void Enter()
     {
         animator.SetInteger(Constants.ANIM_INT_IDLE, 4);
+        input.CanMove = false;
     }
     public override void Do()
     {
         input.SetOriginalPosition();
+       
         if (input.CanMove)
         {
             animator.SetInteger(Constants.ANIM_INT_IDLE, 1);

@@ -2,6 +2,7 @@ using System;
 using NUnit.Framework;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace FeedTheBeasts.Scripts
 {
@@ -11,15 +12,14 @@ namespace FeedTheBeasts.Scripts
     {
 
         [SerializeField] FoodTypes preferredFood;
-        [SerializeField] int hungerLevel;
+        [SerializeField] float hungerTotal;
+        float currentHunger;
 
-        [SerializeField] Transform hungerBar;
-
+        // [SerializeField] Transform hungerBar;
+        [SerializeField] Image hungerBar;
         public int feedPoints;
         int points;
-
-        float BarLength;
-        float percentagePerFeed;
+        int multiplyier;
 
         public event Action<int, Transform> OnPointsGainedEvent;
         void Awake()
@@ -29,8 +29,9 @@ namespace FeedTheBeasts.Scripts
             Assert.IsNotNull(hungerBar, "ERROR, Hunger Bar is empty");
             #endregion
             #region VARIABLES
-            BarLength = hungerBar.localScale.x;
-            percentagePerFeed = BarLength / hungerLevel;
+
+            multiplyier = 1;
+            currentHunger = hungerTotal;
             #endregion
 
         }
@@ -40,23 +41,23 @@ namespace FeedTheBeasts.Scripts
 
             if (fedFood == preferredFood.ToString())
             {
-                Debug.Log("Yummy!");
-                hungerLevel -= 2;
-                feedPoints *= 2;
+                currentHunger -= 2f;
+                multiplyier++;
             }
             else
             {
-                hungerLevel--;
+                currentHunger -= 0.5f;
             }
-            Vector2 scaleToReduceX = new Vector2(hungerBar.localScale.x - percentagePerFeed, hungerBar.localScale.y);
-            hungerBar.localScale = scaleToReduceX;
+            float progress = Mathf.Clamp01(currentHunger / hungerTotal);
+            hungerBar.fillAmount = 1 * progress;
 
             //x 100 = 1
             //hungerlvel / 100
-            if (hungerLevel <= 0)
+            if (currentHunger <= 0)
             {
-                points += feedPoints;
+                points += feedPoints * multiplyier;
                 OnPointsGainedEvent?.Invoke(points, transform);
+
                 Destroy(gameObject);
 
             }

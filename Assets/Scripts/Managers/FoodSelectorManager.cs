@@ -55,10 +55,11 @@ namespace FeedTheBeasts.Scripts
 
         private void OnRechargeCompleCallBack(int currentProjectile)
         {
-            IShootable shootable = itemsInventory[currentProjectile].GetComponent<IShootable>();
+            // IRechargeable shootable = itemsInventory[currentProjectile].GetComponent<IShootable>();
             IRechargeable rechargeable = itemsInventory[currentProjectile].GetComponent<IRechargeable>();
+            int bulletsLeft = GetBullets(itemsInventory[currentProjectile]);
             rechargeable.IsRecharging = false;
-            txtBulletsLeft[currentProjectile].text = shootable.GetBullets().ToString();
+            txtBulletsLeft[currentProjectile].text = bulletsLeft.ToString();
         }
 
         internal void Init()
@@ -70,12 +71,15 @@ namespace FeedTheBeasts.Scripts
             {
                 itemsInventory[i].SetActive(false);
 
-                FoodProvider foodProvider = itemsInventory[i].GetComponent<FoodProvider>();
-                foodProvider.Init();
+                if (itemsInventory[i].TryGetComponent(out FoodProvider foodProvider))
+                {
+                    foodProvider = itemsInventory[i].GetComponent<FoodProvider>();
+                    foodProvider.Init();
+                }
 
-                IShootable shootable = itemsInventory[i].GetComponent<IShootable>();
-                
-                txtBulletsLeft[i].text = shootable.GetBullets().ToString();
+                int bulletsLeft = GetBullets(itemsInventory[i]);
+
+                txtBulletsLeft[i].text = bulletsLeft.ToString();
             }
 
             uIManager.OnSelectedItemInventoryEvent += OnSelectedItemInventoryCallBack;
@@ -88,8 +92,8 @@ namespace FeedTheBeasts.Scripts
             {
                 item.SetActive(true);
             }
-             OnSelectedItemInventoryCallBack(0);
-           
+            OnSelectedItemInventoryCallBack(0);
+
         }
 
         private void OnSelectedItemInventoryCallBack(int index)
@@ -144,11 +148,43 @@ namespace FeedTheBeasts.Scripts
             }
         }
 
-        internal void TryShootCurrentWeapon()
+
+
+        private int GetBullets(GameObject goProvider)
         {
-            IShootable shootable = selectedGameObject.GetComponent<IShootable>();
-            shootable.TryShoot();
-            int bulletsLeft = shootable.GetBullets();
+            IRechargeable rechargeable = goProvider.GetComponent<IRechargeable>();
+            int bulletsLeft = rechargeable.GetBullets();
+            return bulletsLeft;
+        }
+
+        internal void TryShootCurrentWeapon(Vector3 position)
+        {
+            if (selectedGameObject.TryGetComponent(out IThrowable throwable))
+            {
+                throwable.TryThrow(position);
+                SetBulletsToText();
+            }
+            if (selectedGameObject.TryGetComponent(out IShootable shootable))
+            {
+                shootable.TryShoot();
+                SetBulletsToText();
+            }
+            if (selectedGameObject.TryGetComponent(out IPlantable plantable))
+            {
+             //   bool flag = false;
+                plantable.TryPlant();
+                // if (!flag)
+                // {
+                //     flag = true;
+                //     SetBulletsToText();
+                // }
+            }
+
+        }
+
+        private void SetBulletsToText()
+        {
+            int bulletsLeft = GetBullets(selectedGameObject);
             txtBulletsLeft[currentIndex].text = bulletsLeft.ToString();
         }
 
@@ -157,6 +193,7 @@ namespace FeedTheBeasts.Scripts
             IRechargeable rechargeable = selectedGameObject.GetComponent<IRechargeable>();
             rechargeable.TryReload();
         }
+
     }
 
 }

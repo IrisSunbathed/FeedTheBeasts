@@ -11,6 +11,10 @@ namespace FeedTheBeasts.Scripts
         void IncreaseShootCount();
         public void TryReload();
         IEnumerator ReloadCoroutine();
+
+        int GetBullets();
+
+
     }
 
 

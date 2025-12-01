@@ -7,32 +7,37 @@ using UnityEngine.Assertions;
 namespace FeedTheBeasts.Scripts
 {
     [RequireComponent(typeof(NavMeshAgent))]
-    public class AggresiveAnimalController : MonoBehaviour
+    public class AggresiveAnimalController : Animal
     {
-        NavMeshAgent navMeshAgent;
 
         Transform traPlayer;
 
-        public event Action OnLoseLifeEvent;
+        public event Action<bool> OnLoseLifeEvent;
         void Awake()
         {
-            navMeshAgent = GetComponent<NavMeshAgent>();
             traPlayer = GameObject.FindWithTag(Constants.PLAYER_TAG).GetComponent<Transform>();
             tag = Constants.ANIMAL_TAG;
 
         }
 
         // Update is called once per frame
-        void Update()
+        protected override void Update()
         {
-            navMeshAgent.SetDestination(traPlayer.position);
+            if (doesFetch)
+            {
+                TryFetch();
+            }
+            if (animalStatus == AnimalStatus.Running)
+            {
+                navMeshAgent.SetDestination(traPlayer.position);
+            }
         }
 
         void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag(Constants.PLAYER_TAG))
             {
-                OnLoseLifeEvent?.Invoke();
+                OnLoseLifeEvent?.Invoke(false);
             }
         }
     }

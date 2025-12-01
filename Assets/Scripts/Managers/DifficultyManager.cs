@@ -1,4 +1,5 @@
 using System;
+using NUnit.Framework;
 using UnityEngine;
 
 namespace FeedTheBeasts.Scripts
@@ -34,12 +35,17 @@ namespace FeedTheBeasts.Scripts
         float intervalAggresiveSpawnDecreaseSum;
         public float IntervalAggresiveSpawnDecrease { get => intervalAggresiveSpawnDecreaseSum; private set { intervalAggresiveSpawnDecreaseSum = value; } }
 
+        [Header("Refences")]
+
+        [SerializeField] SpawnManager spawnManager;
+
         void Start()
         {
             levelManager = LevelManager.Instance;
         }
         void Awake()
         {
+            Assert.IsNotNull(spawnManager, "Spawn Manager is not added");
             Init();
 
         }
@@ -71,18 +77,21 @@ namespace FeedTheBeasts.Scripts
                     IntervalSpawnAggressiveMax -= IntervalAggresiveSpawnDecrease;
                     break;
                 case Levels.Level2:
+                    spawnManager.Stampede(levelManager.AnimalsLeft / 10);
                     IntervalSpawnMin -= IntervalSpawnDecrese;
                     IntervalSpawnMax -= IntervalSpawnDecrese;
                     IntervalSpawnAggressiveMin -= IntervalAggresiveSpawnDecrease;
                     IntervalSpawnAggressiveMax -= IntervalAggresiveSpawnDecrease;
                     break;
                 case Levels.Level3:
+                    spawnManager.Stampede(levelManager.AnimalsLeft / 7);
                     IntervalSpawnMin -= IntervalSpawnDecrese;
                     IntervalSpawnMax -= IntervalSpawnDecrese;
                     IntervalSpawnAggressiveMin -= IntervalAggresiveSpawnDecrease;
                     IntervalSpawnAggressiveMax -= IntervalAggresiveSpawnDecrease;
                     break;
                 case Levels.Level4:
+                    spawnManager.Stampede(levelManager.AnimalsLeft / 5);
                     IntervalSpawnMin -= IntervalSpawnDecrese;
                     IntervalSpawnMax -= IntervalSpawnDecrese;
                     IntervalSpawnAggressiveMin -= IntervalAggresiveSpawnDecrease;

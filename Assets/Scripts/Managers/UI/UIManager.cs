@@ -15,18 +15,12 @@ namespace FeedTheBeasts.Scripts
     public class UIManager : MonoBehaviour
     {
         [Header("Lifes and Points UI references")]
-        [SerializeField] TMP_Text txtPoints;
-        [SerializeField] TMP_Text txtPointsStr;
-        [SerializeField] GameObject goLives;
-        [SerializeField] RectTransform lifeContainer;
-        [SerializeField] ShakeController shakeController;
-        List<GameObject> lifeList;
+        [SerializeField] LivesAndPointsUIManager livesAndPointsUIManager;
 
-        int previousNumberOfLifes;
         [Header("Start/Game Over Menu references")]
         [SerializeField] MenuUI menuUI;
-        CamerasManager camerasManager;
         [SerializeField] Canvas canvas;
+        CamerasManager camerasManager;
         [Header("Food Selector references")]
         [SerializeField] Image[] imagesFoodSelector;
         [SerializeField] Sprite selectedItemImage;
@@ -35,6 +29,10 @@ namespace FeedTheBeasts.Scripts
         [Header("Recharge configuration")]
         [SerializeField] Image[] imgRechargeBar;
         internal int CurrentProjectile { get; set; }
+
+        [Header("AnimalsLeftUI Reference")]
+
+        [SerializeField] AnimalsLeftUIManager animalsLeftUIManager;
         public event Action RestartGameEvent;
         public event Action<int> OnSelectedItemInventoryEvent;
         public event Action<int> OnRechargeCompleteEvent;
@@ -49,18 +47,15 @@ namespace FeedTheBeasts.Scripts
         void Awake()
         {
             #region ASSERTIONS
-            Assert.IsNotNull(txtPoints, "ERROR: txtPointsStr is empty on UIManager");
-            Assert.IsNotNull(txtPointsStr, "ERROR: txtPoints is empty on UIManager");
             Assert.IsTrue(imagesFoodSelector.Length > 0, "ERROR: image food selector is empty on UIManager");
             Assert.IsNotNull(selectedItemImage, "ERROR: SelectedItemImage is empty on UIManager");
             Assert.IsNotNull(unselectedItemImage, "ERROR: UnselectedItemImage is empty on UIManager");
-            Assert.IsNotNull(goLives, "ERROR: lifes game object is empty on UIManager");
-            Assert.IsNotNull(lifeContainer, "ERROR: life container is empty on UIManager");
+            Assert.IsNotNull(livesAndPointsUIManager, "ERROR: livesAndPointsUIManager is empty on UIManager");
             Assert.IsNotNull(menuUI, "ERROR: Menu UI is empty on UIManager");
-            Assert.IsNotNull(shakeController, "ERROR: shakeController is empty on UIManager");
+            Assert.IsNotNull(animalsLeftUIManager, "ERROR: animalsLeftUIManager is empty on UIManager");
             Assert.IsTrue(imgRechargeBar.Length > 0, "ERROR: rechargeBar is empty on UIManager");
             #endregion
-            lifeList = new List<GameObject>();
+         
             CurrentProjectile = 0;
             foreach (var item in imgRechargeBar)
             {
@@ -76,9 +71,20 @@ namespace FeedTheBeasts.Scripts
 
             ActivateElementsOnMenu(isActive: false);
             InventorySelect(1);
-            
+           
             menuUI.Init();
+            animalsLeftUIManager.Init();
 
+        }
+
+        internal void ManageLives(int lives)
+        {
+            livesAndPointsUIManager.ManageLives(lives);
+        }
+
+        internal void ManagePoints(int points)
+        {
+            livesAndPointsUIManager.ManageScore(points);
         }
 
         void Update()
@@ -100,7 +106,10 @@ namespace FeedTheBeasts.Scripts
 
         private bool IsValidKey()
         {
-            return Input.GetKeyDown(KeyCode.Alpha1) | Input.GetKeyDown(KeyCode.Alpha2);
+            return Input.GetKeyDown(KeyCode.Alpha1) |
+            Input.GetKeyDown(KeyCode.Alpha2) |
+            Input.GetKeyDown(KeyCode.Alpha3) |
+            Input.GetKeyDown(KeyCode.Alpha4);
         }
 
         private void InventorySelect(int result)
@@ -111,44 +120,12 @@ namespace FeedTheBeasts.Scripts
                 {
                     imagesFoodSelector[i].sprite = selectedItemImage;
                     OnSelectedItemInventoryEvent?.Invoke(i);
-
                 }
                 else
                 {
                     imagesFoodSelector[i].sprite = unselectedItemImage;
                 }
             }
-        }
-
-
-        internal void ManageLives(int lives)
-        {
-            Debug.Log($"previousNumberOfLifes {previousNumberOfLifes} > lives {lives}");
-            if (previousNumberOfLifes > lives)
-            {
-                int lifesToDestroy = previousNumberOfLifes - lives;
-                lifesToDestroy = Mathf.Min(lifesToDestroy, lifeList.Count);
-                for (int i = lifesToDestroy; i > 0; i--)
-                {
-                    int lastIndex = lifeList.Count - 1;
-                    GameObject go = lifeList[lastIndex];
-                    Destroy(go);
-                    lifeList.RemoveAt(lastIndex);
-                }
-
-            }
-            if (previousNumberOfLifes < lives)
-
-            {
-                for (int i = previousNumberOfLifes; i < lives; i++)
-                {
-                    GameObject newLife = Instantiate(goLives, lifeContainer);
-                    lifeList.Add(newLife);
-                }
-
-            }
-            previousNumberOfLifes = lives;
-            Debug.Log(previousNumberOfLifes);
         }
 
         internal void GameOver()
@@ -165,20 +142,14 @@ namespace FeedTheBeasts.Scripts
             {
                 sprite.gameObject.SetActive(isActive);
             }
-            txtPoints.gameObject.SetActive(isActive);
-            txtPointsStr.gameObject.SetActive(isActive);
-            if (lifeList != null)
+
+           livesAndPointsUIManager.ActivateElementsOnMenu( isActive);
+
+            foreach (var item in imgRechargeBar)
             {
-                foreach (var item in lifeList)
-                {
-                    if (item != null)
-                    {
-                        item.SetActive(isActive);
-
-                    }
-                }
-
+                item.gameObject.SetActive(isActive);
             }
+
         }
 
         private void StartGame()
@@ -186,15 +157,12 @@ namespace FeedTheBeasts.Scripts
             ActivateElementsOnMenu(true);
             camerasManager.SwitchCameras(isGameplayCamera: true);
             canvas.renderMode = RenderMode.ScreenSpaceCamera;
+            animalsLeftUIManager.StartGame();
 
             RestartGameEvent?.Invoke();
         }
 
-        internal void ManagePoints(int points)
-        {
-            txtPoints.text = points.ToString();
-        }
-
+    
         internal void RechargeBar(float rechargeTime)
         {
             StartCoroutine(RechargeCoroutine(rechargeTime));
@@ -214,12 +182,6 @@ namespace FeedTheBeasts.Scripts
             OnRechargeCompleteEvent?.Invoke(currentReloadProjectile);
             imgRechargeBar[currentReloadProjectile].fillAmount = 0;
         }
-
-        // internal void NextLevel()
-        // {
-        //     throw new NotImplementedException();
-        // }
-
         internal void Win()
         {
             ActivateElementsOnMenu(false);

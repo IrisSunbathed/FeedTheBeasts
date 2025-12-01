@@ -8,10 +8,13 @@ public class MusicManager : MonoBehaviour
     AudioSource audioSource;
     GameCatalog gameCatalog;
 
-
+    AudioClip audioClip;
     void Start()
     {
         gameCatalog = GameCatalog.Instance;
+        audioClip = gameCatalog.GetAudioClip(MusicThemes.MainMenu);
+        audioSource.resource = audioClip;
+        audioSource.Play();
     }
     void Awake()
     {
@@ -20,7 +23,7 @@ public class MusicManager : MonoBehaviour
 
     internal void PlayMusic(MusicThemes musicThemes)
     {
-        AudioClip audioClip = gameCatalog.GetAudioClip(musicThemes);
+        audioClip = gameCatalog.GetAudioClip(musicThemes);
         audioSource.resource = audioClip;
         audioSource.Play();
     }

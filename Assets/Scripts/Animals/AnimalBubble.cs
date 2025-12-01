@@ -27,11 +27,7 @@ namespace FeedTheBeasts.Scripts
             Assert.IsNotNull(foodContainer, "ERROR: FoodContainer not added");
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
+     
     }
 
 }

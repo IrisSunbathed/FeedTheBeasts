@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 
@@ -12,8 +13,10 @@ namespace FeedTheBeasts.Scripts
         protected PlayerController input;
 
         protected Rigidbody rb;
-        float startTime;
+        protected float startTime;
         float CurrentTime => Time.time - startTime;
+      
+
 
         public void Setup(Rigidbody rb, Animator animator, PlayerController input)
         {
@@ -27,6 +30,7 @@ namespace FeedTheBeasts.Scripts
         }
         public virtual void Do()
         {
+            
 
         }
         public virtual void FixedDo()
@@ -35,7 +39,7 @@ namespace FeedTheBeasts.Scripts
         }
         public virtual void Exit()
         {
-
+          
         }
 
     }

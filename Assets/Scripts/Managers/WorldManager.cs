@@ -4,6 +4,7 @@ using NUnit.Framework;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Pool;
+using UnityEngine.UIElements;
 using Debug = UnityEngine.Debug;
 
 namespace FeedTheBeasts.Scripts
@@ -21,19 +22,26 @@ namespace FeedTheBeasts.Scripts
         [SerializeField] DifficultyManager difficultyManager;
         [SerializeField] CamerasManager camerasManager;
         [SerializeField] MusicManager musicManager;
+        [SerializeField] AnimalsLeftUIManager animalsLeftUIManager;
+        [SerializeField] PlayerUIManager playerUIManager;
+        GameCatalog gameCatalog;
         [Header("Others")]
         [SerializeField] GameObject[] foodProviders;
         [SerializeField] CameraShaker cameraShaker;
         [SerializeField] Shooter shooter;
         [SerializeField] ProjectilePool projectilePool;
+        [SerializeField] FruitProvider fruitProvider;
+        [SerializeField] PlantingState plantingState;
 
         LevelManager levelManager;
 
+        [SerializeField] int feedAnimalsGoal;
+        int currentFedAnimals;
 
         void Start()
         {
             levelManager = LevelManager.Instance;
-            musicManager.PlayMusic(MusicThemes.MainMenu);
+            // musicManager.PlayMusic(MusicThemes.MainMenu);
         }
         void Awake()
         {
@@ -48,8 +56,12 @@ namespace FeedTheBeasts.Scripts
             Assert.IsNotNull(shooter, "ERROR: Shooter not added to WorldManager");
             Assert.IsNotNull(projectilePool, "ERROR: ProjectilePool is not added to FoodSelectorManager");
             Assert.IsNotNull(difficultyManager, "ERROR: difficultyManager is not added to FoodSelectorManager");
+            Assert.IsNotNull(animalsLeftUIManager, "ERROR: animalsLeftUIManager is not added to FoodSelectorManager");
             Assert.IsNotNull(camerasManager, "ERROR: camerasManager is not added to FoodSelectorManager");
             Assert.IsNotNull(musicManager, "ERROR: musicManager is not added to FoodSelectorManager");
+            Assert.IsNotNull(plantingState, "ERROR: plantingState is not added to FoodSelectorManager");
+            Assert.IsNotNull(fruitProvider, "ERROR: fruitProvider is not added to FoodSelectorManager");
+            Assert.IsNotNull(playerUIManager, "ERROR: playerUIManager is not added to FoodSelectorManager");
             Assert.IsTrue(foodProviders.Length > 0, "ERROR: providers is empty in FoodSelectorManager");
 
             #endregion
@@ -57,38 +69,48 @@ namespace FeedTheBeasts.Scripts
             player.OnLoseLivePlayerAction += OnLoseLivePlayerActionCallback;
             player.OnGainedLivePlayerAction += OnGainedLiveCallBack;
             player.OnPointsAddedAction += OnPointsAddedCallBack;
-            player.OnMaxScoreReached += OnDifficultyAddCallback;
+            plantingState.OnCancelledAction += OnCacelledActionCallback;
+            // player.OnMaxScoreReached += OnDifficultyAddCallback;
             uIManager.RestartGameEvent += RestartGameCallBack;
             foodSelectorManager.OnChangeEquippedItemEvent += OnChangeEquippedItemCallback;
+            fruitProvider.OnPlantEvent += OnPlantCallBack;
+            playerUIManager.OnCompletionEvent += OnCompletionEventCallback;
             foreach (var item in foodProviders)
             {
-                IRechargeable recharchable = item.GetComponent<IRechargeable>();
-                recharchable.OnRechargeEvent += OnRechargeCallBack;
+                if (item.TryGetComponent(out IRechargeable recharchable))
+                {
+                    recharchable = item.GetComponent<IRechargeable>();
+                    recharchable.OnRechargeEvent += OnRechargeCallBack;
+
+                }
             }
+
+            currentFedAnimals = 0;
 
         }
 
-        private void OnDifficultyAddCallback()
+        private void OnCompletionEventCallback()
         {
-            if (levelManager.CurrentLevel == Levels.Level4)
-            {
-                playerController.WinState();
-                spawnManager.StopSpawning();
-                uIManager.Win();
-                foodSelectorManager.Init();
-                DestroyAnimals();
-                musicManager.PlayMusic(MusicThemes.Win);
-            }
-            else
-            {
-                levelManager.CurrentLevel++;
-                Debug.Log($"Next level: {levelManager.CurrentLevel}");
-                //  uIManager.NextLevel();
-            }
+            Vector3 position = playerController.GetFontPosition();
+            fruitProvider.Plant(position);
+         
+        }
+
+        private void OnCacelledActionCallback()
+        {
+            playerUIManager.CancelFill();
+        }
+
+        private void OnPlantCallBack(float plantingTime)
+        {
+            playerUIManager.FillBar(plantingTime);
+            playerController.SetPlantingState();
+
         }
 
         private void OnChangeEquippedItemCallback(int index, GameObject projectile)
         {
+
             projectilePool.SetProjectile(projectile);
             uIManager.CurrentProjectile = index;
         }
@@ -98,9 +120,9 @@ namespace FeedTheBeasts.Scripts
             uIManager.RechargeBar(rechargeTime);
         }
 
-        private void OnGainedLiveCallBack(int points)
+        private void OnGainedLiveCallBack(int lives)
         {
-            uIManager.ManageLives(points);
+            uIManager.ManageLives(lives);
         }
 
         private void RestartGameCallBack()
@@ -111,6 +133,9 @@ namespace FeedTheBeasts.Scripts
             foodSelectorManager.StartGame();
             player.Init();
             difficultyManager.Init();
+            levelManager.CurrentLevel = Levels.Level1;
+            currentFedAnimals = 0;
+
         }
 
         private void OnPointsAddedCallBack(int points)
@@ -129,6 +154,8 @@ namespace FeedTheBeasts.Scripts
                 foodSelectorManager.Init();
                 DestroyAnimals();
                 musicManager.PlayMusic(MusicThemes.Lose);
+                animalsLeftUIManager.Init();
+                 playerUIManager.CancelFill();
             }
             else
             {
@@ -165,13 +192,30 @@ namespace FeedTheBeasts.Scripts
 
         private void OnPointsGainedCallBack(int points, Transform transform)
         {
+            levelManager.AnimalFed();
             player.Score += points;
             particleSystemManager.SpawnParticles(transform);
 
         }
 
-        private void OnLoseLifeCallBack()
+        internal void Win()
         {
+            playerController.WinState();
+            spawnManager.StopSpawning();
+            uIManager.Win();
+            animalsLeftUIManager.Init();
+            foodSelectorManager.Init();
+            DestroyAnimals();
+            musicManager.PlayMusic(MusicThemes.Win);
+            playerUIManager.CancelFill();
+        }
+
+        private void OnLoseLifeCallBack(bool hasScaped = false)
+        {
+            if (hasScaped)
+            {
+                levelManager.EscapedAnimals++;
+            }
             player.Lives--;
         }
     }

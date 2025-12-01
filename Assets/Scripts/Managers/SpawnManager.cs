@@ -16,6 +16,11 @@ namespace FeedTheBeasts.Scripts
         [SerializeField] GameObject goAggresiveAnimal;
         [Header("References")]
         [SerializeField] DifficultyManager difficultyManager;
+        LevelManager levelManager;
+
+        [SerializeField] bool spawnAnimals;
+
+        int numberSpawnAnimals;
 
         #region Cameras
 
@@ -41,9 +46,12 @@ namespace FeedTheBeasts.Scripts
         Coroutine coroutineAggressiveAnimals;
 
 
+
+
         void Start()
         {
             camerasManager = CamerasManager.Instance;
+            levelManager = LevelManager.Instance;
         }
         void Awake()
         {
@@ -51,6 +59,22 @@ namespace FeedTheBeasts.Scripts
             Assert.IsNotNull(difficultyManager, "ERROR: difficultyManager was not added to SpawnManager");
         }
 
+
+        internal void Init()
+        {
+            ConfigureCameraExtremes();
+            if (spawnAnimals)
+            {
+                StartCoroutine(StartCouroutines());
+            }
+
+            foreach (var animals in GameObject.FindGameObjectsWithTag(Constants.ANIMAL_TAG))
+            {
+                Destroy(animals);
+            }
+
+
+        }
 
         private void SpawnRandomAnimal()
         {
@@ -90,7 +114,7 @@ namespace FeedTheBeasts.Scripts
             StopAllCoroutines();
             coroutineAnimals = null;
             coroutineAggressiveAnimals = null;
-            
+
 
             DestroyAnimals();
         }
@@ -103,22 +127,26 @@ namespace FeedTheBeasts.Scripts
             }
         }
 
-        internal void Init()
+        internal void Stampede(int numberOfAnimals)
         {
-            Debug.Log("Init SpawnManager");
-            ConfigureCameraExtremes();
-            StartCouroutines();
+            Debug.Log("Stampedeeee!");
+            StopAllCoroutines();
+            coroutineAnimals = null;
+            coroutineAggressiveAnimals = null;
 
-            foreach (var animals in GameObject.FindGameObjectsWithTag(Constants.ANIMAL_TAG))
+            for (int i = 0; i <= numberOfAnimals; i++)
             {
-                Destroy(animals);
+                SpawnRandomAnimal();
             }
 
-
+            StartCoroutine(StartCouroutines(5f));
         }
 
-        private void StartCouroutines()
+
+
+        IEnumerator StartCouroutines(float timeToWait = 0f)
         {
+            yield return timeToWait;
             coroutineAnimals ??= StartCoroutine(SpawnRandomAnimalCoroutine(difficultyManager.StartDelay,
                                                                       difficultyManager.IntervalSpawnMin,
                                                                       difficultyManager.IntervalSpawnMax,
@@ -131,7 +159,6 @@ namespace FeedTheBeasts.Scripts
 
         IEnumerator SpawnRandomAnimalCoroutine(float startDelay, float intervalMin, float intervalMax, MyMethodDelegate myMethodDelegate, bool startInizilized = false)
         {
-            Debug.Log("coroutine " + myMethodDelegate.Method);
             float interval = Random.Range(intervalMin, intervalMax);
 
             if (!startInizilized)
@@ -145,7 +172,11 @@ namespace FeedTheBeasts.Scripts
                 yield return new WaitForSeconds(interval);
                 myMethodDelegate();
             }
-            StartCoroutine(SpawnRandomAnimalCoroutine(0, intervalMin, intervalMax, SpawnRandomAnimal, true));
+            numberSpawnAnimals++;
+            if (numberSpawnAnimals <= levelManager.feedAnimalsGoal)
+            {
+                StartCoroutine(SpawnRandomAnimalCoroutine(0, intervalMin, intervalMax, SpawnRandomAnimal, true));
+            }
         }
 
         private void ConfigureCameraExtremes()

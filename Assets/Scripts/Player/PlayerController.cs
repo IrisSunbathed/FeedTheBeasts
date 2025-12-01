@@ -1,5 +1,6 @@
 using System;
 using System.Buffers;
+using DG.Tweening;
 using NUnit.Framework;
 using Unity.Mathematics;
 using Unity.VisualScripting;
@@ -27,7 +28,6 @@ namespace FeedTheBeasts.Scripts
                 {
                     HorizontalInput = 0;
                     VerticalInput = 0;
-                    Debug.Log($"Win: {HorizontalInput} and {VerticalInput}");
                 }
             }
         }
@@ -45,12 +45,17 @@ namespace FeedTheBeasts.Scripts
         public IdleState idleState;
         public DeathState deathState;
         public WinState winState;
+        public PlantingState plantingState;
+        internal float plantingTime;
+
 
         Animator animator;
         [Header("Shoot Properties")]
         [SerializeField] Shooter shooter;
         [SerializeField] FoodSelectorManager foodSelectorManager;
+        float pressedKeyTime;
         float lookAngle;
+        bool hasShoot;
 
         [Header("Get bounds")]
 
@@ -69,18 +74,20 @@ namespace FeedTheBeasts.Scripts
         #endregion
 
 
+
         void Start()
         {
             camerasManager = CamerasManager.Instance;
             orthographicSize = camerasManager.OrthographicSize;
             lengthCam = camerasManager.GetCameraLength();
+            hasShoot = false;
 
         }
 
         void Awake()
         {
             Assert.IsNotNull(shooter, "ERROR: Shooter not added to Player Controller");
-            Assert.IsNotNull(shooter, "ERROR: foodSelectorManager not added to Player Controller");
+            Assert.IsNotNull(foodSelectorManager, "ERROR: foodSelectorManager not added to Player Controller");
             #region GET COMPONENTS
             meshRenderer = GetComponent<MeshRenderer>();
             rbPlayer = GetComponent<Rigidbody>();
@@ -100,6 +107,7 @@ namespace FeedTheBeasts.Scripts
             idleState.Setup(rbPlayer, animator, this);
             deathState.Setup(rbPlayer, animator, this);
             winState.Setup(rbPlayer, animator, this);
+            plantingState.Setup(rbPlayer, animator, this);
             states = idleState;
         }
 
@@ -123,10 +131,31 @@ namespace FeedTheBeasts.Scripts
                 #endregion
                 #region Shoot
                 LookAtMousePosition();
-                if (Input.GetKeyDown(KeyCode.Mouse0))
+                if (Input.GetKey(KeyCode.Mouse0))
                 {
-                    foodSelectorManager.TryShootCurrentWeapon();
+
+                    pressedKeyTime = 0;
+                    pressedKeyTime += Time.deltaTime;
+                    // if (pressedKeyTime < 0.2f)
+                    // {
+
+                    //     Vector3 screenPoint = camerasManager.GetScreenToWorldPoint(Input.mousePosition);
+                    //     foodSelectorManager.TryShootCurrentWeapon(screenPoint);
+                    // }
+                    if (!hasShoot)
+                    {
+                        Vector3 screenPoint = camerasManager.GetScreenToWorldPoint(Input.mousePosition);
+                        foodSelectorManager.TryShootCurrentWeapon(screenPoint);
+                        hasShoot = true;
+                    }
+
+
                 }
+                // if (Input.GetKeyDown(KeyCode.Mouse0))
+                // {
+                //     Vector3 screenPoint = camerasManager.GetScreenToWorldPoint(Input.mousePosition);
+                //     foodSelectorManager.TryShootCurrentWeapon(screenPoint);
+                // }
                 #endregion
                 #region Reload
                 if (Input.GetKeyDown(KeyCode.R))
@@ -136,9 +165,17 @@ namespace FeedTheBeasts.Scripts
 
                 }
                 #endregion
-
             }
 
+            if (Input.GetKeyUp(KeyCode.Mouse0)/* & states == plantingState*/)
+            {
+                pressedKeyTime = 0;
+                if (states == plantingState)
+                {
+                    plantingState.Exit();
+                }
+                hasShoot = false;
+            }
             #region States
             if (states.IsStateComplete)
             {
@@ -154,16 +191,21 @@ namespace FeedTheBeasts.Scripts
         private void SelectState()
         {
 
-            if (HorizontalInput == 0 & VerticalInput == 0)
+            if (states != plantingState)
             {
-                states = idleState;
+
+                if (HorizontalInput == 0 & VerticalInput == 0)
+                {
+                    states.Exit();
+                    states = idleState;
+                }
+                else
+                {
+                    states.Exit();
+                    states = runState;
+                }
+                states.Enter();
             }
-            else
-            {
-                states = runState;
-            }
-       //     Debug.Log(states);
-            states.Enter();
         }
 
         internal void SetDeathState()
@@ -176,7 +218,7 @@ namespace FeedTheBeasts.Scripts
         {
             Vector3 mousePosition = Input.mousePosition;
             Vector3 mouseToWorld = camerasManager.GetScreenToWorldPoint(mousePosition);
-          
+
             lookAngle = AngleBetweenTwoPoints(transform.position, mouseToWorld) + 180;
             transform.eulerAngles = new Vector3(0, lookAngle, 0);
         }
@@ -230,6 +272,17 @@ namespace FeedTheBeasts.Scripts
             CanMove = false;
             states = winState;
             states.Enter();
+        }
+
+        internal void SetPlantingState()
+        {
+            states = plantingState;
+            states.Enter();
+        }
+
+        internal Vector3 GetFontPosition()
+        {
+            return new Vector3(transform.localPosition.x, transform.localPosition.y, transform.localPosition.z + 1f);
         }
     }
 

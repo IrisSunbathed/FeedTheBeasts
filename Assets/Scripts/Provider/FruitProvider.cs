@@ -1,0 +1,93 @@
+using System;
+using System.Collections;
+using NUnit.Framework;
+using Unity.Mathematics;
+using UnityEngine;
+
+namespace FeedTheBeasts.Scripts
+{
+    public class FruitProvider : FoodProvider, IRechargeable, IPlantable
+    {
+        [SerializeField] float plantingTime;
+        [SerializeField] GameObject fruitBasket;
+        public float PlantingTime { get => plantingTime; set { plantingTime = value; } }
+        public bool IsRecharging { get; set; }
+
+        public event Action<float> OnRechargeEvent;
+        public event Action<float> OnPlantEvent;
+
+        void Awake()
+        {
+            Assert.IsNotNull(fruitBasket, "ERROR: fruitBasket not added");
+            Init();
+        }
+
+        public override void Init()
+        {
+            canShoot = true;
+            currentProjectiles = projectilesPerRecharge;
+            shootCount = 0;
+        }
+
+        public int GetBullets()
+        {
+            if (IsRecharging)
+            {
+                return 0;
+            }
+            else
+            {
+                return currentProjectiles - shootCount;
+            }
+
+        }
+
+        public void IncreaseShootCount()
+        {
+            shootCount++;
+            if (shootCount == currentProjectiles)
+            {
+                StartCoroutine(ReloadCoroutine());
+                OnRechargeEvent?.Invoke(rechargingTime);
+                shootCount = 0;
+            }
+        }
+
+        public IEnumerator ReloadCoroutine()
+        {
+            IsRecharging = true;
+            yield return new WaitForSeconds(rechargingTime);
+            IsRecharging = false;
+        }
+
+        public void TryPlant()
+        {
+            if (!IsRecharging)
+            {
+                OnPlantEvent?.Invoke(PlantingTime);
+            }
+            //Pasar el tiempo necesario para plantar
+            //Mirar el tiempo que lleva pulsando el player controller
+            //El player controller, si llega al tiempo establecido llamar a WorldManager
+            //y decirle que se puede plantar
+            //Este que hable con el provier (this) y plant
+            //Al plantar IncreaseShootCount
+        }
+
+        public void TryReload()
+        {
+            if (!IsRecharging)
+            {
+                OnRechargeEvent?.Invoke(rechargingTime);
+                StartCoroutine(ReloadCoroutine());
+                shootCount = 0;
+            }
+        }
+
+        internal void Plant(Vector3 position)
+        {
+            Instantiate(fruitBasket, position, quaternion.identity);
+            IncreaseShootCount();
+        }
+    }
+}

@@ -21,7 +21,7 @@ namespace FeedTheBeasts.Scripts
         public event Action<int> OnLoseLivePlayerAction;
         public event Action<int> OnGainedLivePlayerAction;
         public event Action<int> OnPointsAddedAction;
-        public event Action OnMaxScoreReached;
+        //public event Action OnMaxScoreReached;
 
         int lives;
 
@@ -63,13 +63,11 @@ namespace FeedTheBeasts.Scripts
             {
                 score = value;
                 OnPointsAddedAction?.Invoke(Score);
-                score = value;
                 if (score >= scoreNextLevel)
                 {
-                    Debug.Log(scoreGetLife);
                     Lives++;
-                    OnMaxScoreReached?.Invoke();
-                    scoreNextLevel += scoreGetLife;
+                  //  OnMaxScoreReached?.Invoke();
+                    scoreNextLevel += scoreThreshole;
 
 
                 }
@@ -77,19 +75,20 @@ namespace FeedTheBeasts.Scripts
             }
         }
 
-        [SerializeField, Range(50, 1000)] int scoreGetLife;
+        [SerializeField, Range(50, 1000)] int scoreThreshole;
         int scoreNextLevel;
 
 
         void Awake()
         {
-            scoreNextLevel = scoreGetLife;
+            scoreNextLevel = scoreThreshole;
 
         }
 
         internal void Init()
         {
             previousNumberOfLifes = initialLives;
+            scoreNextLevel = scoreThreshole;
             Lives = initialLives;
             Score = 0;
         }

@@ -39,7 +39,7 @@ namespace FeedTheBeasts.Scripts
         {
             if (canShoot)
             {
-                IRechargeable projectile = projectilePool.GetProjectile().GetComponent<IRechargeable>();
+                projectilePool.GetProjectile().GetComponent<IRechargeable>();
            
                 if (shootCount == maxShootsRecharge)
                 {

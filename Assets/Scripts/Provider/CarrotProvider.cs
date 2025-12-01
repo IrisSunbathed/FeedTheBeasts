@@ -4,22 +4,33 @@ using UnityEngine;
 
 namespace FeedTheBeasts.Scripts
 {
+    [RequireComponent(typeof(AudioSource))]
     public class CarrotProvider : FoodProvider, IRechargeable, IShootable
 
     {
         public bool IsRecharging { get; set; }
+        public AudioSource AudioSourceShoot { get; set; }
 
         public event Action<float> OnRechargeEvent;
+
+        GameCatalog gameCatalog;
+
+        void Start()
+        {
+            gameCatalog = GameCatalog.Instance;
+        }
 
         void Awake()
         {
             Init();
+            AudioSourceShoot = GetComponent<AudioSource>();
         }
 
         public override void Init()
         {
             canShoot = true;
             currentProjectiles = projectilesPerRecharge;
+            shootCount = 0;
         }
 
         public void IncreaseShootCount()
@@ -46,8 +57,14 @@ namespace FeedTheBeasts.Scripts
             if (canShoot & !IsRecharging)
             {
                 projectilePool.GetProjectile();
+                AudioClip audioClip = gameCatalog.GetFXClip(FXTypes.Shot);
+                
+                AudioSourceShoot.resource = audioClip;
+                // AudioSourceShoot.pitch = -3f;
+                AudioSourceShoot.Play();
                 if (shootCount == currentProjectiles)
                 {
+
                     shootCooldown = rechargingTime;
 
                     shootCount = 0;
