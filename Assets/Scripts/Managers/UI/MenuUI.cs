@@ -1,6 +1,7 @@
 using System;
 using TMPro;
 using UnityEditor;
+using UnityEditor.UI;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.UI;
@@ -13,7 +14,11 @@ namespace FeedTheBeasts.Scripts
         [Header("Start/Game Over Menu references")]
         [SerializeField] TMP_Text txtHeader;
         [SerializeField] Button bttStartOver;
+        [SerializeField] Button bttCredits;
         [SerializeField] Button bttExitGame;
+        [SerializeField] GameObject scrollArea;
+        [SerializeField] Button bttReturn;
+        [SerializeField] Scrollbar scrollbar;
         AudioSource audioSource;
         GameCatalog gameCatalog;
 
@@ -28,6 +33,9 @@ namespace FeedTheBeasts.Scripts
             Assert.IsNotNull(txtHeader, "ERROR: txtGameOver is empty on UIManager");
             Assert.IsNotNull(bttStartOver, "ERROR: bttStart is empty on UIManager");
             Assert.IsNotNull(bttExitGame, "ERROR: bttExit is empty on UIManager");
+            Assert.IsNotNull(scrollArea, "ERROR: scrollArea is empty on UIManager");
+            Assert.IsNotNull(bttReturn, "ERROR: bttReturn is empty on UIManager");
+            Assert.IsNotNull(scrollbar, "ERROR: scrollbar is empty on UIManager");
 
             audioSource = GetComponent<AudioSource>();
 
@@ -40,15 +48,41 @@ namespace FeedTheBeasts.Scripts
             TMP_Text tMP_Text = bttStartOver.GetComponentInChildren<TMP_Text>();
             tMP_Text.text = Constants.START_BUTTON_TEXT;
             SetActiveUIElements(true);
+            SetCreditsUIElements(false);
             bttStartOver.onClick.AddListener(StartGame);
+            bttCredits.onClick.AddListener(ShowCredits);
             bttExitGame.onClick.AddListener(Exit);
-
+            bttReturn.onClick.AddListener(Return);
 
         }
 
-        private void SetActiveUIElements(bool isActive)
+
+        private void SetCreditsUIElements(bool isActive)
+        {
+            scrollArea.SetActive(isActive);
+            bttReturn.gameObject.SetActive(isActive);
+            scrollbar.gameObject.SetActive(isActive);
+
+        }
+
+        private void Return()
+        {
+            SetActiveUIElements(true);
+            SetCreditsUIElements(false);
+        }
+
+        private void ShowCredits()
+        {
+            SetActiveUIElements(false);
+            SetCreditsUIElements(true);
+            scrollbar.value = 1f;
+
+        }
+
+        internal void SetActiveUIElements(bool isActive)
         {
             bttStartOver.gameObject.SetActive(isActive);
+            bttCredits.gameObject.SetActive(isActive);
             bttExitGame.gameObject.SetActive(isActive);
             txtHeader.enabled = isActive;
         }

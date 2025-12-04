@@ -49,8 +49,6 @@ namespace FeedTheBeasts.Scripts
 
 
             bossManager.OnBossDefeatedEvent += OnBossDefeatedCallBack;
-            Debug.Log($"feedAnimalsGoal {feedAnimalsGoal} Levels {Enum.GetNames(typeof(Levels)).Length}");
-            Debug.Log($"{feedAnimalsGoal % Enum.GetNames(typeof(Levels)).Length}");
             if (feedAnimalsGoal % (Enum.GetNames(typeof(Levels)).Length - 1) != 0)
             {
                 while (feedAnimalsGoal % (Enum.GetNames(typeof(Levels)).Length - 1) != 0)
@@ -60,8 +58,6 @@ namespace FeedTheBeasts.Scripts
                 Debug.LogWarning($"The number of animals has to fit the number of levels. The number of animals has been risen to: {feedAnimalsGoal}");
             }
             AnimalGoalPerLevel = feedAnimalsGoal /( Enum.GetNames(typeof(Levels)).Length - 1);
-            Debug.Log($"feedAnimalsGoal {feedAnimalsGoal} / Levels: {Enum.GetNames(typeof(Levels)).Length - 1} ");
-            Debug.Log($"AnimalGoalPerLevel {AnimalGoalPerLevel}");
             Init();
         }
 

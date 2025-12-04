@@ -26,6 +26,7 @@ namespace FeedTheBeasts.Scripts
         public const string VICTORY_BUTTON_TEXT = "PLAY AGAIN!";
         public const string STAMPEDE_TEXT = "STAMPEDE INCOMING!";
         public const string SPAWN_MOOSE_TEXT = "MOOSE INCOMING";
+         public const string BOSS_BAR_TEXT = "BOSS HUNGER";
 
 
 
@@ -60,7 +61,9 @@ namespace FeedTheBeasts.Scripts
         MainMenu,
         InGame,
         Win,
-        Lose
+        Lose,
+        Boss,
+        Introdution
     }
 
     public enum AnimalType

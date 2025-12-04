@@ -43,11 +43,13 @@ namespace FeedTheBeasts.Scripts
         [SerializeField] TMP_Text txtInGameNotification;
         Coroutine stampedeCoroutine;
 
+        [SerializeField] MusicManager musicManager;
+
 
         void Start()
         {
             camerasManager = CamerasManager.Instance;
-            camerasManager.SwitchCameras(isGameplayCamera: false);
+           
         }
         void Awake()
         {
@@ -58,14 +60,14 @@ namespace FeedTheBeasts.Scripts
             Assert.IsNotNull(livesAndPointsUIManager, "ERROR: livesAndPointsUIManager is empty on UIManager");
             Assert.IsNotNull(menuUI, "ERROR: Menu UI is empty on UIManager");
             Assert.IsNotNull(animalsLeftUIManager, "ERROR: animalsLeftUIManager is empty on UIManager");
+            Assert.IsNotNull(musicManager, "ERROR: musicManager is empty on UIManager");
             Assert.IsTrue(imgRechargeBar.Length > 0, "ERROR: rechargeBar is empty on UIManager");
             #endregion
             menuUI.StartGameEvent += StartGame;
-            Init();
         }
-        private void Init()
+        internal void Init()
         {
-
+            camerasManager.SwitchCameras(isGameplayCamera: false);
             CurrentProjectile = 0;
             foreach (var item in imgRechargeBar)
             {
@@ -78,6 +80,8 @@ namespace FeedTheBeasts.Scripts
             menuUI.Init();
             animalsLeftUIManager.Init();
             txtInGameNotification.text = string.Empty;
+            musicManager.PlayMusic(MusicThemes.MainMenu);
+            musicManager.FadeCurrentMusic(1f, 1f);
 
         }
 
@@ -155,7 +159,7 @@ namespace FeedTheBeasts.Scripts
             StopWarningEffect();
         }
 
-        private void ActivateElementsOnMenu(bool isActive)
+        internal void ActivateElementsOnMenu(bool isActive)
         {
             foreach (var sprite in imagesFoodSelector)
             {

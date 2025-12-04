@@ -758,6 +758,7 @@ MonoBehaviour:
   preferredFood: 0
   hungerTotal: 100
   hungerBar: {fileID: 1288127801584211139}
+  isBoss: 1
   feedPoints: 50
 --- !u!114 &5717700266434320374
 MonoBehaviour:
@@ -1529,7 +1530,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   goChilds: {fileID: 141827915290315754, guid: e247e79e8846e45408dd5a7e91137c63, type: 3}
-  summonInterval: 10
+  summonIntervalMin: 5
+  summonIntervalMax: 20
   spawnPositions:
   - {fileID: 2345364626053243227}
   - {fileID: 545513473465046349}

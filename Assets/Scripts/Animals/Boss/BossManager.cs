@@ -11,6 +11,8 @@ namespace FeedTheBeasts.Scripts
         [SerializeField] UIManager uIManager;
         [SerializeField] float spawnTime;
         [SerializeField] Player player;
+        [SerializeField] AnimalsLeftUIManager animalsLeftUIManager;
+        [SerializeField] MusicManager musicManager;
 
         LevelManager levelManager;
         AnimalHunger animalHunger;
@@ -34,13 +36,15 @@ namespace FeedTheBeasts.Scripts
         {
             Assert.IsNotNull(goBoss, "Error: goBoss not added");
             Assert.IsNotNull(uIManager, "Error: uIManager not added");
+            Assert.IsNotNull(musicManager, "Error: musicManager not added");
+            Assert.IsNotNull(animalsLeftUIManager, "Error: animalsLeftUIManager not added");
             isSpawned = false;
+           
         }
         internal void SpawnBoss()
         {
-
+            musicManager.StopMusic();
             uIManager.InGameWarning(spawnTime, Constants.SPAWN_MOOSE_TEXT);
-
             StartCoroutine(SpawningWaitingTime());
         }
 
@@ -48,12 +52,15 @@ namespace FeedTheBeasts.Scripts
 
         {
             yield return new WaitForSeconds(spawnTime);
+
             Vector3 spawnPosition = new Vector3(0,
                                       goBoss.transform.position.y,
                                       camerasManager.UpperLimitCamera + offset * -Mathf.Sign(camerasManager.UpperLimitCamera));
 
             spawnedBoss = Instantiate(goBoss, spawnPosition, goBoss.transform.rotation);
+            musicManager.PlayMusic(MusicThemes.Boss);
             animalHunger = spawnedBoss.GetComponent<AnimalHunger>();
+            animalsLeftUIManager.BossHungerSetUp(animalHunger);
             BossController bossController = spawnedBoss.GetComponent<BossController>();
             bossController.idleStateBoss.OnSpawnEvent += OnSpawnCallBack;
             isSpawned = true;

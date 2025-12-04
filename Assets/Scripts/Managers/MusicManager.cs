@@ -1,3 +1,5 @@
+using System;
+using DG.Tweening;
 using FeedTheBeasts.Scripts;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -12,7 +14,7 @@ public class MusicManager : MonoBehaviour
     void Start()
     {
         gameCatalog = GameCatalog.Instance;
-        audioClip = gameCatalog.GetAudioClip(MusicThemes.MainMenu);
+        audioClip = gameCatalog.GetAudioClip(MusicThemes.Introdution);
         audioSource.resource = audioClip;
         audioSource.Play();
     }
@@ -27,4 +29,15 @@ public class MusicManager : MonoBehaviour
         audioSource.resource = audioClip;
         audioSource.Play();
     }
+
+    internal void StopMusic()
+    {
+        audioSource.Stop();
+    }
+
+    internal void FadeCurrentMusic(float endvalue, float duration)
+    {
+        audioSource.DOFade(endvalue, duration);
+    }
 }
+

@@ -12,18 +12,23 @@ namespace FeedTheBeasts.Scripts
     {
 
         [SerializeField] FoodTypes preferredFood;
-        [SerializeField] float hungerTotal;
+        public float hungerTotal;
         AnimalDisappearManager animalDisapearManager;
         UIAnimalScoreController uIAnimalScoreController;
+
 
         internal bool IsPreferred { get; private set; }
         internal float CurrentHunger { get; private set; }
 
         // [SerializeField] Transform hungerBar;
         [SerializeField] Image hungerBar;
+
+        [SerializeField] bool isBoss;
         public int feedPoints;
         int points;
         int multiplyier;
+
+        public event Action<float> OnBossFeedEvent;
 
         public event Action<int, Transform, bool> OnPointsGainedEvent;
         void Awake()
@@ -56,10 +61,17 @@ namespace FeedTheBeasts.Scripts
                 CurrentHunger -= 0.5f;
             }
             float progress = Mathf.Clamp01(CurrentHunger / hungerTotal);
-            hungerBar.fillAmount = 1 * progress;
+            if (isBoss)
+            {
+                OnBossFeedEvent?.Invoke(progress);
+            }
+            else
+            {
+                hungerBar.fillAmount = 1 * progress;
+            }
             points += feedPoints * multiplyier;
             OnPointsGainedEvent?.Invoke(points, transform, false);
-            uIAnimalScoreController.AddMarker(points,IsPreferred);
+            uIAnimalScoreController.AddMarker(points, IsPreferred);
             if (CurrentHunger <= 0)
             {
                 OnPointsGainedEvent?.Invoke(points, transform, true);
@@ -67,8 +79,6 @@ namespace FeedTheBeasts.Scripts
 
             }
         }
-
-
 
         internal FoodTypes GetPreferredFood()
         {
