@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using NUnit.Framework;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace FeedTheBeasts.Scripts
@@ -13,13 +15,16 @@ namespace FeedTheBeasts.Scripts
         public Levels CurrentLevel { get; set; }
 
         [SerializeField] internal int feedAnimalsGoal;
+
         [SerializeField] AnimalsLeftUIManager animalsLeftUIManager;
         [SerializeField] WorldManager worldManager;
         [SerializeField] DifficultyManager difficultyManager;
+        [SerializeField] BossManager bossManager;
+        [SerializeField] float timeGameEnding;
         int currentFedAnimals;
         internal int EscapedAnimals { get; set; }
-      //  int remainingAnimals;
-        int animalGoalPerLevel;
+        int remainingAnimals;
+        internal int AnimalGoalPerLevel { get; private set; }
 
         public int AnimalsLeft { get; set; }
 
@@ -40,34 +45,62 @@ namespace FeedTheBeasts.Scripts
             Assert.IsNotNull(animalsLeftUIManager, "ERROR: animalsLeftUIManager is not added to FoodSelectorManager");
             Assert.IsNotNull(worldManager, "ERROR: worldManager is not added to FoodSelectorManager");
             Assert.IsNotNull(difficultyManager, "ERROR: difficultyManager is not added to FoodSelectorManager");
+            Assert.IsNotNull(bossManager, "ERROR: bossManager is not added to FoodSelectorManager");
 
 
+            bossManager.OnBossDefeatedEvent += OnBossDefeatedCallBack;
+            Debug.Log($"feedAnimalsGoal {feedAnimalsGoal} Levels {Enum.GetNames(typeof(Levels)).Length}");
+            Debug.Log($"{feedAnimalsGoal % Enum.GetNames(typeof(Levels)).Length}");
+            if (feedAnimalsGoal % (Enum.GetNames(typeof(Levels)).Length - 1) != 0)
+            {
+                while (feedAnimalsGoal % (Enum.GetNames(typeof(Levels)).Length - 1) != 0)
+                {
+                    feedAnimalsGoal++;
+                }
+                Debug.LogWarning($"The number of animals has to fit the number of levels. The number of animals has been risen to: {feedAnimalsGoal}");
+            }
+            AnimalGoalPerLevel = feedAnimalsGoal /( Enum.GetNames(typeof(Levels)).Length - 1);
+            Debug.Log($"feedAnimalsGoal {feedAnimalsGoal} / Levels: {Enum.GetNames(typeof(Levels)).Length - 1} ");
+            Debug.Log($"AnimalGoalPerLevel {AnimalGoalPerLevel}");
+            Init();
+        }
+
+        private void OnBossDefeatedCallBack()
+        {
+            StartCoroutine(WaitUntilWin());
+
+        }
+
+        IEnumerator WaitUntilWin()
+        {
+            yield return new WaitForSeconds(timeGameEnding);
+            worldManager.Win();
+        }
+
+        internal void Init()
+        {
             CurrentLevel = Levels.Level1;
+            currentFedAnimals = 0;
+            EscapedAnimals = 0;
 
-            animalGoalPerLevel = feedAnimalsGoal / Enum.GetNames(typeof(Levels)).Length;
+
         }
 
         internal void AnimalFed()
         {
             currentFedAnimals++;
-            
-            AnimalsLeft = feedAnimalsGoal - currentFedAnimals + EscapedAnimals;
-           // remainingAnimals = feedAnimalsGoal - currentFedAnimals + EscapedAnimals;
+            remainingAnimals = feedAnimalsGoal - currentFedAnimals + EscapedAnimals;
             animalsLeftUIManager.AdjustBar(feedAnimalsGoal, currentFedAnimals + EscapedAnimals);
-
-            Debug.Log($"remainingAniamls: {AnimalsLeft}");
-
-            if (AnimalsLeft % animalGoalPerLevel == 0)
+            Debug.Log($"AnimalGoalPerLevel: {AnimalGoalPerLevel} currentFedAnimals: {currentFedAnimals} EscapedAnimals: {EscapedAnimals} ");
+            if ((currentFedAnimals + EscapedAnimals) % AnimalGoalPerLevel == 0)
             {
-                if ((int)CurrentLevel == Enum.GetNames(typeof(Levels)).Length)
-                {
-                    worldManager.Win();
-                }
-                else
+                if ((int)CurrentLevel != Enum.GetNames(typeof(Levels)).Length)
                 {
                     CurrentLevel++;
+                    Debug.Log(CurrentLevel);
                     difficultyManager.AddDifficultyLevel();
                 }
+
             }
         }
     }

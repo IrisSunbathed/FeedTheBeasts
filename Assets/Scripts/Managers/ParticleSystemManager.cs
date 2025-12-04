@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
+using TMPro;
 using UnityEngine;
 
 namespace FeedTheBeasts.Scripts
@@ -10,6 +12,9 @@ namespace FeedTheBeasts.Scripts
 
         [SerializeField] GameObject smokeWhenFed;
         [SerializeField] Transform objectPool;
+
+
+        int canvasIndex;
         [SerializeField] int smokeWhenFedPoolLimit;
 
         List<GameObject> listSmokeWhenFed;
@@ -19,7 +24,7 @@ namespace FeedTheBeasts.Scripts
             Assert.IsNotNull(smokeWhenFed, "ERROR: particle system not added");
 
             listSmokeWhenFed = new List<GameObject>();
-
+            canvasIndex = 0;
             for (int i = 1; i <= smokeWhenFedPoolLimit; i++)
             {
                 AddParticleToPool();
@@ -69,6 +74,8 @@ namespace FeedTheBeasts.Scripts
             yield return new WaitForSeconds(particleSystem.main.startLifetimeMultiplier);
             smoke.SetActive(false);
         }
+
+        
     }
 
 }

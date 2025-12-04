@@ -25,6 +25,7 @@ namespace FeedTheBeasts.Scripts
         [SerializeField] bool doesAnimalStop;
         [SerializeField] protected bool doesFetch;
         [SerializeField] protected bool doesEatBasket;
+        [SerializeField] protected bool doesTurn;
         [SerializeField, Range(1f, 5f)] float timeTransitionMovement;
 
         AudioSource audioSource;
@@ -37,7 +38,7 @@ namespace FeedTheBeasts.Scripts
 
         Animator animator;
 
-        readonly float destinationOffset = 2f;
+        readonly float destinationOffset = 4f;
         internal NavMeshAgent navMeshAgent;
 
         Vector3 destination;
@@ -68,13 +69,14 @@ namespace FeedTheBeasts.Scripts
             audioSource = GetComponent<AudioSource>();
 
             SetDestination(transform.position.x, transform.position.y, destinationZ);
-            animalStatus = AnimalStatus.Running;
+            SetMovingAnimation();
 
 
         }
 
         protected virtual void Update()
         {
+
             time += Time.deltaTime;
             if (doesFetch)
             {
@@ -86,14 +88,12 @@ namespace FeedTheBeasts.Scripts
                 TryEatBasket();
             }
 
-            if (animalStatus == AnimalStatus.Running)
+            if (doesTurn & animalStatus == AnimalStatus.Running)
             {
                 if (time >= timeTransitionMovement)
                 {
                     RandomizeMovement();
                     time = 0;
-
-
                     float randomNumber = Random.Range(1, 4);
 
                     if (randomNumber == 3 & doesAnimalStop)
@@ -103,30 +103,26 @@ namespace FeedTheBeasts.Scripts
                     }
                 }
             }
-
-            if (navMeshAgent.pathStatus == NavMeshPathStatus.PathComplete)
-            {
-                animator.SetBool(Constants.ANIM_BOOL_EAT, true);
-                animator.SetFloat(Constants.ANIM_FLOAT_SPEED, 0);
-            }
-
-
         }
 
         private void TryEatBasket()
         {
-            GameObject platable = GameObject.FindGameObjectWithTag("Plantable");
+            GameObject platable = GameObject.FindGameObjectWithTag(Constants.PLANTABLE_TAG);
             if (platable != null)
             {
 
-               
+                SetMovingAnimation();
                 animalStatus = AnimalStatus.Fetching;
                 Vector3 newDestination = platable.transform.position;
                 SetDestination(newDestination.x, transform.position.y, newDestination.z);
+                if (navMeshAgent.pathStatus == NavMeshPathStatus.PathComplete)
+                {
+                    SetEatingAnimation();
+                }
             }
             else
             {
-                animalStatus = AnimalStatus.Running;
+                SetMovingAnimation();
             }
         }
 
@@ -143,13 +139,18 @@ namespace FeedTheBeasts.Scripts
                     hasAudioPlayed = true;
 
                 }
+                SetMovingAnimation();
                 animalStatus = AnimalStatus.Fetching;
                 Vector3 newDestination = throwable.transform.position;
                 SetDestination(newDestination.x, transform.position.y, newDestination.z);
+                if (navMeshAgent.pathStatus == NavMeshPathStatus.PathComplete)
+                {
+                    SetEatingAnimation();
+                }
             }
             else
             {
-                animalStatus = AnimalStatus.Running;
+                SetMovingAnimation();
             }
         }
 
@@ -169,12 +170,21 @@ namespace FeedTheBeasts.Scripts
 
         IEnumerator StopWalkingCoroutine()
         {
+            SetEatingAnimation();
+            float stoppedTimeMin = animator.GetCurrentAnimatorClipInfo(0).Length;
+            yield return new WaitForSeconds(stoppedTimeMin);
+            SetMovingAnimation();
+        }
+
+        private void SetEatingAnimation()
+        {
             animalStatus = AnimalStatus.Stopped;
             animator.SetBool(Constants.ANIM_BOOL_EAT, true);
             animator.SetFloat(Constants.ANIM_FLOAT_SPEED, 0);
-            float stoppedTimeMin = animator.GetCurrentAnimatorClipInfo(0).Length;
+        }
 
-            yield return new WaitForSeconds(stoppedTimeMin);
+        private void SetMovingAnimation()
+        {
             animator.SetBool(Constants.ANIM_BOOL_EAT, false);
             animator.SetFloat(Constants.ANIM_FLOAT_SPEED, 1);
             animalStatus = AnimalStatus.Running;
@@ -195,6 +205,13 @@ namespace FeedTheBeasts.Scripts
 
         }
 
+    }
+
+    public class Moose : Animal
+    {
+        static bool IsDefeated { get; set; }
+
+        
     }
 
 }

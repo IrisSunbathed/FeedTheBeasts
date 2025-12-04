@@ -1,36 +1,30 @@
+using System;
 using System.Collections;
 using Mono.Cecil;
 using NUnit.Framework;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
+using Random = UnityEngine.Random;
 
 
 
 
 namespace FeedTheBeasts.Scripts
 {
-    [RequireComponent(typeof(MeshFilter))]
-    [RequireComponent(typeof(AudioSource))]
-    [RequireComponent(typeof(MeshRenderer))]
+    [RequireComponent(typeof(MeshFilter), typeof(AudioSource), typeof(MeshRenderer))]
+    [RequireComponent(typeof(Collider))]
     public class DetectCollisions : MonoBehaviour
     {
-
-        GameCatalog gameCatalog;
         AudioSource audioSource;
-
         MeshRenderer meshRenderer;
-
-
-        void Start()
-        {
-            gameCatalog = GameCatalog.Instance;
-        }
+        Collider colAnimal;
 
         void Awake()
         {
             audioSource = GetComponent<AudioSource>();
             meshRenderer = GetComponent<MeshRenderer>();
+            colAnimal = GetComponent<Collider>();
 
         }
 
@@ -41,31 +35,41 @@ namespace FeedTheBeasts.Scripts
             if (other.CompareTag(Constants.ANIMAL_TAG))
             {
                 StartCoroutine(AudioCoroutine(other));
-                //audioSource.PlayOneShot(gameCatalog.GetFXClip(FXTypes.ClickOnButton));
+                //Proviver.AddCollisionPoint()
 
             }
         }
 
+        
+
         IEnumerator AudioCoroutine(Collider other)
         {
-            ConfigureAudio();
             AnimalHunger feedPoints = other.GetComponent<AnimalHunger>();
             feedPoints.FeedAnimal(tag);
+            ConfigureAudio(feedPoints.IsPreferred);
             meshRenderer.enabled = false;
+            colAnimal.enabled = false;
             yield return new WaitForSeconds(audioSource.clip.length);
-
             gameObject.SetActive(false);
             meshRenderer.enabled = true;
-
-
+            colAnimal.enabled = true;
         }
 
-        private void ConfigureAudio()
+        private void ConfigureAudio(bool isPreferred)
         {
-            float randomPitch = Random.Range(.5f, 1f);
-            audioSource.pitch = randomPitch;
-            AudioClip audioClip = gameCatalog.GetFXClip(FXTypes.ClickOnButton);
-            audioSource.resource = audioClip;
+
+            if (isPreferred)
+            {
+                float randomPitch = Random.Range(.5f, 1f);
+                audioSource.pitch = randomPitch;
+                audioSource.volume = 1f;
+            }
+            else
+            {
+                float randomPitch = Random.Range(.1f, .25f);
+                audioSource.pitch = randomPitch;
+                audioSource.volume = 0.5f;
+            }
             audioSource.Play();
         }
     }

@@ -12,6 +12,9 @@ namespace FeedTheBeasts.Scripts
         public const string PLAYER_TAG = "Player";
         public const string ANIMAL_TAG = "Animal";
         public const string THROWABLE_TAG = "Throwable";
+        public const string PLANTABLE_TAG = "Plantable";
+        public const string UNTAGGED_TAG = "Untagged";
+
 
         #endregion
         #region TEXTS
@@ -21,6 +24,11 @@ namespace FeedTheBeasts.Scripts
         public const string GAMEOVER_TEXT = "GAME OVER";
         public const string VICTORY_TEXT = "YOU WIN!";
         public const string VICTORY_BUTTON_TEXT = "PLAY AGAIN!";
+        public const string STAMPEDE_TEXT = "STAMPEDE INCOMING!";
+        public const string SPAWN_MOOSE_TEXT = "MOOSE INCOMING";
+
+
+
         #endregion
         #region AXIS
         public const string HORIZONTAL_AXIS = "Horizontal";
@@ -32,6 +40,8 @@ namespace FeedTheBeasts.Scripts
         public const string ANIM_INT_IDLE = "Animation_int";
         public const string ANIM_FLOAT_SPEED = "Speed_f";
         public const string ANIM_BOOL_EAT = "Eat_b";
+        public const string ANIM_BODY_VERTICAL = "Body_Vertical_f";
+
 
 
         #endregion
@@ -59,6 +69,8 @@ namespace FeedTheBeasts.Scripts
         Dog,
         Chicken,
         Wolf,
+        Moose,
+        Doe
     }
 
     public enum FXTypes
@@ -85,7 +97,8 @@ namespace FeedTheBeasts.Scripts
         Level1 = 1,
         Level2,
         Level3,
-        Level4
+        Level4,
+        Level5
     }
     [Serializable]
     public class FoodItemTransparent

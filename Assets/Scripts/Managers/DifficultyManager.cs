@@ -38,6 +38,7 @@ namespace FeedTheBeasts.Scripts
         [Header("Refences")]
 
         [SerializeField] SpawnManager spawnManager;
+        [SerializeField] BossManager bossManager;
 
         void Start()
         {
@@ -46,6 +47,7 @@ namespace FeedTheBeasts.Scripts
         void Awake()
         {
             Assert.IsNotNull(spawnManager, "Spawn Manager is not added");
+            Assert.IsNotNull(bossManager, "bossManager is not added");
             Init();
 
         }
@@ -53,6 +55,7 @@ namespace FeedTheBeasts.Scripts
         internal void Init()
         {
             SetDeafualtValues();
+
         }
         private void SetDeafualtValues()
         {
@@ -70,33 +73,32 @@ namespace FeedTheBeasts.Scripts
         {
             switch (levelManager.CurrentLevel)
             {
-                case Levels.Level1:
-                    IntervalSpawnMin -= IntervalSpawnDecrese;
-                    IntervalSpawnMax -= IntervalSpawnDecrese;
-                    IntervalSpawnAggressiveMin -= IntervalAggresiveSpawnDecrease;
-                    IntervalSpawnAggressiveMax -= IntervalAggresiveSpawnDecrease;
-                    break;
                 case Levels.Level2:
-                    spawnManager.Stampede(levelManager.AnimalsLeft / 10);
+                    spawnManager.Stampede(levelManager.AnimalGoalPerLevel / 8);
                     IntervalSpawnMin -= IntervalSpawnDecrese;
                     IntervalSpawnMax -= IntervalSpawnDecrese;
                     IntervalSpawnAggressiveMin -= IntervalAggresiveSpawnDecrease;
                     IntervalSpawnAggressiveMax -= IntervalAggresiveSpawnDecrease;
                     break;
                 case Levels.Level3:
-                    spawnManager.Stampede(levelManager.AnimalsLeft / 7);
+                    spawnManager.Stampede(levelManager.AnimalGoalPerLevel / 6);
                     IntervalSpawnMin -= IntervalSpawnDecrese;
                     IntervalSpawnMax -= IntervalSpawnDecrese;
                     IntervalSpawnAggressiveMin -= IntervalAggresiveSpawnDecrease;
                     IntervalSpawnAggressiveMax -= IntervalAggresiveSpawnDecrease;
                     break;
                 case Levels.Level4:
-                    spawnManager.Stampede(levelManager.AnimalsLeft / 5);
+                    spawnManager.Stampede(levelManager.AnimalGoalPerLevel / 4);
                     IntervalSpawnMin -= IntervalSpawnDecrese;
                     IntervalSpawnMax -= IntervalSpawnDecrese;
                     IntervalSpawnAggressiveMin -= IntervalAggresiveSpawnDecrease;
                     IntervalSpawnAggressiveMax -= IntervalAggresiveSpawnDecrease;
                     break;
+                case Levels.Level5:
+                    spawnManager.StopSpawning(false);
+                    bossManager.SpawnBoss();
+                    break;
+
             }
 
         }

@@ -1,43 +1,37 @@
 using System.Collections;
+using Microsoft.Unity.VisualStudio.Editor;
 using UnityEngine;
+using UnityEngine.UI;
+using Image = UnityEngine.UI.Image;
 
 namespace FeedTheBeasts.Scripts
 {
     public class FruitBasket : MonoBehaviour
     {
-        [SerializeField] int totalResistance;
-        [SerializeField] float totalCooldown;
-        float cooldown;
-        int resistance;
+        //[SerializeField] int totalResistance;
+
+        [SerializeField] float totalTimeInScene;
+        [SerializeField] Image progressBar;
+
 
         void Awake()
         {
-            resistance = totalResistance;
-            cooldown = 0;
+            progressBar.fillAmount = 1;
+
+            StartCoroutine(FillBarCoroutine());
         }
 
-        void OnTriggerStay(Collider other)
+        IEnumerator FillBarCoroutine()
         {
-            if (other.CompareTag(Constants.ANIMAL_TAG) & cooldown == 0)
+            float currentTime = 0;
+            while (currentTime <= totalTimeInScene)
             {
-                StartCoroutine(ResistanceCoroutine());
-            }
-        }
-
-        IEnumerator ResistanceCoroutine()
-        {
-            resistance--;
-            cooldown = totalCooldown;
-            if (resistance == 0)
-            {
-                Destroy(gameObject);
-            }
-            while (cooldown >= 0)
-            {
-                cooldown -= Time.deltaTime;
+                currentTime += Time.deltaTime;
+                float progress = Mathf.Clamp01(currentTime / totalTimeInScene);
+                progressBar.fillAmount = 1 - progress;
                 yield return null;
             }
-            cooldown = 0;
+            Destroy(gameObject);
 
         }
     }

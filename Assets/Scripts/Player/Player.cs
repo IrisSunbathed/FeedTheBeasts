@@ -67,7 +67,7 @@ namespace FeedTheBeasts.Scripts
                 {
                     Lives++;
                   //  OnMaxScoreReached?.Invoke();
-                    scoreNextLevel += scoreThreshole;
+                    scoreNextLevel += scoreNewLife;
 
 
                 }
@@ -75,20 +75,20 @@ namespace FeedTheBeasts.Scripts
             }
         }
 
-        [SerializeField, Range(50, 1000)] int scoreThreshole;
+        [SerializeField, Range(50, 1000)] int scoreNewLife;
         int scoreNextLevel;
 
 
         void Awake()
         {
-            scoreNextLevel = scoreThreshole;
+            scoreNextLevel = scoreNewLife;
 
         }
 
         internal void Init()
         {
             previousNumberOfLifes = initialLives;
-            scoreNextLevel = scoreThreshole;
+            scoreNextLevel = scoreNewLife;
             Lives = initialLives;
             Score = 0;
         }

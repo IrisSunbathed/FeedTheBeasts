@@ -15,10 +15,12 @@ namespace FeedTheBeasts.Scripts
         {
             animalHunger = GetComponent<AnimalHunger>();
             FoodTypes preferredFood = animalHunger.GetPreferredFood();
+            if (foodContainer.childCount == 0)
+            {
+                GameObject goPreferredFood = GameCatalog.Instance.GetFoodGameObject(preferredFood);
 
-            GameObject goPreferredFood = GameCatalog.Instance.GetFoodGameObject(preferredFood);
-
-            Instantiate(goPreferredFood, foodContainer);
+                Instantiate(goPreferredFood, foodContainer);
+            }
 
         }
 
@@ -27,7 +29,7 @@ namespace FeedTheBeasts.Scripts
             Assert.IsNotNull(foodContainer, "ERROR: FoodContainer not added");
         }
 
-     
+
     }
 
 }

@@ -24,8 +24,8 @@ namespace FeedTheBeasts.Scripts
 
         public override void Init()
         {
+            StopAllCoroutines();
             canShoot = true;
-            currentProjectiles = projectilesPerRecharge;
             shootCount = 0;
         }
 
@@ -37,7 +37,7 @@ namespace FeedTheBeasts.Scripts
             }
             else
             {
-                return currentProjectiles - shootCount;
+                return projectilesPerRecharge - shootCount;
             }
 
         }
@@ -45,7 +45,7 @@ namespace FeedTheBeasts.Scripts
         public void IncreaseShootCount()
         {
             shootCount++;
-            if (shootCount == currentProjectiles)
+            if (shootCount == projectilesPerRecharge)
             {
                 StartCoroutine(ReloadCoroutine());
                 OnRechargeEvent?.Invoke(rechargingTime);
@@ -66,12 +66,6 @@ namespace FeedTheBeasts.Scripts
             {
                 OnPlantEvent?.Invoke(PlantingTime);
             }
-            //Pasar el tiempo necesario para plantar
-            //Mirar el tiempo que lleva pulsando el player controller
-            //El player controller, si llega al tiempo establecido llamar a WorldManager
-            //y decirle que se puede plantar
-            //Este que hable con el provier (this) y plant
-            //Al plantar IncreaseShootCount
         }
 
         public void TryReload()

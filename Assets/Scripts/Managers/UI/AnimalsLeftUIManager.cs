@@ -14,6 +14,8 @@ namespace FeedTheBeasts.Scripts
 
         float totalBar;
 
+        
+
 
         void Awake()
         {

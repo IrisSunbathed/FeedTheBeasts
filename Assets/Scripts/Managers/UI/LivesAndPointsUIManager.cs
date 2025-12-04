@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -14,8 +15,11 @@ namespace FeedTheBeasts.Scripts
         [SerializeField] TMP_Text txtScoreStr;
         [SerializeField] GameObject goLives;
         [SerializeField] RectTransform lifeContainer;
+        [SerializeField, Range(0.5f, 2.5f)] float sizeToAdd;
+        [SerializeField, Range(0.25f, .75f)] float increaseSizePerFrame;
         List<GameObject> lifeList;
         int previousNumberOfLifes;
+        float originalSize;
 
         void Awake()
         {
@@ -25,6 +29,7 @@ namespace FeedTheBeasts.Scripts
             Assert.IsNotNull(lifeContainer, "ERROR: life container is empty on UIManager");
 
             lifeList = new List<GameObject>();
+            originalSize = txtScore.fontSizeMax;
         }
 
 
@@ -79,36 +84,33 @@ namespace FeedTheBeasts.Scripts
             }
         }
 
-        internal void ManageScore(int points)
+        internal void ManageScore(int score)
         {
-
-            txtScore.text = points.ToString();
-            Debug.Log("test");
-            //if score > 0
-            StartCoroutine(ScoreTextEffect());
+            txtScore.text = score.ToString();
+            if (score > 0)
+            {
+                StartCoroutine(ScoreTextEffect());
+            }
         }
 
         IEnumerator ScoreTextEffect()
         {
-            float originalSize = txtScore.fontSizeMax;
-            float sizeToAdd = 5f;
-            Debug.Log($"originalSize {originalSize}   originalSize + sizeToAdd {originalSize + sizeToAdd}");
-
-            while (txtScore.fontSizeMax <= originalSize + sizeToAdd)
+            float currentSizeToAdd = sizeToAdd;
+            while (txtScore.fontSizeMax <= originalSize + currentSizeToAdd)
             {
-                txtScore.fontSizeMax += 0.25f;
+                txtScore.fontSizeMax += increaseSizePerFrame;
                 yield return null;
             }
 
             while (txtScore.fontSizeMax >= originalSize)
             {
-                txtScore.fontSizeMax -= 0.25f;
+                txtScore.fontSizeMax -= increaseSizePerFrame;
                 yield return null;
             }
             txtScore.fontSizeMax = originalSize;
 
         }
-        
+
     }
 
 }

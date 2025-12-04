@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using NUnit.Framework;
 using Unity.Mathematics;
 using UnityEngine;
@@ -6,14 +7,17 @@ using UnityEngine.UI;
 
 namespace FeedTheBeasts.Scripts
 {
-
-
+    [RequireComponent(typeof(UIAnimalScoreController), typeof(Collider), typeof(AnimalDisappearManager))]
     public class AnimalHunger : MonoBehaviour
     {
 
         [SerializeField] FoodTypes preferredFood;
         [SerializeField] float hungerTotal;
-        float currentHunger;
+        AnimalDisappearManager animalDisapearManager;
+        UIAnimalScoreController uIAnimalScoreController;
+
+        internal bool IsPreferred { get; private set; }
+        internal float CurrentHunger { get; private set; }
 
         // [SerializeField] Transform hungerBar;
         [SerializeField] Image hungerBar;
@@ -21,7 +25,7 @@ namespace FeedTheBeasts.Scripts
         int points;
         int multiplyier;
 
-        public event Action<int, Transform> OnPointsGainedEvent;
+        public event Action<int, Transform, bool> OnPointsGainedEvent;
         void Awake()
         {
             #region ASSERTIONS
@@ -29,39 +33,42 @@ namespace FeedTheBeasts.Scripts
             Assert.IsNotNull(hungerBar, "ERROR, Hunger Bar is empty");
             #endregion
             #region VARIABLES
+            uIAnimalScoreController = GetComponent<UIAnimalScoreController>();
+            animalDisapearManager = GetComponent<AnimalDisappearManager>();
 
             multiplyier = 1;
-            currentHunger = hungerTotal;
+            CurrentHunger = hungerTotal;
             #endregion
 
         }
 
         internal void FeedAnimal(string fedFood)
         {
+            IsPreferred = fedFood == preferredFood.ToString();
 
-            if (fedFood == preferredFood.ToString())
+            if (IsPreferred)
             {
-                currentHunger -= 2f;
+                CurrentHunger -= 2f;
                 multiplyier++;
             }
             else
             {
-                currentHunger -= 0.5f;
+                CurrentHunger -= 0.5f;
             }
-            float progress = Mathf.Clamp01(currentHunger / hungerTotal);
+            float progress = Mathf.Clamp01(CurrentHunger / hungerTotal);
             hungerBar.fillAmount = 1 * progress;
-
-            //x 100 = 1
-            //hungerlvel / 100
-            if (currentHunger <= 0)
+            points += feedPoints * multiplyier;
+            OnPointsGainedEvent?.Invoke(points, transform, false);
+            uIAnimalScoreController.AddMarker(points,IsPreferred);
+            if (CurrentHunger <= 0)
             {
-                points += feedPoints * multiplyier;
-                OnPointsGainedEvent?.Invoke(points, transform);
-
-                Destroy(gameObject);
+                OnPointsGainedEvent?.Invoke(points, transform, true);
+                animalDisapearManager.Disappear();
 
             }
         }
+
+
 
         internal FoodTypes GetPreferredFood()
         {

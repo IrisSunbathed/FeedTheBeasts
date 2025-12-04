@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using TMPro;
+using Unity.Burst.CompilerServices;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -37,13 +38,17 @@ namespace FeedTheBeasts.Scripts
         public event Action<int> OnSelectedItemInventoryEvent;
         public event Action<int> OnRechargeCompleteEvent;
 
+        [Header("Stampede elements")]
+
+        [SerializeField] TMP_Text txtInGameNotification;
+        Coroutine stampedeCoroutine;
+
 
         void Start()
         {
             camerasManager = CamerasManager.Instance;
             camerasManager.SwitchCameras(isGameplayCamera: false);
         }
-
         void Awake()
         {
             #region ASSERTIONS
@@ -55,28 +60,41 @@ namespace FeedTheBeasts.Scripts
             Assert.IsNotNull(animalsLeftUIManager, "ERROR: animalsLeftUIManager is empty on UIManager");
             Assert.IsTrue(imgRechargeBar.Length > 0, "ERROR: rechargeBar is empty on UIManager");
             #endregion
-         
-            CurrentProjectile = 0;
-            foreach (var item in imgRechargeBar)
-            {
-                item.fillAmount = 0;
-            }
-
             menuUI.StartGameEvent += StartGame;
-
             Init();
         }
         private void Init()
         {
 
+            CurrentProjectile = 0;
+            foreach (var item in imgRechargeBar)
+            {
+                item.fillAmount = 0;
+            }
+            StopAllCoroutines();
             ActivateElementsOnMenu(isActive: false);
             InventorySelect(1);
-           
+            StopAllCoroutines();
             menuUI.Init();
             animalsLeftUIManager.Init();
+            txtInGameNotification.text = string.Empty;
 
         }
 
+        private void StartGame()
+        {
+            ActivateElementsOnMenu(isActive: true);
+            camerasManager.SwitchCameras(isGameplayCamera: true);
+            canvas.renderMode = RenderMode.ScreenSpaceCamera;
+            animalsLeftUIManager.StartGame();
+            RestartGameEvent?.Invoke();
+            foreach (var item in imgRechargeBar)
+            {
+                item.fillAmount = 0;
+            }
+            StopAllCoroutines();
+            txtInGameNotification.text = string.Empty;
+        }
         internal void ManageLives(int lives)
         {
             livesAndPointsUIManager.ManageLives(lives);
@@ -134,6 +152,7 @@ namespace FeedTheBeasts.Scripts
             menuUI.GameOver();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
             camerasManager.SwitchCameras(isGameplayCamera: false);
+            StopWarningEffect();
         }
 
         private void ActivateElementsOnMenu(bool isActive)
@@ -143,7 +162,7 @@ namespace FeedTheBeasts.Scripts
                 sprite.gameObject.SetActive(isActive);
             }
 
-           livesAndPointsUIManager.ActivateElementsOnMenu( isActive);
+            livesAndPointsUIManager.ActivateElementsOnMenu(isActive);
 
             foreach (var item in imgRechargeBar)
             {
@@ -152,17 +171,6 @@ namespace FeedTheBeasts.Scripts
 
         }
 
-        private void StartGame()
-        {
-            ActivateElementsOnMenu(true);
-            camerasManager.SwitchCameras(isGameplayCamera: true);
-            canvas.renderMode = RenderMode.ScreenSpaceCamera;
-            animalsLeftUIManager.StartGame();
-
-            RestartGameEvent?.Invoke();
-        }
-
-    
         internal void RechargeBar(float rechargeTime)
         {
             StartCoroutine(RechargeCoroutine(rechargeTime));
@@ -171,10 +179,11 @@ namespace FeedTheBeasts.Scripts
         {
             float time = 0f;
             int currentReloadProjectile = CurrentProjectile;
-
-            while (time <= rechargeTime)
+         
+            while (time <= rechargeTime + .1f)
             {
                 time += Time.deltaTime;
+              
                 float progress = Mathf.Clamp01(time / rechargeTime);
                 imgRechargeBar[currentReloadProjectile].fillAmount = 1 * progress;
                 yield return null;
@@ -188,6 +197,62 @@ namespace FeedTheBeasts.Scripts
             menuUI.Win();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
             camerasManager.SwitchCameras(isGameplayCamera: false);
+            StopWarningEffect();
+        }
+
+        internal void InGameWarning(float stampedeTime, string textWarning)
+        {
+            StartCoroutine(InGameWarningWarningCoroutine(stampedeTime, textWarning));
+        }
+
+        IEnumerator InGameWarningWarningCoroutine(float textTime, string textWarning)
+        {
+            txtInGameNotification.text = textWarning;
+            stampedeCoroutine ??= StartCoroutine(TextTransparentEffect(txtInGameNotification));
+            yield return new WaitForSeconds(textTime);
+            StopWarningEffect();
+        }
+
+        private void StopWarningEffect()
+        {
+            if (stampedeCoroutine != null)
+            {
+                StopCoroutine(stampedeCoroutine);
+                stampedeCoroutine = null;
+            }
+            txtInGameNotification.text = "";
+            
+        }
+
+        IEnumerator TextTransparentEffect(TMP_Text txtToEffect)
+        {
+            Color originalColor = txtToEffect.color; //temp
+            float temp_a = originalColor.a; //okay
+            Color temp = txtToEffect.color;
+            while (txtToEffect.color.a >= 0f)
+            {
+                temp_a -= 0.007f;
+                temp.a = temp_a;
+                txtToEffect.color = temp;
+                yield return null;
+            }
+            temp_a = 0f;
+            temp.a = temp_a;
+            txtToEffect.color = temp;
+
+            while (txtToEffect.color.a <= 1f)
+            {
+                temp_a += 0.007f;
+                temp.a = temp_a;
+                txtToEffect.color = temp;
+                yield return null;
+            }
+            temp_a = 1f;
+            temp.a = temp_a;
+            txtToEffect.color = temp;
+            stampedeCoroutine = StartCoroutine(TextTransparentEffect(txtToEffect));
+
+
         }
     }
 }

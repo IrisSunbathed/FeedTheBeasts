@@ -53,19 +53,12 @@ namespace FeedTheBeasts.Scripts
 
         }
 
-        private void OnRechargeCompleCallBack(int currentProjectile)
-        {
-            // IRechargeable shootable = itemsInventory[currentProjectile].GetComponent<IShootable>();
-            IRechargeable rechargeable = itemsInventory[currentProjectile].GetComponent<IRechargeable>();
-            int bulletsLeft = GetBullets(itemsInventory[currentProjectile]);
-            rechargeable.IsRecharging = false;
-            txtBulletsLeft[currentProjectile].text = bulletsLeft.ToString();
-        }
-
         internal void Init()
         {
+
             OnSelectedItemInventoryCallBack(0);
 
+            DestroyObjectsInScene();
 
             for (int i = 0; i < itemsInventory.Length; i++)
             {
@@ -84,6 +77,27 @@ namespace FeedTheBeasts.Scripts
 
             uIManager.OnSelectedItemInventoryEvent += OnSelectedItemInventoryCallBack;
         }
+
+        private static void DestroyObjectsInScene()
+        {
+            foreach (var item in GameObject.FindGameObjectsWithTag(Constants.THROWABLE_TAG))
+            {
+                Destroy(item);
+            }
+            foreach (var item in GameObject.FindGameObjectsWithTag(Constants.PLANTABLE_TAG))
+            {
+                Destroy(item);
+            }
+        }
+
+        private void OnRechargeCompleCallBack(int currentProjectile)
+        {
+            IRechargeable rechargeable = itemsInventory[currentProjectile].GetComponent<IRechargeable>();
+            int bulletsLeft = GetBullets(itemsInventory[currentProjectile]);
+            rechargeable.IsRecharging = false;
+            txtBulletsLeft[currentProjectile].text = bulletsLeft.ToString();
+        }
+
 
         internal void StartGame()
         {
@@ -143,7 +157,6 @@ namespace FeedTheBeasts.Scripts
         {
             if (selectedGameObject != null)
             {
-
                 selectedGameObject.transform.Rotate(0, 0, rotationSpeed * Time.deltaTime);
             }
         }
@@ -171,13 +184,9 @@ namespace FeedTheBeasts.Scripts
             }
             if (selectedGameObject.TryGetComponent(out IPlantable plantable))
             {
-             //   bool flag = false;
                 plantable.TryPlant();
-                // if (!flag)
-                // {
-                //     flag = true;
-                //     SetBulletsToText();
-                // }
+                SetBulletsToText();
+        
             }
 
         }

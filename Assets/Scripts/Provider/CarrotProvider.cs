@@ -28,15 +28,15 @@ namespace FeedTheBeasts.Scripts
 
         public override void Init()
         {
+            StopAllCoroutines();
             canShoot = true;
-            currentProjectiles = projectilesPerRecharge;
             shootCount = 0;
         }
 
         public void IncreaseShootCount()
         {
             shootCount++;
-            if (shootCount == currentProjectiles)
+            if (shootCount == projectilesPerRecharge)
             {
                 StartCoroutine(ReloadCoroutine());
                 OnRechargeEvent?.Invoke(rechargingTime);
@@ -62,7 +62,7 @@ namespace FeedTheBeasts.Scripts
                 AudioSourceShoot.resource = audioClip;
                 // AudioSourceShoot.pitch = -3f;
                 AudioSourceShoot.Play();
-                if (shootCount == currentProjectiles)
+                if (shootCount == projectilesPerRecharge)
                 {
 
                     shootCooldown = rechargingTime;
@@ -93,7 +93,7 @@ namespace FeedTheBeasts.Scripts
             }
             else
             {
-                return currentProjectiles - shootCount;
+                return projectilesPerRecharge - shootCount;
             }
 
         }

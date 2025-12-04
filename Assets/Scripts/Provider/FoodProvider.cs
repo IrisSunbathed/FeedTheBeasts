@@ -12,14 +12,13 @@ namespace FeedTheBeasts.Scripts
         [SerializeField] protected float cooldown;
         [SerializeField] protected float shootCooldown;
         [SerializeField] protected int projectilesPerRecharge;
-        protected int currentProjectiles;
+        protected int shootCount;
         [SerializeField] protected ProjectilePool projectilePool;
 
         [SerializeField] FoodTypes foodTypes;
 
         public virtual void Init() {}
 
-        protected int shootCount;
 
         protected bool canShoot;
 

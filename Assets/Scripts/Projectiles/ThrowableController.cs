@@ -7,6 +7,7 @@ using UnityEngine;
 namespace FeedTheBeasts.Scripts
 {
     [RequireComponent(typeof(Rigidbody))]
+    [RequireComponent(typeof(MeshRenderer))]
     public class ThrowableController : MonoBehaviour
     {
 
@@ -16,12 +17,30 @@ namespace FeedTheBeasts.Scripts
         public float firingAngle = 45.0f;
         public float gravity = 9.8f;
 
+        MeshRenderer meshRenderer;
+        CamerasManager camerasManager;
+
+        float boneXBounds;
+
+        float boneXBoundsSign;
+        float lengthCam;
+        float orthographicSize;
+
         Rigidbody rbThrowable;
+
+        void Start()
+        {
+            camerasManager = CamerasManager.Instance;
+            lengthCam = camerasManager.GetCameraLength();
+            orthographicSize = camerasManager.OrthographicSize;
+        }
 
 
         void Awake()
         {
             rbThrowable = GetComponent<Rigidbody>();
+            meshRenderer = GetComponent<MeshRenderer>();
+            boneXBounds = meshRenderer.bounds.max.x;
             SetUp();
 
         }
@@ -43,6 +62,34 @@ namespace FeedTheBeasts.Scripts
             if (TryGetComponent(out StraightController straightController))
             {
                 straightController.Deactivate();
+            }
+        }
+
+        void Update()
+        {
+            GetXBounds();
+            GetZBounds();
+        }
+
+        private void GetZBounds()
+        {
+            if (transform.position.z < -orthographicSize
+              | transform.position.z > orthographicSize)
+            {
+                transform.position = new Vector3(transform.position.x
+                                               , transform.position.y, orthographicSize * Mathf.Sign(transform.position.z));
+            }
+        }
+
+        private void GetXBounds()
+        {
+            boneXBoundsSign = boneXBounds * Mathf.Sign(transform.position.x);
+            if (transform.position.x < -lengthCam + boneXBoundsSign
+                | transform.position.x > lengthCam + boneXBoundsSign)
+            {
+                transform.position = new Vector3(lengthCam
+                                                 * Mathf.Sign(transform.position.x) + boneXBoundsSign
+                                                , transform.position.y, transform.position.z);
             }
         }
 
@@ -81,11 +128,11 @@ namespace FeedTheBeasts.Scripts
 
                 yield return null;
             }
-            // if (transform.position.y < 0)
-            // {
-            //     transform.position = new Vector3(transform.position.x, 0);
-            // }
-            //rbThrowable.constraints = RigidbodyConstraints.FreezeAll;
+            if (transform.position.y < 0)
+            {
+                transform.position = new Vector3(transform.position.x, 0, transform.position.z);
+            }
+            rbThrowable.collisionDetectionMode = CollisionDetectionMode.Discrete;
         }
 
         internal void Deactivate()

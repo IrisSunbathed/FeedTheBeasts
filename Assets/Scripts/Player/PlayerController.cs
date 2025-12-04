@@ -28,6 +28,11 @@ namespace FeedTheBeasts.Scripts
                 {
                     HorizontalInput = 0;
                     VerticalInput = 0;
+                    runState.currentRunSpeed = 0;
+                }
+                if (canMove == false)
+                {
+                     runState.currentRunSpeed = runState.runSpeed;
                 }
             }
         }
@@ -126,8 +131,8 @@ namespace FeedTheBeasts.Scripts
                 GetAxisValues();
                 CheckOutOfBoundsX();
                 CheckOutOfBoundsZ();
-                rbPlayer.linearVelocity = new Vector3(HorizontalInput, 0, VerticalInput) * runState.runSpeed;
-                //add animator
+                rbPlayer.linearVelocity = new Vector3(HorizontalInput, 0, VerticalInput) * runState.currentRunSpeed;
+                
                 #endregion
                 #region Shoot
                 LookAtMousePosition();
@@ -136,12 +141,7 @@ namespace FeedTheBeasts.Scripts
 
                     pressedKeyTime = 0;
                     pressedKeyTime += Time.deltaTime;
-                    // if (pressedKeyTime < 0.2f)
-                    // {
 
-                    //     Vector3 screenPoint = camerasManager.GetScreenToWorldPoint(Input.mousePosition);
-                    //     foodSelectorManager.TryShootCurrentWeapon(screenPoint);
-                    // }
                     if (!hasShoot)
                     {
                         Vector3 screenPoint = camerasManager.GetScreenToWorldPoint(Input.mousePosition);
@@ -149,13 +149,8 @@ namespace FeedTheBeasts.Scripts
                         hasShoot = true;
                     }
 
-
                 }
-                // if (Input.GetKeyDown(KeyCode.Mouse0))
-                // {
-                //     Vector3 screenPoint = camerasManager.GetScreenToWorldPoint(Input.mousePosition);
-                //     foodSelectorManager.TryShootCurrentWeapon(screenPoint);
-                // }
+                
                 #endregion
                 #region Reload
                 if (Input.GetKeyDown(KeyCode.R))

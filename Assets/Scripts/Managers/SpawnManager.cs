@@ -16,9 +16,11 @@ namespace FeedTheBeasts.Scripts
         [SerializeField] GameObject goAggresiveAnimal;
         [Header("References")]
         [SerializeField] DifficultyManager difficultyManager;
+        [SerializeField] UIManager uIManager;
         LevelManager levelManager;
 
         [SerializeField] bool spawnAnimals;
+        [SerializeField] float stampedeTime;
 
         int numberSpawnAnimals;
 
@@ -57,11 +59,13 @@ namespace FeedTheBeasts.Scripts
         {
             Assert.IsTrue(goPrefabs.Length > 0, "ERROR: no game objects were added to the array in SpawnManager");
             Assert.IsNotNull(difficultyManager, "ERROR: difficultyManager was not added to SpawnManager");
+            Assert.IsNotNull(uIManager, "ERROR: uIManager was not added to SpawnManager");
         }
 
 
         internal void Init()
         {
+            numberSpawnAnimals = 0;
             ConfigureCameraExtremes();
             if (spawnAnimals)
             {
@@ -107,16 +111,18 @@ namespace FeedTheBeasts.Scripts
             OnAnimalSpawnEvent?.Invoke(lastAggresiveAnimalSpawned);
         }
 
-        internal void StopSpawning()
+        internal void StopSpawning(bool destroy = true)
         {
             // CancelInvoke(nameof(SpawnRandomAnimal));
             // CancelInvoke(nameof(SpawnAggresiveAnimal));
             StopAllCoroutines();
             coroutineAnimals = null;
             coroutineAggressiveAnimals = null;
+            if (destroy)
+            {
+                DestroyAnimals();
+            }
 
-
-            DestroyAnimals();
         }
 
         private static void DestroyAnimals()
@@ -129,10 +135,22 @@ namespace FeedTheBeasts.Scripts
 
         internal void Stampede(int numberOfAnimals)
         {
-            Debug.Log("Stampedeeee!");
             StopAllCoroutines();
+            StartCoroutine(StampedeWarningCoroutine(numberOfAnimals));
+
+        }
+
+        IEnumerator StampedeWarningCoroutine(int numberOfAnimals)
+        {
+            uIManager.InGameWarning(stampedeTime, Constants.STAMPEDE_TEXT);
+            yield return new WaitForSeconds(stampedeTime);
             coroutineAnimals = null;
             coroutineAggressiveAnimals = null;
+
+            if (numberOfAnimals > levelManager.AnimalsLeft)
+            {
+                numberOfAnimals = levelManager.AnimalsLeft;
+            }
 
             for (int i = 0; i <= numberOfAnimals; i++)
             {
@@ -173,7 +191,8 @@ namespace FeedTheBeasts.Scripts
                 myMethodDelegate();
             }
             numberSpawnAnimals++;
-            if (numberSpawnAnimals <= levelManager.feedAnimalsGoal)
+            levelManager.AnimalsLeft = levelManager.feedAnimalsGoal - numberSpawnAnimals;
+            if (numberSpawnAnimals <= levelManager.feedAnimalsGoal + 1)
             {
                 StartCoroutine(SpawnRandomAnimalCoroutine(0, intervalMin, intervalMax, SpawnRandomAnimal, true));
             }
