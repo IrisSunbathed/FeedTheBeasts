@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.Pool;
 
 namespace FeedTheBeasts.Scripts
 {
@@ -11,9 +12,11 @@ namespace FeedTheBeasts.Scripts
         [SerializeField] GameObject goEquippedProjectile;
         [SerializeField, Min(10)] int projectilePoolLength = 10;
 
-        MeshFilter meshNewProjectile;
+        MeshFilter meshNewProjectile; //The new controller would have its own 
         GameObject[] listProjectiles;
         string projectileTag;
+
+        
 
         int indexProjectile;
 
@@ -82,8 +85,6 @@ namespace FeedTheBeasts.Scripts
 
         private void SetUpController(GameObject projectile)
         {
-            
-
             if (projectile.TryGetComponent(out StraightController straightController))
             {
                 straightController.SetUpController();

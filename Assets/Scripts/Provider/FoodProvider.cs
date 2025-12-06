@@ -2,6 +2,7 @@ using System.Collections;
 using FeedTheBeasts.Scripts;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Pool;
 
 namespace FeedTheBeasts.Scripts
 {
@@ -14,6 +15,7 @@ namespace FeedTheBeasts.Scripts
         [SerializeField] protected int projectilesPerRecharge;
         protected int shootCount;
         [SerializeField] protected ProjectilePool projectilePool;
+
 
         [SerializeField] FoodTypes foodTypes;
 

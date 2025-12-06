@@ -28,7 +28,7 @@ public class IntroductionManager : MonoBehaviour
     void Start()
     {
         camerasManager = CamerasManager.Instance;
-        
+
         camerasManager.SwitchCameras(isGameplayCamera: true);
     }
     void Awake()
@@ -84,9 +84,9 @@ public class IntroductionManager : MonoBehaviour
         temp.a = temp_a;
         txtIntroduction[index].color = temp;
 
-        yield return new WaitForSeconds(timeBetweenTexts);
         if (index < txtIntroduction.Length - 1)
         {
+            yield return new WaitForSeconds(timeBetweenTexts);
             index++;
             StartCoroutine(TextEffectCourutine());
 
@@ -170,7 +170,7 @@ public class IntroductionManager : MonoBehaviour
     {
         if (canBeClickedAway && Input.GetMouseButtonDown(0))
         {
-               canBeClickedAway = false;
+            canBeClickedAway = false;
             StartCoroutine(MainMenuTransitionCoroutine());
 
         }
@@ -178,7 +178,7 @@ public class IntroductionManager : MonoBehaviour
 
     IEnumerator MainMenuTransitionCoroutine()
     {
-     
+
         index = 0;
         for (int i = 0; i < txtIntroduction.Length; i++)
         {

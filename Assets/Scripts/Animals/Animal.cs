@@ -114,7 +114,7 @@ namespace FeedTheBeasts.Scripts
                 SetMovingAnimation();
                 animalStatus = AnimalStatus.Fetching;
                 Vector3 newDestination = platable.transform.position;
-                SetDestination(newDestination.x, transform.position.y, newDestination.z);
+                 SetDestination(newDestination.x, transform.position.y, newDestination.z);
                 if (navMeshAgent.pathStatus == NavMeshPathStatus.PathComplete)
                 {
                     SetEatingAnimation();

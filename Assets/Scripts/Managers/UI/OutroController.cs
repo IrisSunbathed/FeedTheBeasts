@@ -102,9 +102,9 @@ namespace FeedTheBeasts.Scripts
             temp.a = temp_a;
             txtOutro[index].color = temp;
 
-            yield return new WaitForSeconds(timeBetweenTexts);
             if (index < txtOutro.Length - 1)
             {
+                yield return new WaitForSeconds(timeBetweenTexts);
                 index++;
                 Debug.Log($"OutroController index: {index}");
                 StartCoroutine(TextEffectCourutine());

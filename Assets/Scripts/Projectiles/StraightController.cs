@@ -11,12 +11,15 @@ namespace FeedTheBeasts.Scripts
 
         float currentSpeed;
 
+        LineRenderer lineRenderer;
+
 
 
 
         void Awake()
         {
             SetUpController();
+            
         }
 
         internal void SetUpController()

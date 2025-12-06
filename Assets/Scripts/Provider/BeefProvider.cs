@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Pool;
 
 namespace FeedTheBeasts.Scripts
 {
@@ -15,6 +16,8 @@ namespace FeedTheBeasts.Scripts
 
         GameCatalog gameCatalog;
 
+        ObjectPool<GameObject> objectPool;
+       
         void Start()
         {
             gameCatalog = GameCatalog.Instance;
