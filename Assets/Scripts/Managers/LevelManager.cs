@@ -20,10 +20,10 @@ namespace FeedTheBeasts.Scripts
         [SerializeField] WorldManager worldManager;
         [SerializeField] DifficultyManager difficultyManager;
         [SerializeField] BossManager bossManager;
+        [SerializeField] OutroController outroController;
         [SerializeField] float timeGameEnding;
-        int currentFedAnimals;
+        internal int currentFedAnimals;
         internal int EscapedAnimals { get; set; }
-        int remainingAnimals;
         internal int AnimalGoalPerLevel { get; private set; }
 
         public int AnimalsLeft { get; set; }
@@ -46,6 +46,7 @@ namespace FeedTheBeasts.Scripts
             Assert.IsNotNull(worldManager, "ERROR: worldManager is not added to FoodSelectorManager");
             Assert.IsNotNull(difficultyManager, "ERROR: difficultyManager is not added to FoodSelectorManager");
             Assert.IsNotNull(bossManager, "ERROR: bossManager is not added to FoodSelectorManager");
+            Assert.IsNotNull(outroController, "ERROR: outroController is not added to FoodSelectorManager");
 
 
             bossManager.OnBossDefeatedEvent += OnBossDefeatedCallBack;
@@ -57,7 +58,7 @@ namespace FeedTheBeasts.Scripts
                 }
                 Debug.LogWarning($"The number of animals has to fit the number of levels. The number of animals has been risen to: {feedAnimalsGoal}");
             }
-            AnimalGoalPerLevel = feedAnimalsGoal /( Enum.GetNames(typeof(Levels)).Length - 1);
+            AnimalGoalPerLevel = feedAnimalsGoal / (Enum.GetNames(typeof(Levels)).Length - 1);
             Init();
         }
 
@@ -69,8 +70,11 @@ namespace FeedTheBeasts.Scripts
 
         IEnumerator WaitUntilWin()
         {
-            yield return new WaitForSeconds(timeGameEnding);
+            
             worldManager.Win();
+            yield return new WaitForSeconds(timeGameEnding);
+            outroController.OutroStart();
+
         }
 
         internal void Init()
@@ -85,7 +89,6 @@ namespace FeedTheBeasts.Scripts
         internal void AnimalFed()
         {
             currentFedAnimals++;
-            remainingAnimals = feedAnimalsGoal - currentFedAnimals + EscapedAnimals;
             animalsLeftUIManager.AdjustBar(feedAnimalsGoal, currentFedAnimals + EscapedAnimals);
             Debug.Log($"AnimalGoalPerLevel: {AnimalGoalPerLevel} currentFedAnimals: {currentFedAnimals} EscapedAnimals: {EscapedAnimals} ");
             if ((currentFedAnimals + EscapedAnimals) % AnimalGoalPerLevel == 0)

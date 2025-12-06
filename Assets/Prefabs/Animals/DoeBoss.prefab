@@ -259,7 +259,7 @@ MonoBehaviour:
   animalType: 5
   doesAnimalStop: 0
   doesFetch: 0
-  doesEatBasket: 0
+  doesEatBasket: 1
   doesTurn: 0
   timeTransitionMovement: 5
 --- !u!114 &6948055457727950637
@@ -316,6 +316,7 @@ MonoBehaviour:
   preferredFood: 0
   hungerTotal: 5
   hungerBar: {fileID: 7128366042297941516}
+  isBoss: 0
   feedPoints: 5
 --- !u!114 &4847110373048944030
 MonoBehaviour:

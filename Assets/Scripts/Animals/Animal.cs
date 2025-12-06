@@ -176,7 +176,7 @@ namespace FeedTheBeasts.Scripts
             SetMovingAnimation();
         }
 
-        private void SetEatingAnimation()
+        internal void SetEatingAnimation()
         {
             animalStatus = AnimalStatus.Stopped;
             animator.SetBool(Constants.ANIM_BOOL_EAT, true);

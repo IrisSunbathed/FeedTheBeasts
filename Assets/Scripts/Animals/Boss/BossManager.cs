@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.Animations;
 
 namespace FeedTheBeasts.Scripts
 {
@@ -13,6 +14,7 @@ namespace FeedTheBeasts.Scripts
         [SerializeField] Player player;
         [SerializeField] AnimalsLeftUIManager animalsLeftUIManager;
         [SerializeField] MusicManager musicManager;
+         BossController bossController;
 
         LevelManager levelManager;
         AnimalHunger animalHunger;
@@ -43,7 +45,7 @@ namespace FeedTheBeasts.Scripts
         }
         internal void SpawnBoss()
         {
-            musicManager.StopMusic();
+            musicManager.FadeCurrentMusic(0,2f);
             uIManager.InGameWarning(spawnTime, Constants.SPAWN_MOOSE_TEXT);
             StartCoroutine(SpawningWaitingTime());
         }
@@ -58,10 +60,12 @@ namespace FeedTheBeasts.Scripts
                                       camerasManager.UpperLimitCamera + offset * -Mathf.Sign(camerasManager.UpperLimitCamera));
 
             spawnedBoss = Instantiate(goBoss, spawnPosition, goBoss.transform.rotation);
+
             musicManager.PlayMusic(MusicThemes.Boss);
+            musicManager.FadeCurrentMusic(1, 2f);
             animalHunger = spawnedBoss.GetComponent<AnimalHunger>();
             animalsLeftUIManager.BossHungerSetUp(animalHunger);
-            BossController bossController = spawnedBoss.GetComponent<BossController>();
+            bossController = spawnedBoss.GetComponent<BossController>();
             bossController.idleStateBoss.OnSpawnEvent += OnSpawnCallBack;
             isSpawned = true;
 
@@ -85,7 +89,10 @@ namespace FeedTheBeasts.Scripts
         {
             if (isSpawned && animalHunger.CurrentHunger <= 0)
             {
+                PlayerController playerController = player.GetComponent<PlayerController>();
+                playerController.CanMove = false;
                 OnBossDefeatedEvent?.Invoke();
+                bossController.IsFed();
                 isSpawned = false;
             }
         }

@@ -17,6 +17,7 @@ public class BossController : MonoBehaviour
     Animator animBoss;
 
     NavMeshAgent navMeshAgent;
+    bool isFed;
 
 
 
@@ -51,7 +52,23 @@ public class BossController : MonoBehaviour
 
     private void SelectState()
     {
-        bossStates = idleStateBoss;
+
+        if (!isFed)
+        {
+            bossStates = idleStateBoss;
+
+        }
+        else
+        {
+            bossStates = runStateBoss;
+
+        }
         bossStates.Enter();
+    }
+
+    internal void IsFed()
+    {
+        isFed = true;
+        bossStates.Exit();
     }
 }

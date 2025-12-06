@@ -72,10 +72,11 @@ namespace FeedTheBeasts.Scripts
             points += feedPoints * multiplyier;
             OnPointsGainedEvent?.Invoke(points, transform, false);
             uIAnimalScoreController.AddMarker(points, IsPreferred);
-            if (CurrentHunger <= 0)
+            if (CurrentHunger <= 0 & !isBoss)
             {
-                OnPointsGainedEvent?.Invoke(points, transform, true);
                 animalDisapearManager.Disappear();
+    
+                OnPointsGainedEvent?.Invoke(points, transform, true);
 
             }
         }

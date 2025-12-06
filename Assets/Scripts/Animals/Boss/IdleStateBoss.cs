@@ -28,6 +28,27 @@ public class IdleStateBoss : BossStates
         StartCoroutine(SummonCouroutine());
     }
 
+    public override void Exit()
+    {
+
+        IsStateComplete = true;
+        StopAllCoroutines();
+        GameObject[] goDoes = GameObject.FindGameObjectsWithTag(Constants.ANIMAL_TAG);
+        if (goDoes.Length > 0)
+        {
+            foreach (var item in goDoes)
+            {
+                if (item.TryGetComponent (out Animal agent))
+                {
+                    agent.SetEatingAnimation();
+
+                }
+            }
+
+        }
+
+    }
+
     IEnumerator SummonCouroutine()
     {
 

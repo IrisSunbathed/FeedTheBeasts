@@ -67,6 +67,7 @@ namespace FeedTheBeasts.Scripts
         }
         internal void Init()
         {
+                    Debug.Log("UImanager");
             camerasManager.SwitchCameras(isGameplayCamera: false);
             CurrentProjectile = 0;
             foreach (var item in imgRechargeBar)
@@ -198,9 +199,8 @@ namespace FeedTheBeasts.Scripts
         internal void Win()
         {
             ActivateElementsOnMenu(false);
-            menuUI.Win();
-            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            camerasManager.SwitchCameras(isGameplayCamera: false);
+            //menuUI.Win();
+            //canvas.renderMode = RenderMode.ScreenSpaceOverlay;
             StopWarningEffect();
         }
 

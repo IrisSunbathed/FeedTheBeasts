@@ -215,6 +215,7 @@ Transform:
   - {fileID: 2345364626053243227}
   - {fileID: 545513473465046349}
   - {fileID: 1349529049117125154}
+  - {fileID: 6940739285455748448}
   m_Father: {fileID: 1696129547468413364}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2035193403165802108
@@ -547,7 +548,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: -334000983
   m_Radius: 0.3
-  m_Speed: 1.2
+  m_Speed: 3
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -756,7 +757,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   preferredFood: 0
-  hungerTotal: 100
+  hungerTotal: 300
   hungerBar: {fileID: 1288127801584211139}
   isBoss: 1
   feedPoints: 50
@@ -963,6 +964,37 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.000000007450581, y: -0.008504167, z: 0.11530784}
     m_Extent: {x: 0.053151757, y: 0.18348412, z: 0.19990173}
   m_DirtyAABB: 0
+--- !u!1 &5463375177532731464
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6940739285455748448}
+  m_Layer: 0
+  m_Name: Position2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6940739285455748448
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5463375177532731464}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -1, z: -0, w: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -0.839}
+  m_LocalScale: {x: 0.06666667, y: 0.06666667, z: 0.06666667}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 600425386075746892}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5523254854001049245
 GameObject:
   m_ObjectHideFlags: 0
@@ -1185,6 +1217,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stopPoints:
   - {fileID: 1349529049117125154}
+  - {fileID: 6940739285455748448}
 --- !u!1 &6020331248722097644
 GameObject:
   m_ObjectHideFlags: 0
@@ -1754,6 +1787,10 @@ PrefabInstance:
       propertyPath: m_VertexColorAlwaysGammaSpace
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2029262196290803890, guid: 555646dd18ba3344283ccdf959ab7d4a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2692768848055931788, guid: 555646dd18ba3344283ccdf959ab7d4a, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1850,9 +1887,17 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7278503348861944764, guid: 555646dd18ba3344283ccdf959ab7d4a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8019038442174583574, guid: 555646dd18ba3344283ccdf959ab7d4a, type: 3}
       propertyPath: m_Name
       value: HungerBar
+      objectReference: {fileID: 0}
+    - target: {fileID: 8019038442174583574, guid: 555646dd18ba3344283ccdf959ab7d4a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

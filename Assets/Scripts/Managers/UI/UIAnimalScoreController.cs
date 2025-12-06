@@ -18,10 +18,14 @@ namespace FeedTheBeasts.Scripts
         [SerializeField] float transparencyPerFrame;
         [SerializeField] Color[] colorsText;
 
+        float minFontSize;
+
         int index;
 
         void Awake()
         {
+
+            minFontSize = txtScore[0].fontSize;
             Assert.IsTrue(txtScore.Length > 0, "ERROR: array is empty");
             index = 0;
 
@@ -75,6 +79,7 @@ namespace FeedTheBeasts.Scripts
         }
         IEnumerator TextEffectSize(int index)
         {
+            txtScore[index].fontSize = minFontSize;
             float addedSize = 0;
             float time = 0;
             while (time <= timeText)

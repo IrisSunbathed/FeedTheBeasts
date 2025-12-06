@@ -194,13 +194,13 @@ namespace FeedTheBeasts.Scripts
 
         internal void Win()
         {
-            playerController.WinState();
-            spawnManager.StopSpawning();
+            //playerController.WinState();
+            //spawnManager.StopSpawning();
             uIManager.Win();
             animalsLeftUIManager.Init();
             foodSelectorManager.Init();
-            DestroyAnimals();
-            musicManager.PlayMusic(MusicThemes.Win);
+            //DestroyAnimals();
+            musicManager.FadeCurrentMusic(0, 0.5f);;
             playerUIManager.CancelFill();
         }
 
@@ -208,6 +208,7 @@ namespace FeedTheBeasts.Scripts
         {
             if (hasScaped)
             {
+                levelManager.AnimalFed();
                 levelManager.EscapedAnimals++;
             }
             player.Lives--;
