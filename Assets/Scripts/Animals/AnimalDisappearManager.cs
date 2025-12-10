@@ -9,7 +9,7 @@ namespace FeedTheBeasts.Scripts
     [RequireComponent(typeof(Collider),typeof(NavMeshAgent))]
     public class AnimalDisappearManager : MonoBehaviour
     {
-        [SerializeField] GameObject canvas;
+        [SerializeField] UnityEngine.GameObject canvas;
         [SerializeField] SkinnedMeshRenderer meshRendererAnimal;
 
         [SerializeField] float timeDisappear;

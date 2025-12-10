@@ -15,6 +15,7 @@ namespace FeedTheBeasts.Scripts
         [SerializeField] protected int projectilesPerRecharge;
         protected int shootCount;
         [SerializeField] protected ProjectilePool projectilePool;
+            [SerializeField] protected Transform playerPosition;
 
 
         [SerializeField] FoodTypes foodTypes;

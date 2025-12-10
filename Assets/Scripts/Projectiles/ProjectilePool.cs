@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Pool;
@@ -9,15 +10,12 @@ namespace FeedTheBeasts.Scripts
    
     public class ProjectilePool : MonoBehaviour
     {
-        [SerializeField] GameObject goEquippedProjectile;
+        [SerializeField] UnityEngine.GameObject goEquippedProjectile;
         [SerializeField, Min(10)] int projectilePoolLength = 10;
 
         MeshFilter meshNewProjectile; //The new controller would have its own 
-        GameObject[] listProjectiles;
+        UnityEngine.GameObject[] listProjectiles;
         string projectileTag;
-
-        
-
         int indexProjectile;
 
         void Start()
@@ -34,7 +32,7 @@ namespace FeedTheBeasts.Scripts
             Assert.IsNotNull(goEquippedProjectile, "ERROR: goEquippedProjectile is not added");
         }
 
-        internal GameObject GetProjectile()
+        internal UnityEngine.GameObject GetProjectile()
         {
             var projectile = listProjectiles[indexProjectile];
 
@@ -47,7 +45,7 @@ namespace FeedTheBeasts.Scripts
             return projectile;
         }
 
-        private void ConfigureProjectile(GameObject projectile)
+        private void ConfigureProjectile(UnityEngine.GameObject projectile)
         {
             projectile.SetActive(true);
             SetTransform(projectile);
@@ -56,7 +54,7 @@ namespace FeedTheBeasts.Scripts
             projectile.tag = projectileTag;
 
         }
-        private ThrowableController ConfigureThrowable(GameObject projectile)
+        private ThrowableController ConfigureThrowable(UnityEngine.GameObject projectile)
         {
             projectile.SetActive(true);
 
@@ -75,7 +73,7 @@ namespace FeedTheBeasts.Scripts
         }
 
 
-        private void SetMesh(GameObject projectile)
+        private void SetMesh(UnityEngine.GameObject projectile)
         {
             MeshFilter meshProjectile = projectile.GetComponent<MeshFilter>();
             meshProjectile.sharedMesh = meshNewProjectile.sharedMesh;
@@ -83,7 +81,7 @@ namespace FeedTheBeasts.Scripts
             // meshFilter.materials[0] =
         }
 
-        private void SetUpController(GameObject projectile)
+        private void SetUpController(UnityEngine.GameObject projectile)
         {
             if (projectile.TryGetComponent(out StraightController straightController))
             {
@@ -95,7 +93,7 @@ namespace FeedTheBeasts.Scripts
             }
         }
 
-        private void SetTransform(GameObject projectile)
+        private void SetTransform(UnityEngine.GameObject projectile)
         {
             projectile.transform.SetPositionAndRotation(transform.position, transform.rotation);
             projectile.transform.localScale = goEquippedProjectile.transform.localScale;
@@ -103,20 +101,18 @@ namespace FeedTheBeasts.Scripts
 
         private void CreateProjectiles()
         {
-            listProjectiles = new GameObject[projectilePoolLength];
+            listProjectiles = new UnityEngine.GameObject[projectilePoolLength];
 
             for (int i = 0; i < listProjectiles.Length; i++)
             {
                 listProjectiles[i] = Instantiate(goEquippedProjectile);
-
                 listProjectiles[i].SetActive(false);
             }
         }
 
-        internal void SetProjectile(GameObject go)
+        internal void SetProjectile(UnityEngine.GameObject go)
         {
             goEquippedProjectile = go;
-
             meshNewProjectile = go.GetComponent<MeshFilter>();
             projectileTag = go.tag;
         }
@@ -135,8 +131,6 @@ namespace FeedTheBeasts.Scripts
             }
 
         }
-
-
     }
 
 }

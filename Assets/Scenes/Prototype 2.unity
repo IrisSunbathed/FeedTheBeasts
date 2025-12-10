@@ -6759,8 +6759,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2507083044729913169, guid: 98d249acfe35ae943bcde7ee5412cf47, type: 3}
       propertyPath: shootCooldown
-      value: 0.3
+      value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 2507083044729913169, guid: 98d249acfe35ae943bcde7ee5412cf47, type: 3}
+      propertyPath: playerPosition
+      value: 
+      objectReference: {fileID: 545455769271013513}
     - target: {fileID: 2507083044729913169, guid: 98d249acfe35ae943bcde7ee5412cf47, type: 3}
       propertyPath: projectilePool
       value: 
@@ -6781,6 +6785,18 @@ PrefabInstance:
       propertyPath: OutputAudioMixerGroup
       value: 
       objectReference: {fileID: 3488204075970785501, guid: d5808911c2c967e48b66ec8a193648af, type: 2}
+    - target: {fileID: 6148185988615231349, guid: 98d249acfe35ae943bcde7ee5412cf47, type: 3}
+      propertyPath: goBeef
+      value: 
+      objectReference: {fileID: 116614, guid: 2d5c59e93d09789489721c2f85a18513, type: 3}
+    - target: {fileID: 6148185988615231349, guid: 98d249acfe35ae943bcde7ee5412cf47, type: 3}
+      propertyPath: maxPoolSize
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 6148185988615231349, guid: 98d249acfe35ae943bcde7ee5412cf47, type: 3}
+      propertyPath: defaultCapacity
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8705,6 +8721,10 @@ PrefabInstance:
       value: 25
       objectReference: {fileID: 0}
     - target: {fileID: -2209012037210530496, guid: a5d3670188fafb749a4334e63d9c7ed4, type: 3}
+      propertyPath: foodTypes
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: -2209012037210530496, guid: a5d3670188fafb749a4334e63d9c7ed4, type: 3}
       propertyPath: fruitBasket
       value: 
       objectReference: {fileID: 4734980274019773793, guid: 48d5af6b3e7fd60448e37166e340fee2, type: 3}
@@ -8716,6 +8736,10 @@ PrefabInstance:
       propertyPath: shootCooldown
       value: 25
       objectReference: {fileID: 0}
+    - target: {fileID: -2209012037210530496, guid: a5d3670188fafb749a4334e63d9c7ed4, type: 3}
+      propertyPath: playerPosition
+      value: 
+      objectReference: {fileID: 545455769271013513}
     - target: {fileID: -2209012037210530496, guid: a5d3670188fafb749a4334e63d9c7ed4, type: 3}
       propertyPath: projectilePool
       value: 
@@ -13580,6 +13604,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1640583224}
     m_Modifications:
+    - target: {fileID: 1726631405012556491, guid: 925b56062c07bfc4098157b6b1f5eeba, type: 3}
+      propertyPath: goCarrot
+      value: 
+      objectReference: {fileID: 3032862633986404171, guid: 83b2a384d7ad4ba4693dc3163a2f67fd, type: 3}
+    - target: {fileID: 1726631405012556491, guid: 925b56062c07bfc4098157b6b1f5eeba, type: 3}
+      propertyPath: maxPoolSize
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 1726631405012556491, guid: 925b56062c07bfc4098157b6b1f5eeba, type: 3}
+      propertyPath: defaultCapacity
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 3032862633986404171, guid: 925b56062c07bfc4098157b6b1f5eeba, type: 3}
       propertyPath: m_Name
       value: CarrotProvider
@@ -13672,6 +13708,10 @@ PrefabInstance:
       propertyPath: shootCooldown
       value: 0.1
       objectReference: {fileID: 0}
+    - target: {fileID: 7564486464110549776, guid: 925b56062c07bfc4098157b6b1f5eeba, type: 3}
+      propertyPath: playerPosition
+      value: 
+      objectReference: {fileID: 545455769271013513}
     - target: {fileID: 7564486464110549776, guid: 925b56062c07bfc4098157b6b1f5eeba, type: 3}
       propertyPath: projectilePool
       value: 
@@ -14702,7 +14742,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 545455769271013512}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 46ec2e6e1ad7c124db1a2882dd2b9ab7, type: 3}
   m_Name: 
@@ -15201,6 +15241,10 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7038479944041443498, guid: 81c5c2544254eed43ba851a6ff340feb, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7038479944041443498, guid: 81c5c2544254eed43ba851a6ff340feb, type: 3}
       propertyPath: goEquippedProjectile
       value: 
       objectReference: {fileID: 3032862633986404171, guid: 610af8cf4415d844184035f90f50b9e8, type: 3}
@@ -15300,6 +15344,11 @@ PrefabInstance:
       addedObject: {fileID: 198535126}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 81c5c2544254eed43ba851a6ff340feb, type: 3}
+--- !u!4 &545455769271013513 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8476757112559083970, guid: 81c5c2544254eed43ba851a6ff340feb, type: 3}
+  m_PrefabInstance: {fileID: 545455769271013512}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1430128056984037591
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15402,6 +15451,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7336711901798719866, guid: ba1e2b509f268fc46867e451d5f69482, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5504877653165146925}
+    - targetCorrespondingSourceObject: {fileID: 7336711901798719866, guid: ba1e2b509f268fc46867e451d5f69482, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5504877653165146930}
   m_SourcePrefab: {fileID: 100100000, guid: ba1e2b509f268fc46867e451d5f69482, type: 3}
 --- !u!224 &5504877653164927772 stripped
 RectTransform:
@@ -15430,6 +15482,7 @@ MonoBehaviour:
   shootCooldown: 20
   projectilesPerRecharge: 1
   projectilePool: {fileID: 2106493367}
+  playerPosition: {fileID: 545455769271013513}
   foodTypes: 2
 --- !u!82 &5504877653165146926
 AudioSource:
@@ -15528,6 +15581,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &5504877653165146930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5504877653165146924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcd3904e591fcec49b43d48766577de2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultCapacity: 10
+  maxPoolSize: 100
+  goBone: {fileID: 704313763338401420, guid: bef3f213c45dde3499e1cf7c74eeaed0, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

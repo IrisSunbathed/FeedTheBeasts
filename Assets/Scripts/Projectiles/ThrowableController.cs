@@ -12,8 +12,8 @@ namespace FeedTheBeasts.Scripts
     {
 
 
-        int resistance;
-        float timeBetweenBites;
+        // int resistance;
+        // float timeBetweenBites;
         public float firingAngle = 45.0f;
         public float gravity = 9.8f;
 
@@ -52,17 +52,17 @@ namespace FeedTheBeasts.Scripts
 
             rbThrowable.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
 
-            if (!TryGetComponent(out DistractCollision _))
-            {
-                DistractCollision distractCollision = gameObject.AddComponent<DistractCollision>();
-                distractCollision.SetUp(resistance, timeBetweenBites);
+            // if (!TryGetComponent(out DistractCollision _))
+            // {
+            //     DistractCollision distractCollision = gameObject.AddComponent<DistractCollision>();
+            //     distractCollision.SetUp(resistance, timeBetweenBites);
 
-            }
+            // }
 
-            if (TryGetComponent(out StraightController straightController))
-            {
-                straightController.Deactivate();
-            }
+            // if (TryGetComponent(out StraightController straightController))
+            // {
+            //     straightController.Deactivate();
+            // }
         }
 
         void Update()
@@ -135,14 +135,14 @@ namespace FeedTheBeasts.Scripts
             rbThrowable.collisionDetectionMode = CollisionDetectionMode.Discrete;
         }
 
-        internal void Deactivate()
-        {
-            if (TryGetComponent(out DistractCollision distractCollision))
-            {
-                distractCollision.enabled = false;
-                Destroy(this);
-            }
-        }
+        // internal void Deactivate()
+        // {
+        //     if (TryGetComponent(out DistractCollision distractCollision))
+        //     {
+        //         distractCollision.enabled = false;
+        //         Destroy(this);
+        //     }
+        // }
     }
 
 }

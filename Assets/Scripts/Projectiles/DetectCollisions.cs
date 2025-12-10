@@ -14,6 +14,7 @@ namespace FeedTheBeasts.Scripts
 {
     [RequireComponent(typeof(MeshFilter), typeof(AudioSource), typeof(MeshRenderer))]
     [RequireComponent(typeof(Collider))]
+    [RequireComponent(typeof(StraightProjectile))]
     public class DetectCollisions : MonoBehaviour
     {
         AudioSource audioSource;
@@ -25,7 +26,6 @@ namespace FeedTheBeasts.Scripts
             audioSource = GetComponent<AudioSource>();
             meshRenderer = GetComponent<MeshRenderer>();
             colAnimal = GetComponent<Collider>();
-
         }
 
 
@@ -49,7 +49,11 @@ namespace FeedTheBeasts.Scripts
             ConfigureAudio(feedPoints.IsPreferred);
             meshRenderer.enabled = false;
             colAnimal.enabled = false;
+            StraightProjectile straightProjectile = GetComponent<StraightProjectile>();
+            straightProjectile.currentSpeed = 0;
+            
             yield return new WaitForSeconds(audioSource.clip.length);
+            straightProjectile.InvokeAction();
             gameObject.SetActive(false);
             meshRenderer.enabled = true;
             colAnimal.enabled = true;

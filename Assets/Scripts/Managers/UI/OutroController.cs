@@ -12,7 +12,7 @@ namespace FeedTheBeasts.Scripts
     {
         [SerializeField] TMP_Text[] txtOutro;
 
-        [SerializeField] GameObject background;
+        [SerializeField] UnityEngine.GameObject background;
         [SerializeField] float timeBetweenTexts;
         [SerializeField] FinalScoreManager finalScoreManager;
         [SerializeField] UIManager uIManager;

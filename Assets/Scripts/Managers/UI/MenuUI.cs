@@ -18,7 +18,7 @@ namespace FeedTheBeasts.Scripts
         [SerializeField] Button bttCredits;
         [SerializeField] Button bttExitGame;
         [Header("Credits references")]
-        [SerializeField] GameObject scrollArea;
+        [SerializeField] UnityEngine.GameObject scrollArea;
         [SerializeField] Button bttReturn;
         [SerializeField] Scrollbar scrollbar;
         AudioSource audioSource;

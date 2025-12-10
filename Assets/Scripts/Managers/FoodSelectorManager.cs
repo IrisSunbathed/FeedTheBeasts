@@ -14,8 +14,8 @@ namespace FeedTheBeasts.Scripts
     public class FoodSelectorManager : MonoBehaviour
     {
         [Header("Game Object lists")]
-        [SerializeField] GameObject[] itemsInventory;
-        [SerializeField] GameObject[] itemsProjectile;
+        [SerializeField] UnityEngine.GameObject[] itemsInventory;
+        [SerializeField] UnityEngine.GameObject[] itemsProjectile;
         [SerializeField] RectTransform[] itemsPosition;
         [Header("References")]
         [SerializeField] UIManager uIManager;
@@ -25,14 +25,14 @@ namespace FeedTheBeasts.Scripts
 
 
 
-        GameObject selectedGameObject;
+        UnityEngine.GameObject selectedGameObject;
 
         float pointObjective;
 
         float originalPositionY;
         int currentIndex;
 
-        public event Action<int, GameObject> OnChangeEquippedItemEvent;
+        public event Action<int, UnityEngine.GameObject> OnChangeEquippedItemEvent;
         [SerializeField] TMP_Text[] txtBulletsLeft;
 
         RectTransform rectTransform;
@@ -80,11 +80,12 @@ namespace FeedTheBeasts.Scripts
 
         private static void DestroyObjectsInScene()
         {
-            foreach (var item in GameObject.FindGameObjectsWithTag(Constants.THROWABLE_TAG))
+            foreach (var item in UnityEngine.GameObject.FindGameObjectsWithTag(Constants.THROWABLE_TAG))
             {
+
                 Destroy(item);
             }
-            foreach (var item in GameObject.FindGameObjectsWithTag(Constants.PLANTABLE_TAG))
+            foreach (var item in UnityEngine.GameObject.FindGameObjectsWithTag(Constants.PLANTABLE_TAG))
             {
                 Destroy(item);
             }
@@ -163,7 +164,7 @@ namespace FeedTheBeasts.Scripts
 
 
 
-        private int GetBullets(GameObject goProvider)
+        private int GetBullets(UnityEngine.GameObject goProvider)
         {
             IRechargeable rechargeable = goProvider.GetComponent<IRechargeable>();
             int bulletsLeft = rechargeable.GetBullets();

@@ -8,7 +8,7 @@ namespace FeedTheBeasts.Scripts
 {
     public class BossManager : MonoBehaviour
     {
-        [SerializeField] GameObject goBoss;
+        [SerializeField] UnityEngine.GameObject goBoss;
         [SerializeField] UIManager uIManager;
         [SerializeField] float spawnTime;
         [SerializeField] Player player;
@@ -19,7 +19,7 @@ namespace FeedTheBeasts.Scripts
         LevelManager levelManager;
         AnimalHunger animalHunger;
 
-        GameObject spawnedBoss;
+        UnityEngine.GameObject spawnedBoss;
         CamerasManager camerasManager;
 
         readonly float offset = 4f;

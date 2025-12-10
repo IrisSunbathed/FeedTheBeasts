@@ -15,7 +15,7 @@ public class IntroductionManager : MonoBehaviour
     [SerializeField] MenuUI uiMenu;
 
     [SerializeField] UIManager uIManager;
-    [SerializeField] GameObject background;
+    [SerializeField] UnityEngine.GameObject background;
     [SerializeField] float timeBetweenTexts;
     [SerializeField] float timeAudioFading;
     [SerializeField] MusicManager musicManager;

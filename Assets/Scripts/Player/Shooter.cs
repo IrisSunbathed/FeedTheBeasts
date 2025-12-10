@@ -17,7 +17,7 @@ namespace FeedTheBeasts.Scripts
         [SerializeField, Range(0.05f, 2f)] float shootCooldown;
         [SerializeField, Range(0.05f, 2f)] float rechageCooldown;
 
-        [SerializeField] GameObject[] foodProviders;
+        [SerializeField] UnityEngine.GameObject[] foodProviders;
 
 
         float coolDown;

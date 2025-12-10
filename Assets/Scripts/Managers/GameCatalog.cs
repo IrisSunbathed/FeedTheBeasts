@@ -86,7 +86,7 @@ namespace FeedTheBeasts.Scripts
             }
         }
 
-        internal GameObject GetFoodGameObject(FoodTypes preferredFood)
+        internal UnityEngine.GameObject GetFoodGameObject(FoodTypes preferredFood)
         {
             return foodTypeToItem[preferredFood].goFood;
         }

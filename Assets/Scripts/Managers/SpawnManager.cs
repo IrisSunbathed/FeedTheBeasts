@@ -12,8 +12,8 @@ namespace FeedTheBeasts.Scripts
     public class SpawnManager : MonoBehaviour
     {
         [Header("Prefabs to spawn")]
-        [SerializeField] GameObject[] goPrefabs;
-        [SerializeField] GameObject goAggresiveAnimal;
+        [SerializeField] UnityEngine.GameObject[] goPrefabs;
+        [SerializeField] UnityEngine.GameObject goAggresiveAnimal;
         [Header("References")]
         [SerializeField] DifficultyManager difficultyManager;
         [SerializeField] UIManager uIManager;
@@ -32,7 +32,7 @@ namespace FeedTheBeasts.Scripts
         float lengthCam;
 
         #endregion
-        public event Action<GameObject> OnAnimalSpawnEvent;
+        public event Action<UnityEngine.GameObject> OnAnimalSpawnEvent;
 
         int index;
 
@@ -40,8 +40,8 @@ namespace FeedTheBeasts.Scripts
 
         readonly float offset = 4f;
 
-        GameObject lastAnimalSpawned;
-        GameObject lastAggresiveAnimalSpawned;
+        UnityEngine.GameObject lastAnimalSpawned;
+        UnityEngine.GameObject lastAggresiveAnimalSpawned;
         delegate void MyMethodDelegate();
 
         Coroutine coroutineAnimals;
@@ -72,7 +72,7 @@ namespace FeedTheBeasts.Scripts
                 StartCoroutine(StartCouroutines());
             }
 
-            foreach (var animals in GameObject.FindGameObjectsWithTag(Constants.ANIMAL_TAG))
+            foreach (var animals in UnityEngine.GameObject.FindGameObjectsWithTag(Constants.ANIMAL_TAG))
             {
                 Destroy(animals);
             }
@@ -127,7 +127,7 @@ namespace FeedTheBeasts.Scripts
 
         private static void DestroyAnimals()
         {
-            foreach (var animals in GameObject.FindGameObjectsWithTag(Constants.ANIMAL_TAG))
+            foreach (var animals in UnityEngine.GameObject.FindGameObjectsWithTag(Constants.ANIMAL_TAG))
             {
                 Destroy(animals);
             }

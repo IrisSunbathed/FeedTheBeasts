@@ -9,7 +9,7 @@ namespace FeedTheBeasts.Scripts
     public class FruitProvider : FoodProvider, IRechargeable, IPlantable
     {
         [SerializeField] float plantingTime;
-        [SerializeField] GameObject fruitBasket;
+        [SerializeField] UnityEngine.GameObject fruitBasket;
         public float PlantingTime { get => plantingTime; set { plantingTime = value; } }
         public bool IsRecharging { get; set; }
 

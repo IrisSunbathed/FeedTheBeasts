@@ -10,20 +10,20 @@ namespace FeedTheBeasts.Scripts
     public class ParticleSystemManager : MonoBehaviour
     {
 
-        [SerializeField] GameObject smokeWhenFed;
+        [SerializeField] UnityEngine.GameObject smokeWhenFed;
         [SerializeField] Transform objectPool;
 
 
         int canvasIndex;
         [SerializeField] int smokeWhenFedPoolLimit;
 
-        List<GameObject> listSmokeWhenFed;
+        List<UnityEngine.GameObject> listSmokeWhenFed;
 
         void Awake()
         {
             Assert.IsNotNull(smokeWhenFed, "ERROR: particle system not added");
 
-            listSmokeWhenFed = new List<GameObject>();
+            listSmokeWhenFed = new List<UnityEngine.GameObject>();
             canvasIndex = 0;
             for (int i = 1; i <= smokeWhenFedPoolLimit; i++)
             {
@@ -34,7 +34,7 @@ namespace FeedTheBeasts.Scripts
 
         private void AddParticleToPool()
         {
-            GameObject newParticle = Instantiate(smokeWhenFed, objectPool); ;
+            UnityEngine.GameObject newParticle = Instantiate(smokeWhenFed, objectPool); ;
             newParticle.SetActive(false);
             listSmokeWhenFed.Add(newParticle);
         }
@@ -68,7 +68,7 @@ namespace FeedTheBeasts.Scripts
         }
 
 
-        IEnumerator SetInactiveCorroutime(GameObject smoke)
+        IEnumerator SetInactiveCorroutime(UnityEngine.GameObject smoke)
         {
             ParticleSystem particleSystem = smoke.GetComponent<ParticleSystem>();
             yield return new WaitForSeconds(particleSystem.main.startLifetimeMultiplier);

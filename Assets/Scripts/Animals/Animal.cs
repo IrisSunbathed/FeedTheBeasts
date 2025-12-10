@@ -107,7 +107,7 @@ namespace FeedTheBeasts.Scripts
 
         private void TryEatBasket()
         {
-            GameObject platable = GameObject.FindGameObjectWithTag(Constants.PLANTABLE_TAG);
+            UnityEngine.GameObject platable = UnityEngine.GameObject.FindGameObjectWithTag(Constants.PLANTABLE_TAG);
             if (platable != null)
             {
 
@@ -128,7 +128,7 @@ namespace FeedTheBeasts.Scripts
 
         protected void TryFetch()
         {
-            GameObject throwable = GameObject.FindGameObjectWithTag(Constants.THROWABLE_TAG);
+            UnityEngine.GameObject throwable = UnityEngine.GameObject.FindGameObjectWithTag(Constants.THROWABLE_TAG);
             if (throwable != null)
             {
 

@@ -13,11 +13,11 @@ namespace FeedTheBeasts.Scripts
     {
         [SerializeField] TMP_Text txtScore;
         [SerializeField] TMP_Text txtScoreStr;
-        [SerializeField] GameObject goLives;
+        [SerializeField] UnityEngine.GameObject goLives;
         [SerializeField] RectTransform lifeContainer;
         [SerializeField, Range(0.5f, 2.5f)] float sizeToAdd;
         [SerializeField, Range(0.25f, .75f)] float increaseSizePerFrame;
-        List<GameObject> lifeList;
+        List<UnityEngine.GameObject> lifeList;
         int previousNumberOfLifes;
         float originalSize;
 
@@ -28,7 +28,7 @@ namespace FeedTheBeasts.Scripts
             Assert.IsNotNull(goLives, "ERROR: lifes game object is empty on UIManager");
             Assert.IsNotNull(lifeContainer, "ERROR: life container is empty on UIManager");
 
-            lifeList = new List<GameObject>();
+            lifeList = new List<UnityEngine.GameObject>();
             originalSize = txtScore.fontSizeMax;
         }
 
@@ -47,7 +47,7 @@ namespace FeedTheBeasts.Scripts
                 for (int i = lifesToDestroy; i > 0; i--)
                 {
                     int lastIndex = lifeList.Count - 1;
-                    GameObject go = lifeList[lastIndex];
+                    UnityEngine.GameObject go = lifeList[lastIndex];
                     Destroy(go);
                     lifeList.RemoveAt(lastIndex);
                 }
@@ -58,7 +58,7 @@ namespace FeedTheBeasts.Scripts
             {
                 for (int i = previousNumberOfLifes; i < lives; i++)
                 {
-                    GameObject newLife = Instantiate(goLives, lifeContainer);
+                    UnityEngine.GameObject newLife = Instantiate(goLives, lifeContainer);
                     lifeList.Add(newLife);
                 }
 

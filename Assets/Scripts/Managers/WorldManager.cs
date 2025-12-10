@@ -25,7 +25,7 @@ namespace FeedTheBeasts.Scripts
         [SerializeField] AnimalsLeftUIManager animalsLeftUIManager;
         [SerializeField] PlayerUIManager playerUIManager;
         [Header("Others")]
-        [SerializeField] GameObject[] foodProviders;
+        [SerializeField] UnityEngine.GameObject[] foodProviders;
         [SerializeField] CameraShaker cameraShaker;
         [SerializeField] Shooter shooter;
         [SerializeField] ProjectilePool projectilePool;
@@ -100,7 +100,7 @@ namespace FeedTheBeasts.Scripts
 
         }
 
-        private void OnChangeEquippedItemCallback(int index, GameObject projectile)
+        private void OnChangeEquippedItemCallback(int index, UnityEngine.GameObject projectile)
         {
 
             projectilePool.SetProjectile(projectile);
@@ -156,14 +156,14 @@ namespace FeedTheBeasts.Scripts
 
         private static void DestroyAnimals()
         {
-            GameObject[] animals = GameObject.FindGameObjectsWithTag(Constants.ANIMAL_TAG);
+            UnityEngine.GameObject[] animals = UnityEngine.GameObject.FindGameObjectsWithTag(Constants.ANIMAL_TAG);
             foreach (var animal in animals)
             {
                 animal.SetActive(false);
             }
         }
 
-        private void OnAnimalSpawnCallBack(GameObject goAnimal)
+        private void OnAnimalSpawnCallBack(UnityEngine.GameObject goAnimal)
         {
             if (goAnimal.TryGetComponent(out DestroyOutOfBounds destroyOutOfBounds))
             {

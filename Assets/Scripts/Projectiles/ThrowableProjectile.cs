@@ -16,6 +16,8 @@ namespace FeedTheBeasts.Scripts
             meshRenderer = GetComponent<MeshRenderer>();
         }
 
+
+
         protected override void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag(Constants.ANIMAL_TAG))

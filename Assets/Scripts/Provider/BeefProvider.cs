@@ -6,6 +6,7 @@ using UnityEngine.Pool;
 namespace FeedTheBeasts.Scripts
 {
     [RequireComponent(typeof(AudioSource))]
+    [RequireComponent(typeof(BeefObjectPool))]
     public class BeefProvider : FoodProvider, IRechargeable, IShootable
 
     {
@@ -16,8 +17,10 @@ namespace FeedTheBeasts.Scripts
 
         GameCatalog gameCatalog;
 
-        ObjectPool<GameObject> objectPool;
-       
+        BeefObjectPool beefObjectPool;
+
+        //ObjectPool<GameObject> objectPool;
+
         void Start()
         {
             gameCatalog = GameCatalog.Instance;
@@ -27,6 +30,7 @@ namespace FeedTheBeasts.Scripts
         {
             Init();
             AudioSourceShoot = GetComponent<AudioSource>();
+            beefObjectPool = GetComponent<BeefObjectPool>();
         }
 
         public override void Init()
@@ -47,7 +51,9 @@ namespace FeedTheBeasts.Scripts
         {
             if (canShoot & !IsRecharging)
             {
-                projectilePool.GetProjectile();
+                // projectilePool.GetProjectile();
+                GameObject newPro = beefObjectPool.opStraightProjectile.Get();
+                newPro.transform.SetPositionAndRotation(playerPosition.position, playerPosition.rotation);
                 AudioClip audioClip = gameCatalog.GetFXClip(FXTypes.Shot);
                 AudioSourceShoot.resource = audioClip;
                 AudioSourceShoot.pitch = .5f;
@@ -101,6 +107,5 @@ namespace FeedTheBeasts.Scripts
         }
     }
 
-
-
+    
 }

@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace FeedTheBeasts.Scripts
 {
@@ -7,14 +9,31 @@ namespace FeedTheBeasts.Scripts
     [RequireComponent(typeof(MeshRenderer))]
     public class StraightProjectile : Projectile
     {
+
+        public event Action<StraightProjectile> OnInvisible;
+        CamerasManager camerasManager;
+        float projectileXBounds;
+
+        float projectileXBoundsSign;
+        float lengthCam;
+        float orthographicSize;
         void Start()
         {
             gameCatalog = GameCatalog.Instance;
+            camerasManager = CamerasManager.Instance;
+            lengthCam = camerasManager.GetCameraLength();
+            orthographicSize = camerasManager.OrthographicSize;
         }
         protected override void Awake()
         {
             audioSource = GetComponent<AudioSource>();
             meshRenderer = GetComponent<MeshRenderer>();
+            SetUpSpeed();
+            projectileXBounds = meshRenderer.bounds.max.x;
+        }
+
+        internal void SetUpSpeed()
+        {
             currentSpeed = speed;
         }
 
@@ -30,8 +49,34 @@ namespace FeedTheBeasts.Scripts
         void Update()
         {
             transform.Translate(currentSpeed * Time.deltaTime * Vector3.forward);
+            GetXBounds();
+            GetZBounds();
         }
 
+
+        private void GetZBounds()
+        {
+            if (transform.position.z < -orthographicSize
+              | transform.position.z > orthographicSize)
+            {
+                InvokeAction();
+            }
+        }
+
+        internal void InvokeAction()
+        {
+            OnInvisible?.Invoke(this);
+        }
+
+        private void GetXBounds()
+        {
+            projectileXBoundsSign = projectileXBounds * Mathf.Sign(transform.position.x);
+            if (transform.position.x < -lengthCam + projectileXBoundsSign
+                | transform.position.x > lengthCam + projectileXBoundsSign)
+            {
+                InvokeAction();
+            }
+        }
         IEnumerator AudioCoroutine(Collider other)
         {
             ConfigureAudio();
@@ -53,7 +98,12 @@ namespace FeedTheBeasts.Scripts
             AudioClip audioClip = gameCatalog.GetFXClip(FXTypes.ClickOnButton);
             audioSource.resource = audioClip;
             audioSource.Play();
+            OnInvisible?.Invoke(this);
         }
+
     }
+
+
+
 }
 

@@ -11,7 +11,6 @@ namespace FeedTheBeasts.Scripts
 
         float currentSpeed;
 
-        LineRenderer lineRenderer;
 
 
 
@@ -19,21 +18,21 @@ namespace FeedTheBeasts.Scripts
         void Awake()
         {
             SetUpController();
-            
+
         }
 
         internal void SetUpController()
         {
             SetSpeed();
             enabled = true;
-            if (!TryGetComponent(out DetectCollisions _))
-            {
-                gameObject.AddComponent<DetectCollisions>();
-            }
-            if (TryGetComponent(out ThrowableController throwableController))
-            {
-                throwableController.Deactivate();
-            }
+            // if (!TryGetComponent(out DetectCollisions _))
+            // {
+            //     gameObject.AddComponent<DetectCollisions>();
+            // }
+            // if (TryGetComponent(out ThrowableController throwableController))
+            // {
+            //     throwableController.Deactivate();
+            // }
         }
 
         internal void SetSpeed(float speedValue)
@@ -53,14 +52,19 @@ namespace FeedTheBeasts.Scripts
             transform.Translate(currentSpeed * Time.deltaTime * Vector3.forward);
         }
 
-        internal void Deactivate()
-        {
-            if (TryGetComponent(out DetectCollisions detectCollisions))
-            {
-                detectCollisions.enabled = false;
-                Destroy(this);
-            }
-        }
+        // internal void Deactivate()
+        // {
+        //     if (TryGetComponent(out DetectCollisions detectCollisions))
+        //     {
+        //         detectCollisions.enabled = false;
+        //         Destroy(this);
+        //     }
+        // }
+    }
+
+    public class CarrotController
+    {
+        
     }
 
 }

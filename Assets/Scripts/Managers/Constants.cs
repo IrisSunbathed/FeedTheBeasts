@@ -102,7 +102,8 @@ namespace FeedTheBeasts.Scripts
     {
         Carrot,
         Beef,
-        Bone
+        Bone,
+        FruitBaskets
     }
     public enum Levels
     {
@@ -116,7 +117,7 @@ namespace FeedTheBeasts.Scripts
     public class FoodItemTransparent
     {
         public FoodTypes foodTypes;
-        public GameObject goFood;
+        public UnityEngine.GameObject goFood;
 
     }
     [Serializable]

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace FeedTheBeasts.Scripts
@@ -7,16 +8,24 @@ namespace FeedTheBeasts.Scripts
     {
         public float speed;
 
-        protected float currentSpeed;
-        protected abstract void Awake();
+        internal float currentSpeed;
 
-        protected abstract void OnTriggerEnter(Collider other);
 
         protected GameCatalog gameCatalog;
         protected AudioSource audioSource;
 
         protected MeshRenderer meshRenderer;
 
+        protected TrailRenderer trailRenderer;
+
+
+        protected FoodTypes foodTypes;
+
+        protected abstract void Awake();
+        protected abstract void OnTriggerEnter(Collider other);
+
+
+        
     }
 }
 

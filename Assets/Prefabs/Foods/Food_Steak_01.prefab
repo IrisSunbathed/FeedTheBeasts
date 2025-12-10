@@ -14,8 +14,8 @@ GameObject:
   - component: {fileID: -5183782099642458527}
   - component: {fileID: 1099502106843469453}
   - component: {fileID: 1727590511419701088}
-  - component: {fileID: 2212317701846765735}
   - component: {fileID: 5408275389056638368}
+  - component: {fileID: 6311549923612250224}
   m_Layer: 0
   m_Name: Food_Steak_01
   m_TagString: Beef
@@ -151,19 +151,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9aedbbc997e399342ba466d5c283598d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &2212317701846765735
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 116614}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55d21733660b3f140882a34973c5751b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 7
 --- !u!82 &5408275389056638368
 AudioSource:
   m_ObjectHideFlags: 0
@@ -261,3 +248,16 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &6311549923612250224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 116614}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1175a2ae2021244384b6595734d746b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 7

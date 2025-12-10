@@ -17,7 +17,7 @@ namespace FeedTheBeasts.Scripts
             FoodTypes preferredFood = animalHunger.GetPreferredFood();
             if (foodContainer.childCount == 0)
             {
-                GameObject goPreferredFood = GameCatalog.Instance.GetFoodGameObject(preferredFood);
+                UnityEngine.GameObject goPreferredFood = GameCatalog.Instance.GetFoodGameObject(preferredFood);
 
                 Instantiate(goPreferredFood, foodContainer);
             }

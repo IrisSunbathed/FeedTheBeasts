@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 6613490232661296084}
   - component: {fileID: 3994419780388411900}
   - component: {fileID: -387507694937525322}
-  - component: {fileID: 3225440607660452766}
   - component: {fileID: 2971098075952774512}
   - component: {fileID: 5582410474859688460}
+  - component: {fileID: -4603887376789448452}
   m_Layer: 0
   m_Name: Food_Organic_Carrot
   m_TagString: Carrot
@@ -110,14 +110,14 @@ Rigidbody:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!65 &-387507694937525322
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -131,7 +131,7 @@ BoxCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
@@ -139,19 +139,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.14170074, y: 0.141707, z: 0.61012447}
   m_Center: {x: 0, y: 0.0708535, z: -0.000000059604645}
---- !u!114 &3225440607660452766
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3032862633986404171}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55d21733660b3f140882a34973c5751b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 20
 --- !u!114 &2971098075952774512
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -261,3 +248,16 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-4603887376789448452
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3032862633986404171}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1175a2ae2021244384b6595734d746b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 10

@@ -15,7 +15,7 @@ namespace FeedTheBeasts.Scripts
         public event Action<bool> OnLoseLifeEvent;
         void Awake()
         {
-            traPlayer = GameObject.FindWithTag(Constants.PLAYER_TAG).GetComponent<Transform>();
+            traPlayer = UnityEngine.GameObject.FindWithTag(Constants.PLAYER_TAG).GetComponent<Transform>();
             tag = Constants.ANIMAL_TAG;
 
         }

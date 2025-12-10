@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 
 public class IdleStateBoss : BossStates
 {
-    [SerializeField] GameObject goChilds;
+    [SerializeField] UnityEngine.GameObject goChilds;
 
     // [SerializeField] int summonRounds;
     [SerializeField, Range(5f, 15f)] float summonIntervalMin;
@@ -33,7 +33,7 @@ public class IdleStateBoss : BossStates
 
         IsStateComplete = true;
         StopAllCoroutines();
-        GameObject[] goDoes = GameObject.FindGameObjectsWithTag(Constants.ANIMAL_TAG);
+        UnityEngine.GameObject[] goDoes = UnityEngine.GameObject.FindGameObjectsWithTag(Constants.ANIMAL_TAG);
         if (goDoes.Length > 0)
         {
             foreach (var item in goDoes)
@@ -54,7 +54,7 @@ public class IdleStateBoss : BossStates
 
         for (int i = 0; i < spawnPositions.Length; i++)
         {
-            GameObject newDoe = Instantiate(goChilds, spawnPositions[i].position, quaternion.identity);
+            UnityEngine.GameObject newDoe = Instantiate(goChilds, spawnPositions[i].position, quaternion.identity);
             DestroyOutOfBounds destroyOutOfBounds = newDoe.GetComponent<DestroyOutOfBounds>();
             OnSpawnEvent?.Invoke(destroyOutOfBounds, true);
 
