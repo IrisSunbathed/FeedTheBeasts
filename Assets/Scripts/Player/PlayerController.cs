@@ -30,7 +30,7 @@ namespace FeedTheBeasts.Scripts
                     VerticalInput = 0;
                     runState.currentRunSpeed = 0;
                 }
-                if (canMove == false)
+                if (canMove == true)
                 {
                      runState.currentRunSpeed = runState.runSpeed;
                 }
@@ -58,8 +58,7 @@ namespace FeedTheBeasts.Scripts
         [Header("Shoot Properties")]
         [SerializeField] Shooter shooter;
         [SerializeField] FoodSelectorManager foodSelectorManager;
-        float pressedKeyTime;
-        float lookAngle;
+       float lookAngle;
         bool hasShoot;
 
         [Header("Get bounds")]
@@ -91,7 +90,6 @@ namespace FeedTheBeasts.Scripts
 
         void Awake()
         {
-            Assert.IsNotNull(shooter, "ERROR: Shooter not added to Player Controller");
             Assert.IsNotNull(foodSelectorManager, "ERROR: foodSelectorManager not added to Player Controller");
             #region GET COMPONENTS
             meshRenderer = GetComponent<MeshRenderer>();
@@ -139,8 +137,7 @@ namespace FeedTheBeasts.Scripts
                 if (Input.GetKey(KeyCode.Mouse0))
                 {
 
-                    pressedKeyTime = 0;
-                    pressedKeyTime += Time.deltaTime;
+                
 
                     if (!hasShoot)
                     {
@@ -164,7 +161,6 @@ namespace FeedTheBeasts.Scripts
 
             if (Input.GetKeyUp(KeyCode.Mouse0)/* & states == plantingState*/)
             {
-                pressedKeyTime = 0;
                 if (states == plantingState)
                 {
                     plantingState.Exit();
@@ -260,13 +256,6 @@ namespace FeedTheBeasts.Scripts
         internal States GetCurrentState()
         {
             return states;
-        }
-
-        internal void WinState()
-        {
-            CanMove = false;
-            states = winState;
-            states.Enter();
         }
 
         internal void SetPlantingState()

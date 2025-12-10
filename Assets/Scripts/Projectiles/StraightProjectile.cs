@@ -37,14 +37,14 @@ namespace FeedTheBeasts.Scripts
             currentSpeed = speed;
         }
 
-        protected override void OnTriggerEnter(Collider other)
-        {
-            if (other.CompareTag(Constants.ANIMAL_TAG))
-            {
-                StartCoroutine(AudioCoroutine(other));
+        // protected override void OnTriggerEnter(Collider other)
+        // {
+        //     if (other.CompareTag(Constants.ANIMAL_TAG))
+        //     {
+        //         StartCoroutine(AudioCoroutine(other));
 
-            }
-        }
+        //     }
+        // }
 
         void Update()
         {
@@ -77,19 +77,19 @@ namespace FeedTheBeasts.Scripts
                 InvokeAction();
             }
         }
-        IEnumerator AudioCoroutine(Collider other)
-        {
-            ConfigureAudio();
-            AnimalHunger feedPoints = other.GetComponent<AnimalHunger>();
-            feedPoints.FeedAnimal(tag);
-            meshRenderer.enabled = false;
-            yield return new WaitForSeconds(audioSource.clip.length);
+        // IEnumerator AudioCoroutine(Collider other)
+        // {
+        //     ConfigureAudio();
+        //     AnimalHunger feedPoints = other.GetComponent<AnimalHunger>();
+        //     feedPoints.FeedAnimal(tag);
+        //     meshRenderer.enabled = false;
+        //     yield return new WaitForSeconds(audioSource.clip.length);
 
-            gameObject.SetActive(false);
-            meshRenderer.enabled = true;
+        //     gameObject.SetActive(false);
+        //     meshRenderer.enabled = true;
 
 
-        }
+        // }
 
         private void ConfigureAudio()
         {

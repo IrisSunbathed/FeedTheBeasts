@@ -21,6 +21,8 @@ namespace FeedTheBeasts.Scripts
         int index;
         bool canBeClickedAway;
 
+        Coroutine fadeInAndOutCoroutine;
+
 
 
         void Start()
@@ -106,12 +108,11 @@ namespace FeedTheBeasts.Scripts
             {
                 yield return new WaitForSeconds(timeBetweenTexts);
                 index++;
-                Debug.Log($"OutroController index: {index}");
                 StartCoroutine(TextEffectCourutine());
             }
             else
             {
-                StartCoroutine(FadeInAndOut());
+                fadeInAndOutCoroutine = StartCoroutine(FadeInAndOut());
                 canBeClickedAway = true;
             }
         }
@@ -193,6 +194,7 @@ namespace FeedTheBeasts.Scripts
         {
             if (canBeClickedAway && Input.GetMouseButtonDown(0))
             {
+                StopCoroutine(fadeInAndOutCoroutine);
                 canBeClickedAway = false;
                 StartCoroutine(FinalScoreTransition());
 

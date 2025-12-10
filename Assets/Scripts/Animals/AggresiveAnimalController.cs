@@ -1,5 +1,6 @@
 using System;
 using FeedTheBeasts.Scripts;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Assertions;
@@ -21,11 +22,15 @@ namespace FeedTheBeasts.Scripts
         }
 
         // Update is called once per frame
-        protected override void Update()
+        public override void Update()
         {
             if (doesFetch)
             {
-                TryFetch();
+                if (!TryFetch())
+                {
+                    navMeshAgent.SetDestination(traPlayer.position);
+                }
+
             }
             if (animalStatus == AnimalStatus.Running)
             {

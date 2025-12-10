@@ -6,7 +6,7 @@ using UnityEngine.AI;
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(NavMeshAgent))]
-public class BossController : MonoBehaviour
+public class BossController : Animal
 {
 
     BossStates bossStates;
@@ -16,12 +16,11 @@ public class BossController : MonoBehaviour
     Rigidbody rbBoss;
     Animator animBoss;
 
-    NavMeshAgent navMeshAgent;
     bool isFed;
 
 
 
-    void Awake()
+   void Awake()
     {
         rbBoss = GetComponent<Rigidbody>();
         animBoss = GetComponent<Animator>();
@@ -39,7 +38,7 @@ public class BossController : MonoBehaviour
 
 
     // Update is called once per frame
-    void Update()
+    public override void Update()
     {
 
         if (bossStates.IsStateComplete)

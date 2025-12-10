@@ -14,7 +14,6 @@ namespace FeedTheBeasts.Scripts
         [SerializeField] Transform objectPool;
 
 
-        int canvasIndex;
         [SerializeField] int smokeWhenFedPoolLimit;
 
         List<UnityEngine.GameObject> listSmokeWhenFed;
@@ -24,7 +23,6 @@ namespace FeedTheBeasts.Scripts
             Assert.IsNotNull(smokeWhenFed, "ERROR: particle system not added");
 
             listSmokeWhenFed = new List<UnityEngine.GameObject>();
-            canvasIndex = 0;
             for (int i = 1; i <= smokeWhenFedPoolLimit; i++)
             {
                 AddParticleToPool();
@@ -41,6 +39,7 @@ namespace FeedTheBeasts.Scripts
 
         internal void SpawnParticles(Transform animalTransform)
         {
+            Debug.Log("Is in spawn particles");
             int activeParticles = -1;
             foreach (var smoke in listSmokeWhenFed)
             {
@@ -50,14 +49,16 @@ namespace FeedTheBeasts.Scripts
                     Vector3 newPosition = new Vector3(animalTransform.position.x,
                                                       smokeWhenFed.transform.position.y,
                                                       animalTransform.position.z);
-                    smoke.transform.position =newPosition;
+                    Debug.Log($"newPositionParticles: {newPosition}");
+                    smoke.transform.position = newPosition;
                     StartCoroutine(SetInactiveCorroutime(smoke));
-                    
+
                     break;
                 }
                 else
                 {
                     activeParticles++;
+                    Debug.Log($"Active Particles : {activeParticles}");
                 }
             }
             if (activeParticles == listSmokeWhenFed.Count)

@@ -17,16 +17,6 @@ namespace FeedTheBeasts.Scripts
         }
 
 
-
-        protected override void OnTriggerEnter(Collider other)
-        {
-            if (other.CompareTag(Constants.ANIMAL_TAG))
-            {
-                Debug.Log("Animal interaction with it");
-
-            }
-        }
-
         internal void SimulateProjectile(Vector3 target, Transform origin)
         {
             Vector3 newTarget = new Vector3(target.x, origin.position.y, target.z);

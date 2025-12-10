@@ -23,9 +23,9 @@ namespace FeedTheBeasts.Scripts
         [SerializeField] AnimalType animalType;
         [Header("Animal behaviour")]
         [SerializeField] bool doesAnimalStop;
-        [SerializeField] protected bool doesFetch;
-        [SerializeField] protected bool doesEatBasket;
-        [SerializeField] protected bool doesTurn;
+        [SerializeField] internal bool doesFetch;
+        [SerializeField] internal bool doesEatBasket;
+        [SerializeField] internal bool doesTurn;
         [SerializeField, Range(1f, 5f)] float timeTransitionMovement;
 
         AudioSource audioSource;
@@ -74,18 +74,24 @@ namespace FeedTheBeasts.Scripts
 
         }
 
-        protected virtual void Update()
+        public virtual void Update()
         {
 
             time += Time.deltaTime;
             if (doesFetch)
             {
-                TryFetch();
+                if (!TryFetch())
+                {
+                    SetDestination(transform.position.x, transform.position.y, destinationZ);
+                }
             }
 
             if (doesEatBasket)
             {
-                TryEatBasket();
+                if (!TryEatBasket())
+                {
+                    SetDestination(transform.position.x, transform.position.y, destinationZ);
+                }
             }
 
             if (doesTurn & animalStatus == AnimalStatus.Running)
@@ -105,7 +111,7 @@ namespace FeedTheBeasts.Scripts
             }
         }
 
-        private void TryEatBasket()
+        private bool TryEatBasket()
         {
             UnityEngine.GameObject platable = UnityEngine.GameObject.FindGameObjectWithTag(Constants.PLANTABLE_TAG);
             if (platable != null)
@@ -114,7 +120,7 @@ namespace FeedTheBeasts.Scripts
                 SetMovingAnimation();
                 animalStatus = AnimalStatus.Fetching;
                 Vector3 newDestination = platable.transform.position;
-                 SetDestination(newDestination.x, transform.position.y, newDestination.z);
+                SetDestination(newDestination.x, transform.position.y, newDestination.z);
                 if (navMeshAgent.pathStatus == NavMeshPathStatus.PathComplete)
                 {
                     SetEatingAnimation();
@@ -124,9 +130,10 @@ namespace FeedTheBeasts.Scripts
             {
                 SetMovingAnimation();
             }
+            return platable != null;
         }
 
-        protected void TryFetch()
+        protected bool TryFetch()
         {
             UnityEngine.GameObject throwable = UnityEngine.GameObject.FindGameObjectWithTag(Constants.THROWABLE_TAG);
             if (throwable != null)
@@ -151,7 +158,9 @@ namespace FeedTheBeasts.Scripts
             else
             {
                 SetMovingAnimation();
+
             }
+            return throwable != null;
         }
 
         IEnumerator BarkCoroutine()
@@ -181,6 +190,7 @@ namespace FeedTheBeasts.Scripts
             animalStatus = AnimalStatus.Stopped;
             animator.SetBool(Constants.ANIM_BOOL_EAT, true);
             animator.SetFloat(Constants.ANIM_FLOAT_SPEED, 0);
+            destinationZ = transform.position.z;
         }
 
         private void SetMovingAnimation()
@@ -205,13 +215,6 @@ namespace FeedTheBeasts.Scripts
 
         }
 
-    }
-
-    public class Moose : Animal
-    {
-        static bool IsDefeated { get; set; }
-
-        
     }
 
 }

@@ -14,7 +14,8 @@ namespace FeedTheBeasts.Scripts
         [SerializeField] Player player;
         [SerializeField] AnimalsLeftUIManager animalsLeftUIManager;
         [SerializeField] MusicManager musicManager;
-         BossController bossController;
+        [SerializeField] ParticleSystemManager particleSystemManager;
+        BossController bossController;
 
         LevelManager levelManager;
         AnimalHunger animalHunger;
@@ -41,11 +42,11 @@ namespace FeedTheBeasts.Scripts
             Assert.IsNotNull(musicManager, "Error: musicManager not added");
             Assert.IsNotNull(animalsLeftUIManager, "Error: animalsLeftUIManager not added");
             isSpawned = false;
-           
+
         }
         internal void SpawnBoss()
         {
-            musicManager.FadeCurrentMusic(0,2f);
+            musicManager.FadeCurrentMusic(0, 2f);
             uIManager.InGameWarning(spawnTime, Constants.SPAWN_MOOSE_TEXT);
             StartCoroutine(SpawningWaitingTime());
         }
@@ -71,14 +72,15 @@ namespace FeedTheBeasts.Scripts
 
         }
 
-        private void OnSpawnCallBack(DestroyOutOfBounds bounds, bool hasScaped)
+        private void OnSpawnCallBack(DestroyOutOfBounds bounds, bool hasScaped, AnimalHunger animalHunger)
         {
             bounds.OnLoseLifeEvent += OnLoseLifeCallBack;
+            animalHunger.OnPointsGainedEvent += OnPointsGainedCallBack;
         }
 
         private void OnLoseLifeCallBack(bool hasScaped)
         {
-           if (hasScaped)
+            if (hasScaped)
             {
                 levelManager.EscapedAnimals++;
             }
@@ -97,6 +99,23 @@ namespace FeedTheBeasts.Scripts
             }
         }
 
+        internal void GameOver()
+        {
+            StopAllCoroutines();
+        }
+        
+         private void OnPointsGainedCallBack(int points, Transform transform, bool isFed)
+        {
+            Debug.Log($"IsFed: {isFed}");
+            player.Score += points;
+            if (isFed)
+            {
+                levelManager.AnimalFed();
+                particleSystemManager.SpawnParticles(transform);
+            }
+
+
+        }
     }
 
 }

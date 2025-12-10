@@ -728,6 +728,7 @@ MonoBehaviour:
   doesAnimalStop: 1
   doesFetch: 0
   doesEatBasket: 1
+  doesTurn: 0
   timeTransitionMovement: 4.04
 --- !u!114 &7846792379734030962
 MonoBehaviour:
@@ -799,9 +800,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   preferredFood: 0
-  hungerTotal: 5
   hungerBar: {fileID: 9109823140604654567}
-  feedPoints: 5
+  hungerTotal: 5
+  feedPoints: 6
+  scaleEffectMax: 0.025
+  scaleTime: 0.1
+  isBoss: 0
 --- !u!114 &-1637831390365044415
 MonoBehaviour:
   m_ObjectHideFlags: 0

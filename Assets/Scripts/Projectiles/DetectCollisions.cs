@@ -40,7 +40,7 @@ namespace FeedTheBeasts.Scripts
             }
         }
 
-        
+
 
         IEnumerator AudioCoroutine(Collider other)
         {
@@ -51,12 +51,11 @@ namespace FeedTheBeasts.Scripts
             colAnimal.enabled = false;
             StraightProjectile straightProjectile = GetComponent<StraightProjectile>();
             straightProjectile.currentSpeed = 0;
-            
+
             yield return new WaitForSeconds(audioSource.clip.length);
             straightProjectile.InvokeAction();
-            gameObject.SetActive(false);
-            meshRenderer.enabled = true;
-            colAnimal.enabled = true;
+
+            GetComponentInChildren<TrailRenderer>().enabled = false;
         }
 
         private void ConfigureAudio(bool isPreferred)

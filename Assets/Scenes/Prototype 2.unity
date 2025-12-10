@@ -6768,7 +6768,7 @@ PrefabInstance:
     - target: {fileID: 2507083044729913169, guid: 98d249acfe35ae943bcde7ee5412cf47, type: 3}
       propertyPath: projectilePool
       value: 
-      objectReference: {fileID: 2106493367}
+      objectReference: {fileID: 0}
     - target: {fileID: 2507083044729913169, guid: 98d249acfe35ae943bcde7ee5412cf47, type: 3}
       propertyPath: rechargingTime
       value: 5
@@ -6937,14 +6937,13 @@ MonoBehaviour:
   musicManager: {fileID: 1497409074}
   animalsLeftUIManager: {fileID: 2070815273}
   playerUIManager: {fileID: 1608267277}
+  bossManager: {fileID: 1913409011}
   foodProviders:
   - {fileID: 656599978}
   - {fileID: 1898487901}
   - {fileID: 5504877653165146924}
   - {fileID: 2102806647}
   cameraShaker: {fileID: 534669907}
-  shooter: {fileID: 2106493368}
-  projectilePool: {fileID: 2106493367}
   fruitProvider: {fileID: 2102806650}
   plantingState: {fileID: 198535127}
 --- !u!1 &1073424318
@@ -8743,7 +8742,7 @@ PrefabInstance:
     - target: {fileID: -2209012037210530496, guid: a5d3670188fafb749a4334e63d9c7ed4, type: 3}
       propertyPath: projectilePool
       value: 
-      objectReference: {fileID: 2106493367}
+      objectReference: {fileID: 0}
     - target: {fileID: -2209012037210530496, guid: a5d3670188fafb749a4334e63d9c7ed4, type: 3}
       propertyPath: rechargingTime
       value: 25
@@ -9242,7 +9241,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95551fab34a1edc42b1f1b63a4158d3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  feedAnimalsGoal: 40
+  feedAnimalsGoal: 10
   animalsLeftUIManager: {fileID: 2070815273}
   worldManager: {fileID: 1051333406}
   difficultyManager: {fileID: 147059650}
@@ -13442,6 +13441,7 @@ MonoBehaviour:
   player: {fileID: 2106493369}
   animalsLeftUIManager: {fileID: 2070815273}
   musicManager: {fileID: 1497409074}
+  particleSystemManager: {fileID: 2033081567}
 --- !u!114 &1920430957 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8397471788762540283, guid: 81c5c2544254eed43ba851a6ff340feb, type: 3}
@@ -13705,6 +13705,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 3488204075970785501, guid: d5808911c2c967e48b66ec8a193648af, type: 2}
     - target: {fileID: 7564486464110549776, guid: 925b56062c07bfc4098157b6b1f5eeba, type: 3}
+      propertyPath: cooldown
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7564486464110549776, guid: 925b56062c07bfc4098157b6b1f5eeba, type: 3}
       propertyPath: shootCooldown
       value: 0.1
       objectReference: {fileID: 0}
@@ -13715,7 +13719,7 @@ PrefabInstance:
     - target: {fileID: 7564486464110549776, guid: 925b56062c07bfc4098157b6b1f5eeba, type: 3}
       propertyPath: projectilePool
       value: 
-      objectReference: {fileID: 2106493367}
+      objectReference: {fileID: 0}
     - target: {fileID: 7564486464110549776, guid: 925b56062c07bfc4098157b6b1f5eeba, type: 3}
       propertyPath: rechargingTime
       value: 3
@@ -13871,7 +13875,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d2c59e603fb6f240873b80e640f890b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  smokeWhenFed: {fileID: 1901299574266369574, guid: c0aa4cf01761fa3429b2b93552c69ca9, type: 3}
+  smokeWhenFed: {fileID: 194062, guid: dbbecdc703e30bd4d80555f3ff209f6d, type: 3}
   objectPool: {fileID: 1469525563}
   smokeWhenFedPoolLimit: 3
 --- !u!137 &2039488844 stripped
@@ -14736,28 +14740,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ca1341f7f1d9b642919bd81f9da2d78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &2106493367 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7038479944041443498, guid: 81c5c2544254eed43ba851a6ff340feb, type: 3}
-  m_PrefabInstance: {fileID: 545455769271013512}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 46ec2e6e1ad7c124db1a2882dd2b9ab7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &2106493368 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6926635688270682061, guid: 81c5c2544254eed43ba851a6ff340feb, type: 3}
-  m_PrefabInstance: {fileID: 545455769271013512}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 69aa8d695a509c84d9f3e585f129c01e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &2106493369 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2755231421789857954, guid: 81c5c2544254eed43ba851a6ff340feb, type: 3}
@@ -15240,6 +15222,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 6926635688270682061, guid: 81c5c2544254eed43ba851a6ff340feb, type: 3}
+      propertyPath: projectilePool
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 7038479944041443498, guid: 81c5c2544254eed43ba851a6ff340feb, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -15267,6 +15253,10 @@ PrefabInstance:
     - target: {fileID: 8369800015122073219, guid: 81c5c2544254eed43ba851a6ff340feb, type: 3}
       propertyPath: m_Layer
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8397471788762540283, guid: 81c5c2544254eed43ba851a6ff340feb, type: 3}
+      propertyPath: shooter
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 8397471788762540283, guid: 81c5c2544254eed43ba851a6ff340feb, type: 3}
       propertyPath: winState
@@ -15336,7 +15326,9 @@ PrefabInstance:
       propertyPath: m_FillOrigin
       value: 2
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7038479944041443498, guid: 81c5c2544254eed43ba851a6ff340feb, type: 3}
+    - {fileID: 6926635688270682061, guid: 81c5c2544254eed43ba851a6ff340feb, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 5212911945430482194, guid: 81c5c2544254eed43ba851a6ff340feb, type: 3}
@@ -15481,7 +15473,7 @@ MonoBehaviour:
   cooldown: 20
   shootCooldown: 20
   projectilesPerRecharge: 1
-  projectilePool: {fileID: 2106493367}
+  projectilePool: {fileID: 0}
   playerPosition: {fileID: 545455769271013513}
   foodTypes: 2
 --- !u!82 &5504877653165146926

@@ -28,6 +28,10 @@ namespace FeedTheBeasts.Scripts
         private void OnActionGet(GameObject projectile)
         {
             projectile.SetActive(true);
+            projectile.GetComponent<MeshRenderer>().enabled = true;
+            projectile.GetComponent<Collider>().enabled = true;
+            StraightProjectile straightProjectile = projectile.GetComponent<StraightProjectile>();
+            straightProjectile.SetUpSpeed();
             //projectile.transform.SetParent(transform, true);
         }
 

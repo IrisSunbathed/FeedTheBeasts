@@ -28,13 +28,13 @@ namespace FeedTheBeasts.Scripts
         public const string SPAWN_MOOSE_TEXT = "MOOSE INCOMING";
          public const string BOSS_BAR_TEXT = "BOSS HUNGER";
          
-        public const string INTRO_TEXT_1 = "Every day, deforestations leave hundreds of aniamls without food";
+        public const string INTRO_TEXT_1 = "Every day, deforestations leave hundreds of animals without food";
         public const string INTRO_TEXT_2 = "forcing them to come here, my farm";
         public const string INTRO_TEXT_3 = "in order to avoid chaos, i'll need to take measures";
         public const string INTRO_TEXT_4 = "i'll have to...";
         public const string OUTRO_TEXT_1 = "And so were the aniamls fed that day";
-        public const string OUTRO_TEXT_2 = "But the real struggle didn't disappear: the greedy deforestation still shakes inocent animal lifes";
-        public const string OUTRO_TEXT_3 = "Some problems are beyond our hands, but remember: you have a voice.";
+        public const string OUTRO_TEXT_2 = "But the real struggle didn't disappear: greedy deforestations still shake inocent animal lifes";
+        public const string OUTRO_TEXT_3 = "Some problems cannot be solved this easily, but remember: you have a voice.";
         public const string OUTRO_TEXT_4 = "Thank you for playing.";
 
 

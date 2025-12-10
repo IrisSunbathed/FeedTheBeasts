@@ -9,26 +9,16 @@ namespace FeedTheBeasts.Scripts
 {
     public class DistractCollision : MonoBehaviour
     {
-        [SerializeField] int resistance;
+        [SerializeField, Range(5, 15)] int resistance;
         [SerializeField] float timeBetweenBites;
+        float time = 0;
 
         public event Action<GameObject> OnWastedItem;
 
-        void Awake()
-        {
-            resistance = 5;
-        }
-        void OnTriggerEnter(Collider other)
-        {
-            if (other.CompareTag(Constants.ANIMAL_TAG))
-            {
-                StartCoroutine(DistractionCoroutine());
-            }
-        }
-
         void OnTriggerStay(Collider other)
         {
-            if (other.CompareTag(Constants.ANIMAL_TAG))
+            
+            if (other.CompareTag(Constants.ANIMAL_TAG) && other.GetComponent<Animal>().doesFetch & time == 0)
             {
                 StartCoroutine(DistractionCoroutine());
             }
@@ -36,16 +26,17 @@ namespace FeedTheBeasts.Scripts
 
         IEnumerator DistractionCoroutine()
         {
+            time += Time.deltaTime;
+
             yield return new WaitForSeconds(timeBetweenBites);
+            Debug.Log("Bone bitten");
             resistance--;
-            if (resistance >= 0)
-            {
-                StartCoroutine(DistractionCoroutine());
-            }
-            else
+            if (resistance == 0)
             {
                 OnWastedItem?.Invoke(gameObject);
             }
+
+            time = 0;
         }
 
         // internal void SetUp(int resistance, float timeBetweenBites)

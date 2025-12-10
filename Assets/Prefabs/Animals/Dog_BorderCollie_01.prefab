@@ -3620,9 +3620,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   preferredFood: 1
-  hungerTotal: 2
   hungerBar: {fileID: 8208699821032322923}
+  hungerTotal: 2
   feedPoints: 20
+  scaleEffectMax: 2
+  scaleTime: 0.1
+  isBoss: 0
 --- !u!114 &6834349451705819957
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3652,6 +3655,7 @@ MonoBehaviour:
   doesAnimalStop: 1
   doesFetch: 1
   doesEatBasket: 0
+  doesTurn: 0
   timeTransitionMovement: 3
 --- !u!114 &6016133951144797401
 MonoBehaviour:

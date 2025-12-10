@@ -1,19 +1,26 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using FeedTheBeasts.Scripts;
+using NUnit.Framework;
 using Unity.Mathematics;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using RangeAttribute = UnityEngine.RangeAttribute;
 
 public class IdleStateBoss : BossStates
 {
-    [SerializeField] UnityEngine.GameObject goChilds;
+    [SerializeField] GameObject goChilds;
 
     // [SerializeField] int summonRounds;
-    [SerializeField, Range(5f, 15f)] float summonIntervalMin;
-    [SerializeField, Range(10f, 25f)] float summonIntervalMax;
+    [SerializeField, Range(1f, 15f)] float summonIntervalMin;
+    [SerializeField, Range(5f, 25f)] float summonIntervalMax;
     [SerializeField] Transform[] spawnPositions;
-    public event Action<DestroyOutOfBounds, bool> OnSpawnEvent;
+    [SerializeField] WorldManager worldManager;
+    public event Action<DestroyOutOfBounds, bool, AnimalHunger> OnSpawnEvent;
+    int randomPositionInt = -1;
+
+  
 
     void OnValidate()
     {
@@ -33,12 +40,12 @@ public class IdleStateBoss : BossStates
 
         IsStateComplete = true;
         StopAllCoroutines();
-        UnityEngine.GameObject[] goDoes = UnityEngine.GameObject.FindGameObjectsWithTag(Constants.ANIMAL_TAG);
+        GameObject[] goDoes = GameObject.FindGameObjectsWithTag(Constants.ANIMAL_TAG);
         if (goDoes.Length > 0)
         {
             foreach (var item in goDoes)
             {
-                if (item.TryGetComponent (out Animal agent))
+                if (item.TryGetComponent(out Animal agent))
                 {
                     agent.SetEatingAnimation();
 
@@ -51,17 +58,54 @@ public class IdleStateBoss : BossStates
 
     IEnumerator SummonCouroutine()
     {
+        //randonNumber = take a random number between 1 and 4 -> number of spawn positions active
+        //for change i < randonNumber
+        //spawnPosition.position also random
 
-        for (int i = 0; i < spawnPositions.Length; i++)
+        //randomPositionInt = Random.Range(0, randomNumber)
+        //if usedPositions.Contains(randomPositionInt) -> randomPositionInt = Random.Range(0, randomNumber)
+        //List<int> = usedPositions.Add(randomPositionInt);
+
+        int randomNumber = Random.Range(2, spawnPositions.Length);
+        List<int> randomPositions = new List<int>();
+
+        for (int i = 0; i < randomNumber; i++)
         {
-            UnityEngine.GameObject newDoe = Instantiate(goChilds, spawnPositions[i].position, quaternion.identity);
-            DestroyOutOfBounds destroyOutOfBounds = newDoe.GetComponent<DestroyOutOfBounds>();
-            OnSpawnEvent?.Invoke(destroyOutOfBounds, true);
-
+            StartCoroutine(CofigRandomPositionCoroutine(randomNumber, randomPositions));
         }
+        randomPositions.Clear();
         float summonInterval = Random.Range(summonIntervalMin, summonIntervalMax);
         yield return new WaitForSeconds(summonInterval);
 
         StartCoroutine(SummonCouroutine());
+    }
+
+    IEnumerator CofigRandomPositionCoroutine(int randomNumber, List<int> randomPositions)
+    {
+        randomPositionInt = Random.Range(0, randomNumber);
+        if (!randomPositions.Contains(randomPositionInt))
+        {
+            randomPositions.Add(randomPositionInt);
+            GameObject newDoe = Instantiate(goChilds, spawnPositions[randomPositionInt].position, quaternion.identity);
+            DestroyOutOfBounds destroyOutOfBounds = newDoe.GetComponent<DestroyOutOfBounds>();
+            OnSpawnEvent?.Invoke(destroyOutOfBounds, true, newDoe.GetComponent<AnimalHunger>());
+        }
+        else
+        {
+            StartCoroutine(CofigRandomPositionCoroutine(randomNumber, randomPositions));
+        }
+        yield return null;
+    }
+
+    private void GetRandomPosition(int randomNumber, List<int> randomPositions)
+    {
+        randomPositionInt = Random.Range(0, randomNumber);
+        if (!randomPositions.Contains(randomPositionInt)) return;
+        else
+        {
+            GetRandomPosition(randomNumber, randomPositions);
+        }
+
+
     }
 }

@@ -25,6 +25,8 @@ public class IntroductionManager : MonoBehaviour
     CamerasManager camerasManager;
     int index;
 
+    Coroutine fadeInAndOutCoroutine;
+
     void Start()
     {
         camerasManager = CamerasManager.Instance;
@@ -48,7 +50,6 @@ public class IntroductionManager : MonoBehaviour
 
         SetUpTexts();
         StartCoroutine(TextEffectCourutine());
-        Debug.Log(index);
         uiMenu.SetActiveUIElements(false);
     }
 
@@ -124,7 +125,6 @@ public class IntroductionManager : MonoBehaviour
         temp_a = 1f;
         temp.a = temp_a;
         txtIntroduction[^1].color = temp;
-        txtIntroduction[^1].color = temp;
         yield return new WaitForSeconds(.5f);
         StartCoroutine(FadeInAndOut());
 
@@ -170,10 +170,21 @@ public class IntroductionManager : MonoBehaviour
     {
         if (canBeClickedAway && Input.GetMouseButtonDown(0))
         {
+
             canBeClickedAway = false;
+            //4StopCoroutine(fadeInAndOutCoroutine);
+            StopAllCoroutines();
             StartCoroutine(MainMenuTransitionCoroutine());
 
         }
+    }
+
+    private void SetTextTransparent()
+    {
+        float temp_a = 1f;
+        Color temp = txtIntroduction[^1].color;
+        temp.a = temp_a;
+        txtIntroduction[^1].color = temp;
     }
 
     IEnumerator MainMenuTransitionCoroutine()
@@ -186,7 +197,6 @@ public class IntroductionManager : MonoBehaviour
         }
         StartCoroutine(FadeOutBackground());
         yield return new WaitForSeconds(2f);
-        Debug.Log("Introduction manager");
         camerasManager.SwitchCameras(isGameplayCamera: false);
         background.SetActive(false);
         foreach (var item in txtIntroduction)

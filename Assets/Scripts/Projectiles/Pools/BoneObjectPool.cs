@@ -17,7 +17,8 @@ namespace FeedTheBeasts.Scripts
 
         private void OnPODestroy(GameObject projectile)
         {
-            Destroy(projectile);
+            
+            //Destroy(projectile);
         }
 
         private void OnRelease(GameObject projectile)
@@ -28,7 +29,6 @@ namespace FeedTheBeasts.Scripts
         private void OnActionGet(GameObject projectile)
         {
             projectile.SetActive(true);
-            //projectile.transform.SetParent(transform, true);
         }
 
         private GameObject OnCreateEvent()
@@ -45,13 +45,8 @@ namespace FeedTheBeasts.Scripts
 
         private void ReturnToObjectPool(GameObject instance)
         {
-            opThrowableObject.Release(gameObject);
+            opThrowableObject.Release(instance);
         }
     }
-
-
-
-
-
 }
 

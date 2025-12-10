@@ -36,7 +36,6 @@ namespace FeedTheBeasts.Scripts
         }
         internal void SwitchCameras(bool isGameplayCamera)
         {
-            Debug.Log("Test");
             mainCamera.gameObject.SetActive(isGameplayCamera);
             menuCamera.gameObject.SetActive(!isGameplayCamera);
         }

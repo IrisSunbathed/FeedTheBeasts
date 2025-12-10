@@ -22,7 +22,7 @@ namespace FeedTheBeasts.Scripts
         protected FoodTypes foodTypes;
 
         protected abstract void Awake();
-        protected abstract void OnTriggerEnter(Collider other);
+        //protected abstract void OnTriggerEnter(Collider other);
 
 
         
