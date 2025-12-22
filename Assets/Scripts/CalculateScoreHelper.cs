@@ -107,7 +107,6 @@ namespace FeedTheBeasts.Scripts
                 scoreUIManager.txtScore.text = finalResult.ToString();
             }
             SetExtraScore(0);
-
             hasCoroutineEnded = true;
             StopCoroutine(textEffectCoroutine);
             textEffectCoroutine = null;
@@ -177,7 +176,7 @@ namespace FeedTheBeasts.Scripts
         }
         IEnumerator CorrectRotationCoroutine(RectTransform rectTransform, TMP_Text score)
         {
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.25f);
             if (rectTransform.localRotation != originalRotation && score.fontSize != 10)
             {
                 rectTransform.localRotation = originalRotation;

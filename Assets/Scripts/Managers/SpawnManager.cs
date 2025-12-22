@@ -79,6 +79,7 @@ namespace FeedTheBeasts.Scripts
 
         private void SpawnRandomAnimal()
         {
+            numberSpawnAnimals++;
             index = Random.Range(0, goPrefabs.Length);
             float randomXValue = Random.Range(-lengthCam, lengthCam);
             Vector3 spawnPosition = new Vector3(randomXValue,
@@ -94,6 +95,7 @@ namespace FeedTheBeasts.Scripts
 
         private void SpawnAggresiveAnimal()
         {
+            numberSpawnAnimals++;
             float randomZValue = Random.Range(0, camerasManager.OrthographicSize);
             int randomXValue = Random.Range(0, 2);
 
@@ -110,8 +112,7 @@ namespace FeedTheBeasts.Scripts
 
         internal void StopSpawning(bool destroy = true)
         {
-            // CancelInvoke(nameof(SpawnRandomAnimal));
-            // CancelInvoke(nameof(SpawnAggresiveAnimal));
+            numberSpawnAnimals = 0;
             StopAllCoroutines();
             coroutineAnimals = null;
             coroutineAggressiveAnimals = null;
@@ -192,11 +193,19 @@ namespace FeedTheBeasts.Scripts
                 yield return new WaitForSeconds(interval);
                 myMethodDelegate();
             }
-            numberSpawnAnimals++;
+
             levelManager.AnimalsLeft = levelManager.feedAnimalsGoal - numberSpawnAnimals;
-            if (numberSpawnAnimals <= levelManager.feedAnimalsGoal + 1)
+            Debug.Log($"spawn animals: {numberSpawnAnimals} spawn animals per level: {levelManager.LevelAnimalGoal}");
+            if (numberSpawnAnimals < levelManager.LevelAnimalGoal)
             {
-                StartCoroutine(SpawnRandomAnimalCoroutine(0, intervalMin, intervalMax, SpawnRandomAnimal, true));
+                if (levelManager.LevelAnimalGoal - numberSpawnAnimals == 5)
+                {
+                    Stampede(5);
+                }
+                else
+                {
+                    StartCoroutine(SpawnRandomAnimalCoroutine(0, intervalMin, intervalMax, SpawnRandomAnimal, true));
+                }
             }
         }
 

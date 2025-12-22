@@ -34,7 +34,6 @@ namespace FeedTheBeasts.Scripts
             get => lives;
             set
             {
-                Debug.Log($"lives: {lives} maxLives: {maxLifes}");
                 lives = value;
                 if (lives <= maxLifes)
                 {

@@ -37,7 +37,6 @@ namespace FeedTheBeasts.Scripts
         internal void AdjustBar(int totalAnimals, int currentFedAnimals)
         {
             float progress = Mathf.Clamp01((float)currentFedAnimals / (float)totalAnimals);
-            Debug.Log($"totalAnimals: {totalAnimals} currentFedAnimals {currentFedAnimals} progress: {progress}");
             animalsLeftBar.fillAmount = TotalBar - progress;
             if (animalsLeftBar.fillAmount == 0)
             {

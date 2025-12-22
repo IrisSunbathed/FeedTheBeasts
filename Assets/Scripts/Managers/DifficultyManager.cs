@@ -74,21 +74,21 @@ namespace FeedTheBeasts.Scripts
             switch (levelManager.CurrentLevel)
             {
                 case Levels.Level2:
-                    spawnManager.Stampede(levelManager.AnimalGoalPerLevel / 8);
+                    spawnManager.Stampede(levelManager.LevelAnimalGoal / 8);
                     IntervalSpawnMin -= IntervalSpawnDecrese;
                     IntervalSpawnMax -= IntervalSpawnDecrese;
                     IntervalSpawnAggressiveMin -= IntervalAggresiveSpawnDecrease;
                     IntervalSpawnAggressiveMax -= IntervalAggresiveSpawnDecrease;
                     break;
                 case Levels.Level3:
-                    spawnManager.Stampede(levelManager.AnimalGoalPerLevel / 6);
+                    spawnManager.Stampede(levelManager.LevelAnimalGoal / 6);
                     IntervalSpawnMin -= IntervalSpawnDecrese;
                     IntervalSpawnMax -= IntervalSpawnDecrese;
                     IntervalSpawnAggressiveMin -= IntervalAggresiveSpawnDecrease;
                     IntervalSpawnAggressiveMax -= IntervalAggresiveSpawnDecrease;
                     break;
                 case Levels.Level4:
-                    spawnManager.Stampede(levelManager.AnimalGoalPerLevel / 4);
+                    spawnManager.Stampede(levelManager.LevelAnimalGoal / 4);
                     IntervalSpawnMin -= IntervalSpawnDecrese;
                     IntervalSpawnMax -= IntervalSpawnDecrese;
                     IntervalSpawnAggressiveMin -= IntervalAggresiveSpawnDecrease;
