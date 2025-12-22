@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6131622476542787328}
   - component: {fileID: 5582410474859688460}
   - component: {fileID: 7564486464110549776}
+  - component: {fileID: 1726631405012556491}
   m_Layer: 0
   m_Name: CarrotProvider
   m_TagString: Untagged
@@ -227,6 +228,22 @@ MonoBehaviour:
   shootCooldown: 0.3
   projectilesPerRecharge: 5
   projectilePool: {fileID: 0}
-  foodTypes: 0
-  carrotObjectPool: {fileID: 0}
   playerPosition: {fileID: 0}
+  foodTypes: 0
+  consecutiveShootsManager: {fileID: 0}
+--- !u!114 &1726631405012556491
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3032862633986404171}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 272df47891a48294eb101bee39ef943d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultCapacity: 10
+  maxPoolSize: 100
+  timeTrailReactivate: 0.01
+  goCarrot: {fileID: 0}

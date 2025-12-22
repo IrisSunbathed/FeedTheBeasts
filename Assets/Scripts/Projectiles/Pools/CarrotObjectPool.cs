@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -22,44 +23,51 @@ namespace FeedTheBeasts.Scripts
 
         private void OnRelease(GameObject projectile)
         {
-            projectile.SetActive(false);
-            projectile.GetComponent<MeshRenderer>().enabled = false;
-            projectile.GetComponent<Collider>().enabled = false;
-            projectile.GetComponentInChildren<TrailRenderer>().enabled = false;
+            EnableComponents(projectile, false);
             projectile.GetComponent<StraightProjectile>().currentSpeed = 0;
         }
 
         private void OnActionGet(GameObject projectile)
         {
-            EnableComponents(projectile);
+            EnableComponents(projectile, true);
             projectile.GetComponent<StraightProjectile>().SetUpSpeed();
-            //projectile.transform.SetParent(transform, true);
         }
 
-        private static void EnableComponents(GameObject projectile)
+        internal override void EnableComponents(GameObject projectile, bool areActive)
         {
-            projectile.SetActive(true);
-            projectile.GetComponent<MeshRenderer>().enabled = true;
-            projectile.GetComponent<Collider>().enabled = true;
-            projectile.GetComponentInChildren<TrailRenderer>().enabled = true;
+            projectile.SetActive(areActive);
+            projectile.GetComponent<MeshRenderer>().enabled = areActive;
+            projectile.GetComponent<Collider>().enabled = areActive;
+            if (!areActive)
+            {
+                projectile.GetComponentInChildren<TrailRenderer>().enabled = areActive;
+            }
+            else
+            {
+                StartCoroutine(EnableTrailRendererCoroutine(projectile, areActive));
+            }
+        }
+
+        IEnumerator EnableTrailRendererCoroutine(GameObject projectile, bool areActive)
+        {
+            yield return new WaitForSeconds(timeTrailReactivate);
+            projectile.GetComponentInChildren<TrailRenderer>().enabled = areActive;
         }
 
         private GameObject OnCreateEvent()
         {
             GameObject newProjectile = Instantiate(goCarrot, Vector3.zero, quaternion.identity);
 
-            StraightProjectile newStraightProjectile = newProjectile.GetComponent<StraightProjectile>();
+            DetectCollisions newStraightProjectile = newProjectile.GetComponent<DetectCollisions>();
 
             newStraightProjectile.OnInvisible += ReturnToObjectPool;
 
             return newProjectile;
         }
 
-        private void ReturnToObjectPool(StraightProjectile instance)
+        private void ReturnToObjectPool(GameObject instance)
         {
-            opStraightProjectile.Release(instance.gameObject);
-
-
+            opStraightProjectile.Release(instance);
         }
     }
 

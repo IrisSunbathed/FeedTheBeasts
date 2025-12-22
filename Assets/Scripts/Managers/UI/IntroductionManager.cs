@@ -51,6 +51,7 @@ public class IntroductionManager : MonoBehaviour
         SetUpTexts();
         StartCoroutine(TextEffectCourutine());
         uiMenu.SetActiveUIElements(false);
+        canBeClickedAway = true;
     }
 
     private void SetUpTexts()
@@ -95,7 +96,7 @@ public class IntroductionManager : MonoBehaviour
         else
         {
             StartCoroutine(FadeInAndOut());
-            canBeClickedAway = true;
+            
         }
     }
     IEnumerator FadeInAndOut()

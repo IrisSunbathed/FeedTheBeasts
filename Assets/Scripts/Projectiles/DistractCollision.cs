@@ -29,7 +29,6 @@ namespace FeedTheBeasts.Scripts
             time += Time.deltaTime;
 
             yield return new WaitForSeconds(timeBetweenBites);
-            Debug.Log("Bone bitten");
             resistance--;
             if (resistance == 0)
             {

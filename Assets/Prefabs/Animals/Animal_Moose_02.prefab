@@ -822,7 +822,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   preferredFood: 0
   hungerBar: {fileID: 1288127801584211139}
-  hungerTotal: 300
+  hungerTotal: 200
   feedPoints: 10
   scaleEffectMax: 2
   scaleTime: 0.1
@@ -858,6 +858,8 @@ MonoBehaviour:
   doesEatBasket: 0
   doesTurn: 0
   timeTransitionMovement: 1
+  destinationOffset: 5
+  timeWaitNewLocation: 5
   runStateBoss: {fileID: 9040480876825297289}
   idleStateBoss: {fileID: 8656160304536022205}
 --- !u!1 &4303266439207392003
@@ -1642,6 +1644,7 @@ MonoBehaviour:
   - {fileID: 545513473465046349}
   - {fileID: 5636491167121670350}
   - {fileID: 6816457134928493463}
+  worldManager: {fileID: 0}
 --- !u!1001 &5161870340785039493
 PrefabInstance:
   m_ObjectHideFlags: 0

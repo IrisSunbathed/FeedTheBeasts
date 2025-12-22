@@ -16,24 +16,22 @@ namespace FeedTheBeasts.Scripts
         [SerializeField] TMP_Text txtEscapedAnimals;
         [SerializeField] Button bttEnd;
         [Header("Other references")]
-        [SerializeField] Player player;
-        LevelManager levelManager;
+        [SerializeField] ScoreManager scoreManager;
+        [SerializeField] LevelManager levelManager;
         AudioSource audioSource;
         GameCatalog gameCatalog;
 
 
         void Start()
         {
-            levelManager = LevelManager.Instance;
             gameCatalog = GameCatalog.Instance;
-
-
         }
 
         void Awake()
         {
             Assert.IsNotNull(txtFinalScoreInt, "ERROR: txtScore is not added");
-            Assert.IsNotNull(player, "ERROR: player is not added");
+            Assert.IsNotNull(scoreManager, "ERROR: scoreManager is not added");
+            Assert.IsNotNull(levelManager, "ERROR: scoreManager is not added");
             audioSource = GetComponent<AudioSource>();
             bttEnd.onClick.AddListener(Exit);
 
@@ -41,20 +39,31 @@ namespace FeedTheBeasts.Scripts
 
         private void Exit()
         {
-            audioSource.PlayOneShot(gameCatalog.GetFXClip(FXTypes.ClickOnButton));
-            #if UNITY_EDITOR
+            AudioClip audioClip = gameCatalog.GetFXClip(FXTypes.ClickOnButton);
+            audioSource.PlayOneShot(audioClip);
+            StartCoroutine(QuitCoroutine(audioClip.length + .5f));
+        }
+        IEnumerator QuitCoroutine(float seconds)
+        {
+            yield return new WaitForSeconds(seconds);
+#if UNITY_EDITOR
             EditorApplication.ExitPlaymode();
-            #else
+#else
             Application.Quit();
-            #endif
+#endif
         }
 
         internal void Init()
         {
-            txtTotalFedAnimals.text = $"Fed Animals: {levelManager.currentFedAnimals}";
-            txtEscapedAnimals.text = $"Escaped Animals: {levelManager.EscapedAnimals}";
-            txtFinalScoreInt.text = $"Final Score: {player.Score}";
 
+
+            txtTotalFedAnimals.text = $"Total Fed Animals: {levelManager.CurrentFedAnimals}";
+            txtEscapedAnimals.text = $"Escpaed Animals: {levelManager.EscapedAnimals}";
+            //Max consecutive hits
+            //Fed animals without throwing out food
+            txtFinalScoreInt.text = $"Final score: {scoreManager.Score}";
+
+            
             TMP_Text[] texts = new TMP_Text[]
 
             {

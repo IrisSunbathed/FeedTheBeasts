@@ -25,9 +25,9 @@ namespace FeedTheBeasts.Scripts
 
         void Awake()
         {
-            Init();
             AudioSourceShoot = GetComponent<AudioSource>();
             boneObjectPool = GetComponent<BoneObjectPool>();
+            Init();
         }
 
         public override void Init()
@@ -35,6 +35,7 @@ namespace FeedTheBeasts.Scripts
             StopAllCoroutines();
             canShoot = true;
             shootCount = 0;
+            boneObjectPool.StopAllCoroutines();
         }
 
         public IEnumerator ReloadCoroutine()

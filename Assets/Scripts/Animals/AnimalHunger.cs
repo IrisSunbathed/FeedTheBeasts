@@ -21,7 +21,6 @@ namespace FeedTheBeasts.Scripts
         public float hungerTotal;
         public int feedPoints;
         int points;
-        int multiplyier;
         internal bool IsPreferred { get; private set; }
         [Header("Feed effect configuration")]
         [SerializeField] float scaleEffectMax;
@@ -45,7 +44,6 @@ namespace FeedTheBeasts.Scripts
             uIAnimalScoreController = GetComponent<UIAnimalScoreController>();
             animalDisapearManager = GetComponent<AnimalDisappearManager>();
 
-            multiplyier = 1;
             CurrentHunger = hungerTotal;
             #endregion
             defualtScale = transform.localScale;
@@ -55,11 +53,14 @@ namespace FeedTheBeasts.Scripts
         {
             IsPreferred = fedFood == preferredFood.ToString();
 
-            
+
+            if (CurrentHunger > 0f)
+            {
+
+
                 if (IsPreferred)
                 {
                     CurrentHunger -= 2f;
-                    multiplyier++;
                     Vector3 addedScale = new Vector3(scaleEffectMax, scaleEffectMax, scaleEffectMax);
                     transform.DOScale(transform.localScale + addedScale, scaleTime).OnComplete(OnDoScaleComplete);
                 }
@@ -73,8 +74,14 @@ namespace FeedTheBeasts.Scripts
 
                     }
                 }
+                HungerBarManagement();
+                points += feedPoints;
+                uIAnimalScoreController.AddMarker(points, IsPreferred);
+            }
+        }
 
-            
+        private void HungerBarManagement()
+        {
             float progress = Mathf.Clamp01(CurrentHunger / hungerTotal);
             if (isBoss)
             {
@@ -84,9 +91,6 @@ namespace FeedTheBeasts.Scripts
             {
                 hungerBar.fillAmount = 1 * progress;
             }
-            points += feedPoints * multiplyier;
-            OnPointsGainedEvent?.Invoke(points, transform, false);
-            uIAnimalScoreController.AddMarker(points, IsPreferred);
         }
 
         private void OnDoScaleComplete()
@@ -95,15 +99,15 @@ namespace FeedTheBeasts.Scripts
             if (CurrentHunger <= 0 & !isBoss & !isCompleted)
             {
 
+                animalDisapearManager.Disappear();
                 isCompleted = true;
                 OnPointsGainedEvent?.Invoke(points, transform, true);
-                animalDisapearManager.Disappear();
-                Debug.Log("Disappear");
 
             }
             else
             {
                 transform.DOScale(defualtScale, scaleTime);
+                OnPointsGainedEvent?.Invoke(points, transform, false);
 
             }
         }

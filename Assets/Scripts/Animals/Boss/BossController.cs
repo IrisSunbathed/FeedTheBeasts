@@ -67,7 +67,7 @@ public class BossController : Animal
 
     internal void IsFed()
     {
-        isFed = true;
         bossStates.Exit();
+        isFed = true;
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -17,18 +18,30 @@ namespace FeedTheBeasts.Scripts
 
         private void OnPODestroy(GameObject projectile)
         {
-            
-            //Destroy(projectile);
+            // Destroy(GameObject);
         }
 
         private void OnRelease(GameObject projectile)
         {
-            projectile.SetActive(false);
+            EnableComponents(projectile, false);
         }
 
         private void OnActionGet(GameObject projectile)
         {
-            projectile.SetActive(true);
+            EnableComponents(projectile, true);
+        }
+
+        internal override void EnableComponents(GameObject projectile, bool areActive)
+        {
+            projectile.SetActive(areActive);
+            projectile.GetComponent<MeshRenderer>().enabled = areActive;
+            projectile.GetComponent<Collider>().enabled = areActive;
+            StartCoroutine(EnableTrailRendererCoroutine(projectile, areActive));
+        }
+        IEnumerator EnableTrailRendererCoroutine(GameObject projectile, bool isActive)
+        {
+            yield return new WaitForSeconds(timeTrailReactivate);
+            projectile.GetComponentInChildren<TrailRenderer>().enabled = isActive;
         }
 
         private GameObject OnCreateEvent()

@@ -26,8 +26,10 @@ namespace FeedTheBeasts.Scripts
         public const string VICTORY_BUTTON_TEXT = "PLAY AGAIN!";
         public const string STAMPEDE_TEXT = "STAMPEDE INCOMING!";
         public const string SPAWN_MOOSE_TEXT = "MOOSE INCOMING";
-         public const string BOSS_BAR_TEXT = "BOSS HUNGER";
-         
+        public const string ANIMALS_LEFT_TEXT = "ANIMALS LEFT";
+        public const string BOSS_BAR_TEXT = "BOSS HUNGER";
+
+
         public const string INTRO_TEXT_1 = "Every day, deforestations leave hundreds of animals without food";
         public const string INTRO_TEXT_2 = "forcing them to come here, my farm";
         public const string INTRO_TEXT_3 = "in order to avoid chaos, i'll need to take measures";
@@ -62,7 +64,8 @@ namespace FeedTheBeasts.Scripts
     {
         Running,
         Fetching,
-        Stopped
+        Stopped,
+        Returning
     }
 
     public enum MusicThemes
@@ -92,7 +95,8 @@ namespace FeedTheBeasts.Scripts
         Shot,
         LoseLife,
         DogBone,
-        WrongFood
+        WrongFood,
+        Points
         // Wolf,
         // Cow,
         //Chicken

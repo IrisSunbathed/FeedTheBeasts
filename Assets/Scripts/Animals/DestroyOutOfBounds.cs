@@ -2,31 +2,33 @@ using System;
 using FeedTheBeasts.Scripts;
 using NUnit.Framework;
 using UnityEngine;
+using RangeAttribute = UnityEngine.RangeAttribute;
 
 namespace FeedTheBeasts.Scripts
 {
     [RequireComponent(typeof(MeshRenderer))]
     public class DestroyOutOfBounds : MonoBehaviour
     {
-        
-        Camera mainCam;
 
-        float upperLimitCamera;
+        [SerializeField, Range(0.5f, 2f)] float offset;
+        CamerasManager camerasManager;
 
+        float bounds;
         public event Action<bool> OnLoseLifeEvent;
         bool flag;
 
-
+        void Start()
+        {
+            camerasManager = CamerasManager.Instance;
+        }
         void Awake()
         {
-            mainCam = Camera.main;
-            upperLimitCamera = mainCam.orthographicSize;
             flag = false;
-
+          
         }
         void Update()
         {
-            if (transform.position.z < -upperLimitCamera & gameObject.CompareTag(Constants.ANIMAL_TAG) & !flag)
+            if (transform.position.z + offset< -camerasManager.OrthographicSize  & !flag)
             {
                 flag = true;
                 OnLoseLifeEvent?.Invoke(true);

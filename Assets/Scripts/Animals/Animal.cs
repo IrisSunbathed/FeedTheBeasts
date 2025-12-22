@@ -34,23 +34,29 @@ namespace FeedTheBeasts.Scripts
 
         GameCatalog gameCatalog;
 
-        protected AnimalStatus animalStatus;
+        internal AnimalStatus animalStatus;
 
         Animator animator;
 
-        readonly float destinationOffset = 4f;
+        [SerializeField,Range(5f, 10f)] float destinationOffset = 4f;
         internal NavMeshAgent navMeshAgent;
 
         Vector3 destination;
 
         float destinationZ;
+        Coroutine coroutine;
+
+
+        [SerializeField, Range(5f, 60f)] float timeWaitNewLocation;
 
 
         CamerasManager camerasManager;
 
+        Vector3 defaultDestination;
+
+        Vector3 currentDestinion;
+
         float time;
-
-
 
         void Start()
         {
@@ -58,7 +64,7 @@ namespace FeedTheBeasts.Scripts
             gameCatalog = GameCatalog.Instance;
 
             destinationZ = -camerasManager.OrthographicSize - destinationOffset;
-
+            defaultDestination = new Vector3(transform.position.x, transform.position.y, destinationZ);
             Awake();
         }
 
@@ -77,38 +83,42 @@ namespace FeedTheBeasts.Scripts
         public virtual void Update()
         {
 
-            time += Time.deltaTime;
-            if (doesFetch)
+            if (animalStatus != AnimalStatus.Returning)
             {
-                if (!TryFetch())
+
+                time += Time.deltaTime;
+                if (doesFetch && !TryFetch() & coroutine == null)
                 {
-                    SetDestination(transform.position.x, transform.position.y, destinationZ);
+                    coroutine = StartCoroutine(SetDestinationCoroutine(currentDestinion));
                 }
-            }
 
-            if (doesEatBasket)
-            {
-                if (!TryEatBasket())
+                if (doesEatBasket && !TryEatBasket() & coroutine == null)
                 {
-                    SetDestination(transform.position.x, transform.position.y, destinationZ);
+                    coroutine = StartCoroutine(SetDestinationCoroutine(currentDestinion));
                 }
-            }
 
-            if (doesTurn & animalStatus == AnimalStatus.Running)
-            {
-                if (time >= timeTransitionMovement)
+                if (doesTurn & animalStatus == AnimalStatus.Running)
                 {
-                    RandomizeMovement();
-                    time = 0;
-                    float randomNumber = Random.Range(1, 4);
-
-                    if (randomNumber == 3 & doesAnimalStop)
+                    if (time >= timeTransitionMovement)
                     {
-                        StartCoroutine(StopWalkingCoroutine());
+                        RandomizeMovement();
+                        time = 0;
+                        float randomNumber = Random.Range(1, 4);
 
+                        if (randomNumber == 3 & doesAnimalStop)
+                        {
+                            StartCoroutine(StopWalkingCoroutine());
+
+                        }
                     }
                 }
             }
+        }
+        IEnumerator SetDestinationCoroutine(Vector3 newDestination)
+        {
+            SetDestination(newDestination.x, newDestination.y, newDestination.z);
+            yield return new WaitForSeconds(timeWaitNewLocation);
+            coroutine = null;
         }
 
         private bool TryEatBasket()
@@ -119,18 +129,38 @@ namespace FeedTheBeasts.Scripts
 
                 SetMovingAnimation();
                 animalStatus = AnimalStatus.Fetching;
-                Vector3 newDestination = platable.transform.position;
-                SetDestination(newDestination.x, transform.position.y, newDestination.z);
-                if (navMeshAgent.pathStatus == NavMeshPathStatus.PathComplete)
+                if (coroutine == null)
                 {
-                    SetEatingAnimation();
+                    Vector3 newDestination = new Vector3(platable.transform.position.x, transform.position.y, platable.transform.position.z);
+                    coroutine = StartCoroutine(SetDestinationCoroutine(newDestination));
                 }
+
+
+                TryEat();
             }
             else
             {
+                if (animalStatus != AnimalStatus.Returning)
+                {
+                    currentDestinion = defaultDestination;
+                }
                 SetMovingAnimation();
             }
             return platable != null;
+        }
+
+        private void TryEat()
+        {
+            if (!navMeshAgent.pathPending)
+            {
+                if (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
+                {
+                    if (!navMeshAgent.hasPath || navMeshAgent.velocity.sqrMagnitude == 0f)
+                    {
+                        SetEatingAnimation();
+                    }
+                }
+            }
         }
 
         protected bool TryFetch()
@@ -148,15 +178,19 @@ namespace FeedTheBeasts.Scripts
                 }
                 SetMovingAnimation();
                 animalStatus = AnimalStatus.Fetching;
-                Vector3 newDestination = throwable.transform.position;
-                SetDestination(newDestination.x, transform.position.y, newDestination.z);
-                if (navMeshAgent.pathStatus == NavMeshPathStatus.PathComplete)
+                if (coroutine == null)
                 {
-                    SetEatingAnimation();
+                    Vector3 newDestination = new Vector3(throwable.transform.position.x, transform.position.y, throwable.transform.position.z);
+                    coroutine = StartCoroutine(SetDestinationCoroutine(newDestination));
                 }
+                TryEat();
             }
             else
             {
+                if (animalStatus != AnimalStatus.Returning)
+                {
+                    currentDestinion = defaultDestination;
+                }
                 SetMovingAnimation();
 
             }
@@ -197,7 +231,8 @@ namespace FeedTheBeasts.Scripts
         {
             animator.SetBool(Constants.ANIM_BOOL_EAT, false);
             animator.SetFloat(Constants.ANIM_FLOAT_SPEED, 1);
-            animalStatus = AnimalStatus.Running;
+
+            animalStatus = animalStatus != AnimalStatus.Fetching ? AnimalStatus.Running : AnimalStatus.Fetching;
         }
 
         private void RandomizeMovement()
@@ -208,11 +243,11 @@ namespace FeedTheBeasts.Scripts
 
         }
 
-        private void SetDestination(float destinationX, float destinationY, float destinationZ)
+        internal void SetDestination(float destinationX, float destinationY, float destinationZ)
         {
             destination = new Vector3(destinationX, destinationY, destinationZ);
-            navMeshAgent.SetDestination(destination);
-
+            currentDestinion = destination;
+            navMeshAgent.SetDestination(currentDestinion);
         }
 
     }

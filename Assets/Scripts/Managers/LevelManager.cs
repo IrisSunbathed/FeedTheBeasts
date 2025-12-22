@@ -14,16 +14,36 @@ namespace FeedTheBeasts.Scripts
 
         public Levels CurrentLevel { get; set; }
 
-        [SerializeField] internal int feedAnimalsGoal;
-
+        [Header("References")]
         [SerializeField] AnimalsLeftUIManager animalsLeftUIManager;
         [SerializeField] WorldManager worldManager;
         [SerializeField] DifficultyManager difficultyManager;
         [SerializeField] BossManager bossManager;
         [SerializeField] OutroController outroController;
+        [SerializeField] ConsecutiveShootsManager consecutiveShootsManager;
+        [Header("Configuration")]
+        [SerializeField] internal int feedAnimalsGoal;
         [SerializeField] float timeGameEnding;
-        internal int currentFedAnimals;
-        internal int EscapedAnimals { get; set; }
+
+        int currentFedAniamls;
+        internal int CurrentFedAnimals
+        {
+            get => currentFedAniamls;
+            set
+            {
+                currentFedAniamls = value;
+            }
+        }
+
+        int escapedAnimals;
+        internal int EscapedAnimals
+        {
+            get => escapedAnimals;
+            set
+            {
+                escapedAnimals = value;
+            }
+        }
         internal int AnimalGoalPerLevel { get; private set; }
 
         public int AnimalsLeft { get; set; }
@@ -47,6 +67,7 @@ namespace FeedTheBeasts.Scripts
             Assert.IsNotNull(difficultyManager, "ERROR: difficultyManager is not added to FoodSelectorManager");
             Assert.IsNotNull(bossManager, "ERROR: bossManager is not added to FoodSelectorManager");
             Assert.IsNotNull(outroController, "ERROR: outroController is not added to FoodSelectorManager");
+            Assert.IsNotNull(consecutiveShootsManager, "ERROR: consecutiveShootsManager is not added to FoodSelectorManager");
 
 
             bossManager.OnBossDefeatedEvent += OnBossDefeatedCallBack;
@@ -64,44 +85,42 @@ namespace FeedTheBeasts.Scripts
 
         private void OnBossDefeatedCallBack()
         {
-            StartCoroutine(WaitUntilWin());
-
-        }
-
-        IEnumerator WaitUntilWin()
-        {
-            
             worldManager.Win();
-            yield return new WaitForSeconds(timeGameEnding);
-            outroController.OutroStart();
-
         }
-
         internal void Init()
         {
             CurrentLevel = Levels.Level1;
-            currentFedAnimals = 0;
+            CurrentFedAnimals = 0;
             EscapedAnimals = 0;
 
 
         }
 
-        internal void AnimalFed()
+        internal void LevelAnimalCheck()
         {
-            currentFedAnimals++;
-            animalsLeftUIManager.AdjustBar(feedAnimalsGoal, currentFedAnimals + EscapedAnimals);
-            Debug.Log($"AnimalGoalPerLevel: {AnimalGoalPerLevel} currentFedAnimals: {currentFedAnimals} EscapedAnimals: {EscapedAnimals} ");
-            if ((currentFedAnimals + EscapedAnimals) % AnimalGoalPerLevel == 0)
+            animalsLeftUIManager.AdjustBar(feedAnimalsGoal, CurrentFedAnimals + EscapedAnimals);
+
+            Debug.Log($"(currentFedAnimals {CurrentFedAnimals} + EscapedAnimals {EscapedAnimals}) % AnimalGoalPerLevel {AnimalGoalPerLevel}== 0");
+            if ((CurrentFedAnimals + EscapedAnimals) % AnimalGoalPerLevel == 0)
             {
                 if ((int)CurrentLevel != Enum.GetNames(typeof(Levels)).Length)
                 {
-                    CurrentLevel++;
-                    Debug.Log(CurrentLevel);
-                    difficultyManager.AddDifficultyLevel();
+                    Debug.Log($"(int)CurrentLevel {(int)CurrentLevel} != Enum.GetNames(typeof(Levels)).Length {Enum.GetNames(typeof(Levels)).Length}");
+
+                    worldManager.NextRound();
                 }
 
             }
         }
+
+        internal void NextRound()
+        {
+            CurrentLevel++;
+            Debug.Log(CurrentLevel);
+            difficultyManager.AddDifficultyLevel();
+
+        }
+
     }
 
 }

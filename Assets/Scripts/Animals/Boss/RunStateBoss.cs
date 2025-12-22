@@ -21,7 +21,7 @@ public class RunStateBoss : BossStates
         }
         foreach (var item in stopPoints)
         {
-            item.parent = null;
+            item.transform.parent = null;
         }
         navMeshAgent.SetDestination(stopPoints[indexPositions].position);
     }

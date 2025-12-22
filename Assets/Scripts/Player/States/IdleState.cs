@@ -23,6 +23,8 @@ namespace FeedTheBeasts.Scripts
 
         public override void Exit()
         {
+            animator.SetInteger(Constants.ANIM_INT_IDLE, 0);
+            IsStateComplete = true;
         }
 
     }

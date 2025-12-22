@@ -39,7 +39,6 @@ namespace FeedTheBeasts.Scripts
 
         internal void SpawnParticles(Transform animalTransform)
         {
-            Debug.Log("Is in spawn particles");
             int activeParticles = -1;
             foreach (var smoke in listSmokeWhenFed)
             {
@@ -49,7 +48,6 @@ namespace FeedTheBeasts.Scripts
                     Vector3 newPosition = new Vector3(animalTransform.position.x,
                                                       smokeWhenFed.transform.position.y,
                                                       animalTransform.position.z);
-                    Debug.Log($"newPositionParticles: {newPosition}");
                     smoke.transform.position = newPosition;
                     StartCoroutine(SetInactiveCorroutime(smoke));
 
@@ -58,7 +56,6 @@ namespace FeedTheBeasts.Scripts
                 else
                 {
                     activeParticles++;
-                    Debug.Log($"Active Particles : {activeParticles}");
                 }
             }
             if (activeParticles == listSmokeWhenFed.Count)

@@ -12,6 +12,7 @@ namespace FeedTheBeasts.Scripts
         [SerializeField] UIManager uIManager;
         [SerializeField] float spawnTime;
         [SerializeField] Player player;
+        [SerializeField] ScoreManager scoreManager;
         [SerializeField] AnimalsLeftUIManager animalsLeftUIManager;
         [SerializeField] MusicManager musicManager;
         [SerializeField] ParticleSystemManager particleSystemManager;
@@ -107,10 +108,10 @@ namespace FeedTheBeasts.Scripts
          private void OnPointsGainedCallBack(int points, Transform transform, bool isFed)
         {
             Debug.Log($"IsFed: {isFed}");
-            player.Score += points;
+            scoreManager.Score += points;
             if (isFed)
             {
-                levelManager.AnimalFed();
+                levelManager.LevelAnimalCheck();
                 particleSystemManager.SpawnParticles(transform);
             }
 

@@ -1,5 +1,6 @@
 using System;
 using NUnit.Framework;
+using Unity.VisualScripting;
 using UnityEngine;
 namespace FeedTheBeasts.Scripts
 {
@@ -11,7 +12,7 @@ namespace FeedTheBeasts.Scripts
         [SerializeField] Camera mainCamera;
         [SerializeField] Camera menuCamera;
 
-         [SerializeField] ShakeController shakeController;
+        [SerializeField] ShakeController shakeController;
 
         static CamerasManager instance;
         public static CamerasManager Instance => instance;
@@ -54,6 +55,17 @@ namespace FeedTheBeasts.Scripts
             Camera currentCamera = Camera.allCameras[0];
 
             shakeController.Shake(currentCamera.transform, 0.5f, .5f, intensity);
+        }
+
+        internal (bool, bool, bool, bool) IsOutOfBounds(Vector3 position, Vector3 bounds)
+
+        {
+            var boundsX = bounds.x * Mathf.Sign(position.x);
+            var boundsZ = bounds.z * Mathf.Sign(position.z);
+            
+            return (position.z < -OrthographicSize + boundsZ, position.z > OrthographicSize + boundsZ,
+            position.x < -GetCameraLength() + boundsX, position.x > GetCameraLength() + boundsX);
+
         }
     }
 

@@ -9,6 +9,8 @@ using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
+using Image = UnityEngine.UI.Image;
 
 namespace FeedTheBeasts.Scripts
 {
@@ -16,7 +18,8 @@ namespace FeedTheBeasts.Scripts
     public class UIManager : MonoBehaviour
     {
         [Header("Lifes and Points UI references")]
-        [SerializeField] LivesAndPointsUIManager livesAndPointsUIManager;
+        [SerializeField] ScoreUIManager livesAndPointsUIManager;
+        [SerializeField] LivesUIManager livesUIManager;
 
         [Header("Start/Game Over Menu references")]
         [SerializeField] MenuUI menuUI;
@@ -61,13 +64,13 @@ namespace FeedTheBeasts.Scripts
             Assert.IsNotNull(menuUI, "ERROR: Menu UI is empty on UIManager");
             Assert.IsNotNull(animalsLeftUIManager, "ERROR: animalsLeftUIManager is empty on UIManager");
             Assert.IsNotNull(musicManager, "ERROR: musicManager is empty on UIManager");
+            Assert.IsNotNull(livesUIManager, "ERROR: livesUIManager is empty on UIManager");
             Assert.IsTrue(imgRechargeBar.Length > 0, "ERROR: rechargeBar is empty on UIManager");
             #endregion
             menuUI.StartGameEvent += StartGame;
         }
         internal void Init()
         {
-                    Debug.Log("UImanager");
             camerasManager.SwitchCameras(isGameplayCamera: false);
             CurrentProjectile = 0;
             foreach (var item in imgRechargeBar)
@@ -83,6 +86,7 @@ namespace FeedTheBeasts.Scripts
             txtInGameNotification.text = string.Empty;
             musicManager.PlayMusic(MusicThemes.MainMenu);
             musicManager.FadeCurrentMusic(1f, 1f);
+            //livesAndPointsUIManager.Init();
 
         }
 
@@ -102,14 +106,9 @@ namespace FeedTheBeasts.Scripts
         }
         internal void ManageLives(int lives)
         {
-            livesAndPointsUIManager.ManageLives(lives);
+            livesUIManager.ManageLives(lives);
+            
         }
-
-        internal void ManagePoints(int points)
-        {
-            livesAndPointsUIManager.ManageScore(points);
-        }
-
         void Update()
         {
 
@@ -168,6 +167,7 @@ namespace FeedTheBeasts.Scripts
             }
 
             livesAndPointsUIManager.ActivateElementsOnMenu(isActive);
+            livesUIManager.ActivateElementsOnMenu(isActive);
 
             foreach (var item in imgRechargeBar)
             {
@@ -256,7 +256,11 @@ namespace FeedTheBeasts.Scripts
             txtToEffect.color = temp;
             stampedeCoroutine = StartCoroutine(TextTransparentEffect(txtToEffect));
 
+        }
 
+        internal bool CheckPointsCalc()
+        {
+            return livesAndPointsUIManager.IsScoreCalc;
         }
     }
 }

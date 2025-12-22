@@ -9,12 +9,13 @@ namespace FeedTheBeasts.Scripts
 {
     public class AnimalsLeftUIManager : MonoBehaviour
     {
-
         [SerializeField] Image animalsLeftBar;
 
         [SerializeField] TMP_Text animalsLeftText;
 
         float totalBar;
+
+        internal float TotalBar { get => totalBar; set { totalBar = value; } }
 
 
 
@@ -23,8 +24,8 @@ namespace FeedTheBeasts.Scripts
         {
             Assert.IsNotNull(animalsLeftBar, "animalsLeftBar is empty");
             Assert.IsNotNull(animalsLeftText, "animalsLeftText is empty");
-
-            totalBar = animalsLeftBar.fillAmount;
+            animalsLeftBar.fillAmount = 1;
+            TotalBar = animalsLeftBar.fillAmount;
 
         }
         internal void Init()
@@ -36,10 +37,15 @@ namespace FeedTheBeasts.Scripts
         internal void AdjustBar(int totalAnimals, int currentFedAnimals)
         {
             float progress = Mathf.Clamp01((float)currentFedAnimals / (float)totalAnimals);
-            animalsLeftBar.fillAmount = totalBar - progress;
+            Debug.Log($"totalAnimals: {totalAnimals} currentFedAnimals {currentFedAnimals} progress: {progress}");
+            animalsLeftBar.fillAmount = TotalBar - progress;
             if (animalsLeftBar.fillAmount == 0)
             {
                 animalsLeftText.text = string.Empty;
+            }
+            else
+            {
+                animalsLeftText.text = Constants.ANIMALS_LEFT_TEXT;
             }
 
         }
@@ -49,17 +55,19 @@ namespace FeedTheBeasts.Scripts
             animalsLeftBar.gameObject.SetActive(true);
             animalsLeftText.gameObject.SetActive(true);
 
-            animalsLeftBar.fillAmount = totalBar;
+            animalsLeftBar.fillAmount = TotalBar;
         }
 
         internal void BossHungerSetUp(AnimalHunger animalHunger)
         {
+            Debug.Log("BossHungerSetUp");
             animalsLeftText.text = Constants.BOSS_BAR_TEXT;
             StartCoroutine(FillBossHungerBar());
             animalHunger.OnBossFeedEvent += SetBossHungerBar;
         }
         IEnumerator FillBossHungerBar()
         {
+            Debug.Log("FillBossHungerBar");
             float progress = 0;
             while (animalsLeftBar.fillAmount < 1)
             {
@@ -72,6 +80,7 @@ namespace FeedTheBeasts.Scripts
 
         internal void SetBossHungerBar(float progress)
         {
+            Debug.Log("SetBossHungerBar");
             animalsLeftBar.fillAmount = 1 * progress;
             
         }

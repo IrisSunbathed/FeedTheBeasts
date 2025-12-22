@@ -28,7 +28,8 @@ namespace FeedTheBeasts.Scripts
         }
         public override void Exit()
         {
-              animator.SetFloat(Constants.ANIM_FLOAT_SPEED, 0);
+            animator.SetFloat(Constants.ANIM_FLOAT_SPEED, 0);
+            IsStateComplete = true;
         }
 
     }

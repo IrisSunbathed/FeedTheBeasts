@@ -72,10 +72,7 @@ namespace FeedTheBeasts.Scripts
                 StartCoroutine(StartCouroutines());
             }
 
-            foreach (var animals in UnityEngine.GameObject.FindGameObjectsWithTag(Constants.ANIMAL_TAG))
-            {
-                Destroy(animals);
-            }
+            DestroyAnimals();
 
 
         }
@@ -125,11 +122,16 @@ namespace FeedTheBeasts.Scripts
 
         }
 
-        private static void DestroyAnimals()
+        internal void DestroyAnimals()
         {
-            foreach (var animals in UnityEngine.GameObject.FindGameObjectsWithTag(Constants.ANIMAL_TAG))
+            foreach (var animal in UnityEngine.GameObject.FindGameObjectsWithTag(Constants.ANIMAL_TAG))
             {
-                Destroy(animals);
+                Vector3 bounds = animal.GetComponent<MeshRenderer>().bounds.max;
+                var result = camerasManager.IsOutOfBounds(animal.transform.position, bounds);
+                if (result.Item2)
+                {
+                    Destroy(animal);
+                }
             }
         }
 

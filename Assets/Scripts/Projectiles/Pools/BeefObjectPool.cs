@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -22,33 +23,45 @@ namespace FeedTheBeasts.Scripts
 
         private void OnRelease(GameObject projectile)
         {
-            projectile.SetActive(false);
+            EnableComponents(projectile, false);
+            projectile.GetComponent<StraightProjectile>().currentSpeed = 0;
         }
 
         private void OnActionGet(GameObject projectile)
         {
-            projectile.SetActive(true);
-            projectile.GetComponent<MeshRenderer>().enabled = true;
-            projectile.GetComponent<Collider>().enabled = true;
-            StraightProjectile straightProjectile = projectile.GetComponent<StraightProjectile>();
-            straightProjectile.SetUpSpeed();
+            EnableComponents(projectile, true);
+            projectile.GetComponent<StraightProjectile>().SetUpSpeed();
             //projectile.transform.SetParent(transform, true);
+        }
+
+        internal override void EnableComponents(GameObject projectile, bool areActive)
+        {
+            projectile.SetActive(areActive);
+            projectile.GetComponent<MeshRenderer>().enabled = areActive;
+            projectile.GetComponent<Collider>().enabled = areActive;
+            StartCoroutine(EnableTrailRendererCoroutine(projectile, areActive));
+        }
+
+        IEnumerator EnableTrailRendererCoroutine(GameObject projectile, bool isActive)
+        {
+            yield return new WaitForSeconds(timeTrailReactivate);
+            projectile.GetComponentInChildren<TrailRenderer>().enabled = isActive;
         }
 
         private GameObject OnCreateEvent()
         {
             GameObject newProjectile = Instantiate(goBeef, Vector3.zero, quaternion.identity);
 
-            StraightProjectile newStraightProjectile = newProjectile.GetComponent<StraightProjectile>();
+            DetectCollisions newStraightProjectile = newProjectile.GetComponent<DetectCollisions>();
 
             newStraightProjectile.OnInvisible += ReturnToObjectPool;
 
             return newProjectile;
         }
 
-        private void ReturnToObjectPool(StraightProjectile instance)
+        private void ReturnToObjectPool(GameObject instance)
         {
-            opStraightProjectile.Release(instance.gameObject);
+            opStraightProjectile.Release(instance);
         }
     }
 }

@@ -64,12 +64,6 @@ namespace FeedTheBeasts.Scripts
             {
                 itemsInventory[i].SetActive(false);
 
-                if (itemsInventory[i].TryGetComponent(out FoodProvider foodProvider))
-                {
-                    foodProvider = itemsInventory[i].GetComponent<FoodProvider>();
-                    foodProvider.Init();
-                }
-
                 int bulletsLeft = GetBullets(itemsInventory[i]);
 
                 txtBulletsLeft[i].text = bulletsLeft.ToString();
@@ -82,7 +76,6 @@ namespace FeedTheBeasts.Scripts
         {
             foreach (var item in UnityEngine.GameObject.FindGameObjectsWithTag(Constants.THROWABLE_TAG))
             {
-
                 Destroy(item);
             }
             foreach (var item in UnityEngine.GameObject.FindGameObjectsWithTag(Constants.PLANTABLE_TAG))
@@ -187,7 +180,7 @@ namespace FeedTheBeasts.Scripts
             {
                 plantable.TryPlant();
                 SetBulletsToText();
-        
+
             }
 
         }
@@ -204,6 +197,26 @@ namespace FeedTheBeasts.Scripts
             rechargeable.TryReload();
         }
 
+        internal void EndGame()
+        {
+            DestroyObjectsInScene();
+
+            for (int i = 0; i < itemsInventory.Length; i++)
+            {
+                itemsInventory[i].SetActive(false);
+
+                if (itemsInventory[i].TryGetComponent(out FoodProvider foodProvider))
+                {
+                    foodProvider = itemsInventory[i].GetComponent<FoodProvider>();
+                    foodProvider.Init();
+                }
+
+                // int bulletsLeft = GetBullets(itemsInventory[i]);
+
+                // txtBulletsLeft[i].text = bulletsLeft.ToString();
+            }
+
+        }
     }
 
 }

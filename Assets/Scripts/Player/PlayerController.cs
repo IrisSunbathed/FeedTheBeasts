@@ -4,6 +4,7 @@ using DG.Tweening;
 using NUnit.Framework;
 using Unity.Mathematics;
 using Unity.VisualScripting;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -32,7 +33,7 @@ namespace FeedTheBeasts.Scripts
                 }
                 if (canMove == true)
                 {
-                     runState.currentRunSpeed = runState.runSpeed;
+                    runState.currentRunSpeed = runState.runSpeed;
                 }
             }
         }
@@ -51,14 +52,13 @@ namespace FeedTheBeasts.Scripts
         public DeathState deathState;
         public WinState winState;
         public PlantingState plantingState;
-        internal float plantingTime;
 
 
         Animator animator;
         [Header("Shoot Properties")]
         [SerializeField] Shooter shooter;
         [SerializeField] FoodSelectorManager foodSelectorManager;
-       float lookAngle;
+        float lookAngle;
         bool hasShoot;
 
         [Header("Get bounds")]
@@ -130,15 +130,12 @@ namespace FeedTheBeasts.Scripts
                 CheckOutOfBoundsX();
                 CheckOutOfBoundsZ();
                 rbPlayer.linearVelocity = new Vector3(HorizontalInput, 0, VerticalInput) * runState.currentRunSpeed;
-                
+
                 #endregion
                 #region Shoot
                 LookAtMousePosition();
                 if (Input.GetKey(KeyCode.Mouse0))
                 {
-
-                
-
                     if (!hasShoot)
                     {
                         Vector3 screenPoint = camerasManager.GetScreenToWorldPoint(Input.mousePosition);
@@ -147,7 +144,7 @@ namespace FeedTheBeasts.Scripts
                     }
 
                 }
-                
+
                 #endregion
                 #region Reload
                 if (Input.GetKeyDown(KeyCode.R))
@@ -159,11 +156,13 @@ namespace FeedTheBeasts.Scripts
                 #endregion
             }
 
-            if (Input.GetKeyUp(KeyCode.Mouse0)/* & states == plantingState*/)
+            if (Input.GetKeyUp(KeyCode.Mouse0))
             {
                 if (states == plantingState)
                 {
+
                     plantingState.Exit();
+
                 }
                 hasShoot = false;
             }
@@ -182,21 +181,18 @@ namespace FeedTheBeasts.Scripts
         private void SelectState()
         {
 
-            if (states != plantingState)
+            if (HorizontalInput == 0 & VerticalInput == 0 & states != plantingState)
             {
-
-                if (HorizontalInput == 0 & VerticalInput == 0)
-                {
-                    states.Exit();
-                    states = idleState;
-                }
-                else
-                {
-                    states.Exit();
-                    states = runState;
-                }
-                states.Enter();
+                //states.Exit();
+                states = idleState;
             }
+            else
+            {
+                //states.Exit();
+                states = runState;
+            }
+
+            states.Enter();
         }
 
         internal void SetDeathState()
@@ -260,6 +256,7 @@ namespace FeedTheBeasts.Scripts
 
         internal void SetPlantingState()
         {
+            states.Exit();
             states = plantingState;
             states.Enter();
         }

@@ -568,7 +568,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 5
+  m_StoppingDistance: 3.5
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 0
@@ -739,6 +739,8 @@ MonoBehaviour:
   doesEatBasket: 0
   doesTurn: 0
   timeTransitionMovement: 1
+  destinationOffset: 10
+  timeWaitNewLocation: 5
 --- !u!114 &-9078734462562591292
 MonoBehaviour:
   m_ObjectHideFlags: 0

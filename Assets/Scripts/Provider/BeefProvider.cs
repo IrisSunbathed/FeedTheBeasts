@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.Pool;
 
 namespace FeedTheBeasts.Scripts
@@ -19,6 +20,8 @@ namespace FeedTheBeasts.Scripts
 
         BeefObjectPool beefObjectPool;
 
+        [SerializeField] ConsecutiveShootsManager consecutiveShootsManager;
+
         //ObjectPool<GameObject> objectPool;
 
         void Start()
@@ -28,14 +31,17 @@ namespace FeedTheBeasts.Scripts
 
         void Awake()
         {
-            Init();
+            
+            Assert.IsNotNull(consecutiveShootsManager, "ERROR: consecutiveShootsManager not added");
             AudioSourceShoot = GetComponent<AudioSource>();
             beefObjectPool = GetComponent<BeefObjectPool>();
+            Init();
         }
 
         public override void Init()
         {
             StopAllCoroutines();
+            beefObjectPool.StopAllCoroutines();
             canShoot = true;
             shootCount = 0;
         }
@@ -53,6 +59,8 @@ namespace FeedTheBeasts.Scripts
             {
                 // projectilePool.GetProjectile();
                 GameObject newPro = beefObjectPool.opStraightProjectile.Get();
+                DetectCollisions detectCollisions = newPro.GetComponent<DetectCollisions>();
+                consecutiveShootsManager.SubscribeToEvents(detectCollisions);
                 newPro.transform.SetPositionAndRotation(playerPosition.position, playerPosition.rotation);
                 AudioClip audioClip = gameCatalog.GetFXClip(FXTypes.Shot);
                 AudioSourceShoot.resource = audioClip;

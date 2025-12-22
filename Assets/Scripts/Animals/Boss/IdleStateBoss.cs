@@ -20,7 +20,7 @@ public class IdleStateBoss : BossStates
     public event Action<DestroyOutOfBounds, bool, AnimalHunger> OnSpawnEvent;
     int randomPositionInt = -1;
 
-  
+
 
     void OnValidate()
     {
@@ -32,7 +32,7 @@ public class IdleStateBoss : BossStates
         navMeshAgent.isStopped = true;
         animator.SetBool(Constants.ANIM_BOOL_EAT, true);
         animator.SetFloat(Constants.ANIM_FLOAT_SPEED, 0);
-        StartCoroutine(SummonCouroutine());
+        TrySpawn();
     }
 
     public override void Exit()
@@ -43,12 +43,18 @@ public class IdleStateBoss : BossStates
         GameObject[] goDoes = GameObject.FindGameObjectsWithTag(Constants.ANIMAL_TAG);
         if (goDoes.Length > 0)
         {
-            foreach (var item in goDoes)
-            {
-                if (item.TryGetComponent(out Animal agent))
-                {
-                    agent.SetEatingAnimation();
 
+            for (int i = 0; i < goDoes.Length; i++)
+            {
+                if (goDoes[i].TryGetComponent(out Animal agent))
+                {
+                    agent.navMeshAgent.isStopped = true;
+                    int destIndex = Mathf.Clamp(i, 0, spawnPositions.Length - 1);
+                    agent.animalStatus = AnimalStatus.Returning; 
+                    agent.SetDestination(spawnPositions[destIndex].position.x,
+                                         spawnPositions[destIndex].position.y,
+                                         spawnPositions[destIndex].position.z);
+                    agent.navMeshAgent.isStopped = false;
                 }
             }
 
@@ -58,12 +64,6 @@ public class IdleStateBoss : BossStates
 
     IEnumerator SummonCouroutine()
     {
-        //randonNumber = take a random number between 1 and 4 -> number of spawn positions active
-        //for change i < randonNumber
-        //spawnPosition.position also random
-
-        //randomPositionInt = Random.Range(0, randomNumber)
-        //if usedPositions.Contains(randomPositionInt) -> randomPositionInt = Random.Range(0, randomNumber)
         //List<int> = usedPositions.Add(randomPositionInt);
 
         int randomNumber = Random.Range(2, spawnPositions.Length);
@@ -71,16 +71,34 @@ public class IdleStateBoss : BossStates
 
         for (int i = 0; i < randomNumber; i++)
         {
-            StartCoroutine(CofigRandomPositionCoroutine(randomNumber, randomPositions));
+            StartCoroutine(ConfigRandomPositionCoroutine(randomNumber, randomPositions));
         }
         randomPositions.Clear();
         float summonInterval = Random.Range(summonIntervalMin, summonIntervalMax);
         yield return new WaitForSeconds(summonInterval);
-
-        StartCoroutine(SummonCouroutine());
+        TrySpawn();
     }
 
-    IEnumerator CofigRandomPositionCoroutine(int randomNumber, List<int> randomPositions)
+    private void TrySpawn()
+    {
+        GameObject[] goDoes = GameObject.FindGameObjectsWithTag(Constants.ANIMAL_TAG);
+        if (goDoes.Length < 4)
+        {
+            StartCoroutine(SummonCouroutine());
+        }
+        else
+        {
+            StartCoroutine(WaitingCoroutine());
+        }
+    }
+
+    IEnumerator WaitingCoroutine()
+    {
+        yield return new WaitForSeconds(.5f);
+        TrySpawn();
+    }
+
+    IEnumerator ConfigRandomPositionCoroutine(int randomNumber, List<int> randomPositions)
     {
         randomPositionInt = Random.Range(0, randomNumber);
         if (!randomPositions.Contains(randomPositionInt))
@@ -92,7 +110,7 @@ public class IdleStateBoss : BossStates
         }
         else
         {
-            StartCoroutine(CofigRandomPositionCoroutine(randomNumber, randomPositions));
+            StartCoroutine(ConfigRandomPositionCoroutine(randomNumber, randomPositions));
         }
         yield return null;
     }
