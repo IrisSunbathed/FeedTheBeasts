@@ -54,6 +54,7 @@ namespace FeedTheBeasts.Scripts
         {
             camerasManager = CamerasManager.Instance;
             levelManager = LevelManager.Instance;
+            ConfigureCameraExtremes();
         }
         void Awake()
         {
@@ -66,7 +67,6 @@ namespace FeedTheBeasts.Scripts
         internal void Init()
         {
             numberSpawnAnimals = 0;
-            ConfigureCameraExtremes();
             if (spawnAnimals)
             {
                 StartCoroutine(StartCouroutines());
@@ -140,7 +140,6 @@ namespace FeedTheBeasts.Scripts
         {
             StopAllCoroutines();
             StartCoroutine(StampedeWarningCoroutine(numberOfAnimals));
-
         }
 
         IEnumerator StampedeWarningCoroutine(int numberOfAnimals)
@@ -150,24 +149,24 @@ namespace FeedTheBeasts.Scripts
             coroutineAnimals = null;
             coroutineAggressiveAnimals = null;
 
-            if (numberOfAnimals > levelManager.AnimalsLeft)
-            {
-                numberOfAnimals = levelManager.AnimalsLeft;
-            }
+            // if (numberOfAnimals > levelManager.AnimalsLeft)
+            // {
+            //     numberOfAnimals = levelManager.AnimalsLeft;
+            // }
 
-            for (int i = 0; i <= numberOfAnimals; i++)
+            for (int i = 1; i <= numberOfAnimals; i++)
             {
                 SpawnRandomAnimal();
             }
 
-            StartCoroutine(StartCouroutines(5f));
         }
 
 
 
-        IEnumerator StartCouroutines(float timeToWait = 0f)
+        internal IEnumerator StartCouroutines(float timeToWait = 0f)
         {
             yield return timeToWait;
+
             coroutineAnimals ??= StartCoroutine(SpawnRandomAnimalCoroutine(difficultyManager.StartDelay,
                                                                       difficultyManager.IntervalSpawnMin,
                                                                       difficultyManager.IntervalSpawnMax,
@@ -194,13 +193,15 @@ namespace FeedTheBeasts.Scripts
                 myMethodDelegate();
             }
 
-            levelManager.AnimalsLeft = levelManager.feedAnimalsGoal - numberSpawnAnimals;
+            // levelManager.AnimalsLeft = levelManager.LevelAnimalGoal - numberSpawnAnimals;
             Debug.Log($"spawn animals: {numberSpawnAnimals} spawn animals per level: {levelManager.LevelAnimalGoal}");
             if (numberSpawnAnimals < levelManager.LevelAnimalGoal)
             {
-                if (levelManager.LevelAnimalGoal - numberSpawnAnimals == 5)
+                if (levelManager.LevelAnimalGoal - numberSpawnAnimals == Mathf.FloorToInt(levelManager.LevelAnimalGoal / 4))
                 {
-                    Stampede(5);
+                    StopSpawning();
+                    int numberOfAnimals = Mathf.FloorToInt(levelManager.LevelAnimalGoal / 4);
+                    Stampede(Mathf.FloorToInt(Mathf.Clamp(numberOfAnimals, levelManager.LevelAnimalGoal / 4, levelManager.LevelAnimalGoal - numberSpawnAnimals)));
                 }
                 else
                 {

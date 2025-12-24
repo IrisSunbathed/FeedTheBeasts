@@ -37,6 +37,7 @@ namespace FeedTheBeasts.Scripts
                 lives = value;
                 if (lives <= maxLifes)
                 {
+                    Debug.Log($"lives: {lives} previousNumberOfLives: {previousNumberOfLifes}");
                     if (lives >= previousNumberOfLifes)
                     {
                         OnGainedLivePlayerAction?.Invoke(Lives);
