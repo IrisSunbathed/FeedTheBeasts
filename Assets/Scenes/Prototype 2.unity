@@ -11468,6 +11468,7 @@ MonoBehaviour:
   bossManager: {fileID: 1913409011}
   outroController: {fileID: 1386265531}
   consecutiveShootsManager: {fileID: 1097830072}
+  spawnManager: {fileID: 415680010}
   feedAnimalsGoal: 70
   timeGameEnding: 3
 --- !u!1001 &1403438485
@@ -12953,7 +12954,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1572853558
 RectTransform:
   m_ObjectHideFlags: 0
