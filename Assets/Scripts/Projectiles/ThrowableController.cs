@@ -12,8 +12,7 @@ namespace FeedTheBeasts.Scripts
     {
 
 
-        int resistance;
-        float timeBetweenBites;
+      
         public float firingAngle = 45.0f;
         public float gravity = 9.8f;
 
@@ -51,18 +50,6 @@ namespace FeedTheBeasts.Scripts
             enabled = true;
 
             rbThrowable.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-
-            if (!TryGetComponent(out DistractCollision _))
-            {
-                DistractCollision distractCollision = gameObject.AddComponent<DistractCollision>();
-                distractCollision.SetUp(resistance, timeBetweenBites);
-
-            }
-
-            if (TryGetComponent(out StraightController straightController))
-            {
-                straightController.Deactivate();
-            }
         }
 
         void Update()

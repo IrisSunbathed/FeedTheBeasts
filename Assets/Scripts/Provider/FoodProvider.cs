@@ -12,15 +12,9 @@ namespace FeedTheBeasts.Scripts
         [SerializeField] protected float cooldown;
         [SerializeField] protected float shootCooldown;
         [SerializeField] protected int projectilesPerRecharge;
-<<<<<<< Updated upstream
-        protected int shootCount;
-        [SerializeField] protected ProjectilePool projectilePool;
-=======
-        internal int shootCount;
+    internal int shootCount;
         // [SerializeField] protected ProjectilePool projectilePool;
         [SerializeField] protected Transform playerPosition;
-
->>>>>>> Stashed changes
 
         [SerializeField] FoodTypes foodTypes;
 

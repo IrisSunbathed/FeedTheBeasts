@@ -13,18 +13,21 @@ using Random = UnityEngine.Random;
 namespace FeedTheBeasts.Scripts
 {
     [RequireComponent(typeof(MeshFilter), typeof(AudioSource), typeof(MeshRenderer))]
-    [RequireComponent(typeof(Collider))]
+    [RequireComponent(typeof(Collider), typeof(StraightProjectile))]
     public class DetectCollisions : MonoBehaviour
     {
         AudioSource audioSource;
         MeshRenderer meshRenderer;
         Collider colAnimal;
+        CamerasManager camerasManager;
 
-<<<<<<< Updated upstream
-=======
         float pitch;
 
+        float lengthCam;
+        float orthographicSize;
+
         Vector3 projectileBounds;
+        float projectileXBoundsSign;
 
         public event Action<GameObject> OnInvisible;
         public event Action<DetectCollisions, bool> OnHitAction;
@@ -35,16 +38,18 @@ namespace FeedTheBeasts.Scripts
         void Start()
         {
             camerasManager = CamerasManager.Instance;
+            lengthCam = camerasManager.GetCameraLength();
+            orthographicSize = camerasManager.OrthographicSize;
         }
->>>>>>> Stashed changes
         void Awake()
         {
             audioSource = GetComponent<AudioSource>();
             meshRenderer = GetComponent<MeshRenderer>();
             colAnimal = GetComponent<Collider>();
+            pitch = 0.4f;
+            projectileBounds = meshRenderer.bounds.max;
 
         }
-
 
 
         void OnTriggerEnter(Collider other)
@@ -52,14 +57,9 @@ namespace FeedTheBeasts.Scripts
             if (other.CompareTag(Constants.ANIMAL_TAG))
             {
                 StartCoroutine(AudioCoroutine(other));
-                //Proviver.AddCollisionPoint()
-
             }
         }
 
-<<<<<<< Updated upstream
-        
-=======
         void Update()
         {
           
@@ -69,22 +69,41 @@ namespace FeedTheBeasts.Scripts
                 OnMissAction?.Invoke(this);
                 InvokeAction();
             }
-
+            // GetXBounds();
+            // GetZBounds();
         }
+
+        // private void GetZBounds()
+        // {
+        //     if (transform.position.z < -orthographicSize
+        //       | transform.position.z > orthographicSize)
+        //     {
+        //         OnMissAction?.Invoke(this);
+        //         InvokeAction();
+        //     }
+        // }
+
+        // private void GetXBounds()
+        // {
+        //     projectileXBoundsSign = projectileXBounds * Mathf.Sign(transform.position.x);
+        //     if (transform.position.x < -lengthCam + projectileXBoundsSign
+        //         | transform.position.x > lengthCam + projectileXBoundsSign)
+        //     {
+        //         OnMissAction?.Invoke(this);
+        //         InvokeAction();
+        //     }
+        // }
 
         internal void InvokeAction()
         {
             OnInvisible?.Invoke(gameObject);
         }
 
->>>>>>> Stashed changes
 
         IEnumerator AudioCoroutine(Collider other)
         {
             AnimalHunger feedPoints = other.GetComponent<AnimalHunger>();
             feedPoints.FeedAnimal(tag);
-<<<<<<< Updated upstream
-=======
             if (feedPoints.CurrentHunger <= 0)
             {
                 OnHitAction?.Invoke(this, true);
@@ -92,18 +111,18 @@ namespace FeedTheBeasts.Scripts
             }
             else
             {
-
                 OnHitAction?.Invoke(this, false);
 
             }
->>>>>>> Stashed changes
             ConfigureAudio(feedPoints.IsPreferred);
             meshRenderer.enabled = false;
             colAnimal.enabled = false;
+            StraightProjectile straightProjectile = GetComponent<StraightProjectile>();
+            straightProjectile.currentSpeed = 0;
+
             yield return new WaitForSeconds(audioSource.clip.length);
-            gameObject.SetActive(false);
-            meshRenderer.enabled = true;
-            colAnimal.enabled = true;
+            InvokeAction();
+
         }
 
         private void ConfigureAudio(bool isPreferred)
@@ -111,8 +130,15 @@ namespace FeedTheBeasts.Scripts
 
             if (isPreferred)
             {
-                float randomPitch = Random.Range(.5f, 1f);
-                audioSource.pitch = randomPitch;
+                if (pitch <= 1f)
+                {
+                    pitch += 0.1f;
+                }
+                else
+                {
+                    pitch = 0.4f;
+                }
+                audioSource.pitch = pitch;
                 audioSource.volume = 1f;
             }
             else

@@ -56,7 +56,6 @@ namespace FeedTheBeasts.Scripts
 
         Animator animator;
         [Header("Shoot Properties")]
-        [SerializeField] Shooter shooter;
         [SerializeField] FoodSelectorManager foodSelectorManager;
         float pressedKeyTime;
         float lookAngle;
@@ -91,7 +90,6 @@ namespace FeedTheBeasts.Scripts
 
         void Awake()
         {
-            Assert.IsNotNull(shooter, "ERROR: Shooter not added to Player Controller");
             Assert.IsNotNull(foodSelectorManager, "ERROR: foodSelectorManager not added to Player Controller");
             #region GET COMPONENTS
             meshRenderer = GetComponent<MeshRenderer>();

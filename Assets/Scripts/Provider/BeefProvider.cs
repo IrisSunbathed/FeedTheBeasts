@@ -1,21 +1,13 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Assertions;
+using UnityEngine.Pool;
 
 namespace FeedTheBeasts.Scripts
 {
     [RequireComponent(typeof(AudioSource))]
-<<<<<<< Updated upstream
-=======
     [RequireComponent(typeof(BeefObjectPool))]
-    [RequireComponent(typeof(RectTransform))]
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
     public class BeefProvider : FoodProvider, IRechargeable, IShootable
 
     {
@@ -26,14 +18,12 @@ namespace FeedTheBeasts.Scripts
 
         GameCatalog gameCatalog;
 
-<<<<<<< Updated upstream
-=======
         BeefObjectPool beefObjectPool;
 
         [SerializeField] ConsecutiveShootsManager consecutiveShootsManager;
 
+        //ObjectPool<GameObject> objectPool;
 
->>>>>>> Stashed changes
         void Start()
         {
             gameCatalog = GameCatalog.Instance;
@@ -41,13 +31,17 @@ namespace FeedTheBeasts.Scripts
 
         void Awake()
         {
-            Init();
+            
+            Assert.IsNotNull(consecutiveShootsManager, "ERROR: consecutiveShootsManager not added");
             AudioSourceShoot = GetComponent<AudioSource>();
+            beefObjectPool = GetComponent<BeefObjectPool>();
+            Init();
         }
 
         public override void Init()
         {
             StopAllCoroutines();
+            beefObjectPool.StopAllCoroutines();
             canShoot = true;
             shootCount = 0;
         }
@@ -59,13 +53,15 @@ namespace FeedTheBeasts.Scripts
             IsRecharging = false;
         }
 
-
-
         public void TryShoot()
         {
             if (canShoot & !IsRecharging)
             {
-                projectilePool.GetProjectile();
+                // projectilePool.GetProjectile();
+                GameObject newPro = beefObjectPool.opStraightProjectile.Get();
+                DetectCollisions detectCollisions = newPro.GetComponent<DetectCollisions>();
+                consecutiveShootsManager.SubscribeToEvents(detectCollisions);
+                newPro.transform.SetPositionAndRotation(playerPosition.position, playerPosition.rotation);
                 AudioClip audioClip = gameCatalog.GetFXClip(FXTypes.Shot);
                 AudioSourceShoot.resource = audioClip;
                 AudioSourceShoot.pitch = .5f;
@@ -119,6 +115,5 @@ namespace FeedTheBeasts.Scripts
         }
     }
 
-
-
+    
 }

@@ -11,18 +11,11 @@ using UnityEditor;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.UI;
-<<<<<<< Updated upstream
-=======
+
 using UnityEngine.UIElements;
 using Image = UnityEngine.UI.Image;
 using RangeAttribute = UnityEngine.RangeAttribute;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
 
 namespace FeedTheBeasts.Scripts
 {
@@ -30,18 +23,10 @@ namespace FeedTheBeasts.Scripts
     public class UIManager : MonoBehaviour
     {
         [Header("Lifes and Points UI references")]
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-        [SerializeField] LivesAndPointsUIManager livesAndPointsUIManager;
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
         [SerializeField] ScoreUIManager scoreUIManager;
         [SerializeField] LivesUIManager livesUIManager;
->>>>>>> Stashed changes
+
 
         [Header("Start/Game Over Menu references")]
         [SerializeField] MenuUI menuUI;
@@ -91,24 +76,16 @@ namespace FeedTheBeasts.Scripts
             Assert.IsNotNull(menuUI, "ERROR: Menu UI is empty on UIManager");
             Assert.IsNotNull(animalsLeftUIManager, "ERROR: animalsLeftUIManager is empty on UIManager");
             Assert.IsNotNull(musicManager, "ERROR: musicManager is empty on UIManager");
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
             Assert.IsNotNull(fXSoundsManager, "ERROR: fXSoundsManager is empty on UIManager");
             Assert.IsNotNull(livesUIManager, "ERROR: livesUIManager is empty on UIManager");
->>>>>>> Stashed changes
             Assert.IsTrue(imgRechargeBar.Length > 0, "ERROR: rechargeBar is empty on UIManager");
             #endregion
             menuUI.StartGameEvent += StartGame;
         }
         internal void Init()
         {
-                    Debug.Log("UImanager");
+            Debug.Log("UImanager");
             camerasManager.SwitchCameras(isGameplayCamera: false);
             CurrentProjectile = 0;
             foreach (var item in imgRechargeBar)
@@ -145,24 +122,10 @@ namespace FeedTheBeasts.Scripts
         }
         internal void ManageLives(int lives)
         {
-<<<<<<< Updated upstream
-            livesAndPointsUIManager.ManageLives(lives);
-=======
+
             livesUIManager.ManageLives(lives);
-
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
         }
 
-        internal void ManagePoints(int points)
-        {
-            livesAndPointsUIManager.ManageScore(points);
-        }
 
         void Update()
         {
@@ -235,19 +198,9 @@ namespace FeedTheBeasts.Scripts
             {
                 sprite.gameObject.SetActive(isActive);
             }
-
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-            livesAndPointsUIManager.ActivateElementsOnMenu(isActive);
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
             scoreUIManager.ActivateElementsOnMenu(isActive);
             livesUIManager.ActivateElementsOnMenu(isActive);
->>>>>>> Stashed changes
+
 
             foreach (var item in imgRechargeBar)
             {
@@ -263,7 +216,7 @@ namespace FeedTheBeasts.Scripts
         IEnumerator RechargeCoroutine(float rechargeTime)
         {
             float time = 0f;
-            
+
             int currentReloadProjectile = CurrentProjectile;
 
             while (time <= rechargeTime + .1f)
@@ -334,20 +287,15 @@ namespace FeedTheBeasts.Scripts
             temp.a = temp_a;
             txtToEffect.color = temp;
             stampedeCoroutine = StartCoroutine(TextTransparentEffect(txtToEffect));
+        }
 
 
-<<<<<<< Updated upstream
-=======
+
         internal bool CheckPointsCalc()
         {
             return scoreUIManager.IsScoreCalc;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
         }
     }
 }
+

@@ -1,28 +1,27 @@
 using System;
 using System.Collections;
+using NUnit.Framework;
 using UnityEngine;
 
 namespace FeedTheBeasts.Scripts
 {
     [RequireComponent(typeof(AudioSource))]
+    [RequireComponent(typeof(CarrotObjectPool))]
     public class CarrotProvider : FoodProvider, IRechargeable, IShootable
 
     {
         public bool IsRecharging { get; set; }
         public AudioSource AudioSourceShoot { get; set; }
 
+        public event Action<float> OnRechargeEvent;
 
         GameCatalog gameCatalog;
 
-<<<<<<< Updated upstream
-=======
         CarrotObjectPool carrotObjectPool;
 
         [SerializeField] ConsecutiveShootsManager consecutiveShootsManager;
 
-        public event Action<float> OnRechargeEvent;
 
->>>>>>> Stashed changes
         void Start()
         {
             gameCatalog = GameCatalog.Instance;
@@ -30,13 +29,17 @@ namespace FeedTheBeasts.Scripts
 
         void Awake()
         {
-            Init();
+
+            Assert.IsNotNull(consecutiveShootsManager, "ERROR: consecutiveShootsManager not added");
             AudioSourceShoot = GetComponent<AudioSource>();
+            carrotObjectPool = GetComponent<CarrotObjectPool>();
+            Init();
         }
 
         public override void Init()
         {
             StopAllCoroutines();
+            carrotObjectPool.StopAllCoroutines();
             canShoot = true;
             shootCount = 0;
         }
@@ -64,9 +67,15 @@ namespace FeedTheBeasts.Scripts
         {
             if (canShoot & !IsRecharging)
             {
-                projectilePool.GetProjectile();
+
+                GameObject newPro = carrotObjectPool.opStraightProjectile.Get();
+
+                newPro.transform.SetPositionAndRotation(playerPosition.position, playerPosition.rotation);
+                DetectCollisions detectCollisions = newPro.GetComponent<DetectCollisions>();
+                consecutiveShootsManager.SubscribeToEvents(detectCollisions);
+                // projectilePool.GetProjectile();
                 AudioClip audioClip = gameCatalog.GetFXClip(FXTypes.Shot);
-                
+
                 AudioSourceShoot.resource = audioClip;
                 // AudioSourceShoot.pitch = -3f;
                 AudioSourceShoot.Play();

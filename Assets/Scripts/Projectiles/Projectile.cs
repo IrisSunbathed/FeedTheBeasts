@@ -7,7 +7,7 @@ namespace FeedTheBeasts.Scripts
     {
         public float speed;
 
-        protected float currentSpeed;
+        internal float currentSpeed;
         protected abstract void Awake();
 
         protected abstract void OnTriggerEnter(Collider other);

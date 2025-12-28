@@ -9,7 +9,10 @@ namespace FeedTheBeasts.Scripts
     {
         [Header("Health Properties")]
 
-        [SerializeField, Range(1, 7)] int initialLives;
+        [SerializeField, Range(1, 9)]
+        int initialLives;
+        [SerializeField, Range(7, 9)]
+        int maxLifes;
         [SerializeField, Range(0.5f, 5f), Tooltip("The amount of time that the characters is invencible")]
         float invensibilityCooldown;
         [SerializeField, Range(0.05f, .5f), Tooltip("The amount of time that the shader color changes when hit")]
@@ -20,7 +23,6 @@ namespace FeedTheBeasts.Scripts
 
         public event Action<int> OnLoseLivePlayerAction;
         public event Action<int> OnGainedLivePlayerAction;
-        public event Action<int> OnPointsAddedAction;
         //public event Action OnMaxScoreReached;
 
         int lives;
@@ -32,82 +34,39 @@ namespace FeedTheBeasts.Scripts
             get => lives;
             set
             {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
                 lives = value;
-                if (lives >= previousNumberOfLifes)
+                if (lives <= maxLifes)
                 {
-                    OnGainedLivePlayerAction?.Invoke(Lives);
-                }
-                else
-                {
-                    if (!isInvincible)
-=======
-                if (lives < maxLifes)
-                {
-=======
-                if (lives < maxLifes)
-                {
->>>>>>> Stashed changes
-=======
-                if (lives < maxLifes)
-                {
->>>>>>> Stashed changes
-                    lives = value;
+                    Debug.Log($"lives: {lives} previousNumberOfLives: {previousNumberOfLifes}");
                     if (lives >= previousNumberOfLifes)
->>>>>>> Stashed changes
                     {
-                        OnLoseLivePlayerAction?.Invoke(Lives);
-                        StartCoroutine(InvencibilityTime());
-                        StartCoroutine(HitIndicator());
+                        OnGainedLivePlayerAction?.Invoke(Lives);
                     }
-                }
-                previousNumberOfLifes = lives;
-
-            }
-        }
-
-
-        [Header("Score Properties")]
-        int score;
-
-        public int Score
-        {
-            get => score;
-
-            set
-            {
-                score = value;
-                OnPointsAddedAction?.Invoke(Score);
-                if (score >= scoreNextLevel)
-                {
-                    Lives++;
-                  //  OnMaxScoreReached?.Invoke();
-                    scoreNextLevel += scoreNewLife;
-
-
+                    else
+                    {
+                        if (!isInvincible)
+                        {
+                            OnLoseLivePlayerAction?.Invoke(Lives);
+                            StartCoroutine(InvencibilityTime());
+                            StartCoroutine(HitIndicator());
+                        }
+                    }
+                    previousNumberOfLifes = lives;
                 }
 
             }
         }
 
-        [SerializeField, Range(50, 1000)] int scoreNewLife;
-        int scoreNextLevel;
-
-
-        void Awake()
+        void OnValidate()
         {
-            scoreNextLevel = scoreNewLife;
-
+            initialLives = Mathf.Clamp(initialLives, 1, maxLifes);
+            maxLifes = Mathf.Clamp(maxLifes, initialLives, 9);
         }
 
         internal void Init()
         {
             previousNumberOfLifes = initialLives;
-            scoreNextLevel = scoreNewLife;
             Lives = initialLives;
-            Score = 0;
         }
 
         IEnumerator InvencibilityTime()

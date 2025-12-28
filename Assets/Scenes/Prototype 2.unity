@@ -8415,7 +8415,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b16615b2c63c8ca45893493735cbbbca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  livesAndPointsUIManager: {fileID: 1905823839}
+  scoreUIManager: {fileID: 1905823839}
   livesUIManager: {fileID: 1506390830}
   menuUI: {fileID: 1004595639}
   canvas: {fileID: 1585400374}
@@ -8424,8 +8424,8 @@ MonoBehaviour:
   - {fileID: 2127291507}
   - {fileID: 1624305887}
   - {fileID: 1583574088}
-  selectedItemImage: {fileID: 21300000, guid: 3377ade4a0e8255459a1eb558fa872e0, type: 3}
-  unselectedItemImage: {fileID: 21300000, guid: 597312487241cab44b3c98915176425c, type: 3}
+  inventoryMaxRotation: 45
+  timeTweenRotation: 0.001
   imgRechargeBar:
   - {fileID: 897788126}
   - {fileID: 1048306965}
@@ -8434,6 +8434,7 @@ MonoBehaviour:
   animalsLeftUIManager: {fileID: 2070815273}
   txtInGameNotification: {fileID: 465929434}
   musicManager: {fileID: 1497409074}
+  fXSoundsManager: {fileID: 345701676}
 --- !u!1001 &1021932889
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9020,6 +9021,7 @@ MonoBehaviour:
   carrotProvider: {fileID: 1990266317}
   beefProvider: {fileID: 1898487904}
   livesAndPointsUIManager: {fileID: 1905823839}
+  particleSystemManager: {fileID: 2033081567}
 --- !u!4 &1120486687 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7140844442097323097, guid: 4786e2698ac97a949a9209febfcbd49b, type: 3}
@@ -12332,7 +12334,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1506390828}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a0f9218857a2df54e87aff40c3d3fc39, type: 3}
+  m_Script: {fileID: 11500000, guid: f008e48b00f1a294896e4550837ee405, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   goLives: {fileID: 7182013965031512913, guid: 4d826d42425b1b349bbf15e45a79f1c6, type: 3}
@@ -14755,6 +14757,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fXSoundsManager: {fileID: 345701676}
+  scoreManager: {fileID: 60970620}
   scoreUIManager: {fileID: 1905823839}
   effectIntensityIncrease: 0.1
   initialEffectSpeed: 0.6
@@ -16057,6 +16060,8 @@ MonoBehaviour:
   - {fileID: 455852011}
   - {fileID: 1321224045}
   - {fileID: 654590161}
+  bulletMaxRotation: -45
+  timeTweenRotation: 0.001
 --- !u!1 &1898487901 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 116614, guid: 98d249acfe35ae943bcde7ee5412cf47, type: 3}
@@ -16268,9 +16273,9 @@ MonoBehaviour:
   uIManager: {fileID: 1019160012}
   spawnTime: 5
   player: {fileID: 2106493369}
-  scoreManager: {fileID: 60970620}
   animalsLeftUIManager: {fileID: 2070815273}
   musicManager: {fileID: 1497409074}
+  scoreManager: {fileID: 60970620}
   particleSystemManager: {fileID: 2033081567}
 --- !u!114 &1920430957 stripped
 MonoBehaviour:
@@ -16569,7 +16574,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3032862633986404171, guid: 925b56062c07bfc4098157b6b1f5eeba, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1990266323}
   m_SourcePrefab: {fileID: 100100000, guid: 925b56062c07bfc4098157b6b1f5eeba, type: 3}
 --- !u!224 &1990266315 stripped
 RectTransform:
@@ -16587,6 +16595,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41b5729bfd75901419015a72cef806cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1990266323
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 656599978}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 272df47891a48294eb101bee39ef943d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultCapacity: 0
+  maxPoolSize: 0
+  timeTrailReactivate: 0
+  goCarrot: {fileID: 0}
 --- !u!1001 &1992680759
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16725,8 +16749,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   smokeWhenFed: {fileID: 194062, guid: dbbecdc703e30bd4d80555f3ff209f6d, type: 3}
+  smokeHit: {fileID: 194016, guid: be9094254498d294aaaca5eefc3d5f3f, type: 3}
   objectPool: {fileID: 1469525563}
   smokeWhenFedPoolLimit: 3
+  smokeWhenHitPoolLimit: 10
 --- !u!137 &2039488844 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 7943435162629773138, guid: 81c5c2544254eed43ba851a6ff340feb, type: 3}

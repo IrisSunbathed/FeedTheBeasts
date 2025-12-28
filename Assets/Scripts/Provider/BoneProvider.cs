@@ -5,6 +5,7 @@ using UnityEngine;
 namespace FeedTheBeasts.Scripts
 {
     [RequireComponent(typeof(AudioSource))]
+    [RequireComponent(typeof(BoneObjectPool))]
     public class BoneProvider : FoodProvider, IRechargeable, IThrowable
 
     {
@@ -15,6 +16,8 @@ namespace FeedTheBeasts.Scripts
 
         GameCatalog gameCatalog;
 
+        BoneObjectPool boneObjectPool;
+
         void Start()
         {
             gameCatalog = GameCatalog.Instance;
@@ -22,8 +25,9 @@ namespace FeedTheBeasts.Scripts
 
         void Awake()
         {
-            Init();
             AudioSourceShoot = GetComponent<AudioSource>();
+            boneObjectPool = GetComponent<BoneObjectPool>();
+            Init();
         }
 
         public override void Init()
@@ -31,6 +35,7 @@ namespace FeedTheBeasts.Scripts
             StopAllCoroutines();
             canShoot = true;
             shootCount = 0;
+            boneObjectPool.StopAllCoroutines();
         }
 
         public IEnumerator ReloadCoroutine()
@@ -83,7 +88,11 @@ namespace FeedTheBeasts.Scripts
         {
             if (canShoot & !IsRecharging)
             {
-                projectilePool.ThrowProjectile(position);
+                //projectilePool.ThrowProjectile(position);
+                GameObject newBone = boneObjectPool.opThrowableObject.Get();
+                newBone.transform.SetPositionAndRotation(playerPosition.position, playerPosition.rotation);
+                ThrowableController throwable = newBone.GetComponent<ThrowableController>();
+                throwable.SimulateProjectile(position);
                 ConfigureAudio();
 
                 if (shootCount == projectilesPerRecharge)

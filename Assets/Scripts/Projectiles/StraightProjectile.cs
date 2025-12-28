@@ -45,6 +45,10 @@ namespace FeedTheBeasts.Scripts
 
 
         }
+          internal void SetUpSpeed()
+        {
+            currentSpeed = speed;
+        }
 
         private void ConfigureAudio()
         {
