@@ -22,7 +22,6 @@ namespace FeedTheBeasts.Scripts
         [SerializeField] BossManager bossManager;
         [SerializeField] OutroController outroController;
         [SerializeField] ConsecutiveShootsManager consecutiveShootsManager;
-        [SerializeField] SpawnManager spawnManager;
         [Header("Configuration")]
         [SerializeField] internal int feedAnimalsGoal;
         [SerializeField] float timeGameEnding;
@@ -33,14 +32,7 @@ namespace FeedTheBeasts.Scripts
             get => currentFedAniamls;
             set
             {
-                if (value > currentFedAniamls)
-                {
-                    currentFedAnimalsRound++;
-                }
                 currentFedAniamls = value;
-
-
-
             }
         }
 
@@ -50,22 +42,18 @@ namespace FeedTheBeasts.Scripts
             get => escapedAnimals;
             set
             {
-                if (value > escapedAnimals)
-                {
-                    escapedAnimalsRound++;
-                }
                 escapedAnimals = value;
             }
         }
-
-        int escapedAnimalsRound;
-        int currentFedAnimalsRound;
         internal int LevelAnimalGoal { get; private set; }
 
         int avarageAniamlsPerLevel;
         int[] matrixEnemies;
         int baseMatrix;
-      //  public int AnimalsLeft { get; set; }
+        public int AnimalsLeft { get; set; }
+
+
+
 
         void Awake()
         {
@@ -83,7 +71,6 @@ namespace FeedTheBeasts.Scripts
             Assert.IsNotNull(difficultyManager, "ERROR: difficultyManager is not added to FoodSelectorManager");
             Assert.IsNotNull(bossManager, "ERROR: bossManager is not added to FoodSelectorManager");
             Assert.IsNotNull(outroController, "ERROR: outroController is not added to FoodSelectorManager");
-            Assert.IsNotNull(spawnManager, "ERROR: spawnManager is not added to FoodSelectorManager");
             Assert.IsNotNull(consecutiveShootsManager, "ERROR: consecutiveShootsManager is not added to FoodSelectorManager");
             bossManager.OnBossDefeatedEvent += OnBossDefeatedCallBack;
 
@@ -119,11 +106,12 @@ namespace FeedTheBeasts.Scripts
         private void GetAnimalsLevel()
         {
             LevelAnimalGoal = avarageAniamlsPerLevel + matrixEnemies[(int)CurrentLevel - 1];
-            // for (int i = 1; i <= Enum.GetNames(typeof(Levels)).Length - 1; i++)
-            // {
-            //     Debug.Log($"avarage: {avarageAniamlsPerLevel} + matrixEnemies[i - 1] { matrixEnemies[i - 1]}");
-            //     Debug.Log($"Level {i} avarage: {avarageAniamlsPerLevel + matrixEnemies[i - 1]}");
-            // }
+            for (int i = 1; i <= Enum.GetNames(typeof(Levels)).Length - 1; i++)
+            {
+                Debug.Log($"avarage: {avarageAniamlsPerLevel} + matrixEnemies[i - 1] { matrixEnemies[i - 1]}");
+                Debug.Log($"Level {i} avarage: {avarageAniamlsPerLevel + matrixEnemies[i - 1]}");
+            }
+
         }
 
         private void OnBossDefeatedCallBack()
@@ -134,26 +122,19 @@ namespace FeedTheBeasts.Scripts
         {
             CurrentLevel = Levels.Level1;
             CurrentFedAnimals = 0;
-            escapedAnimalsRound = 0;
             EscapedAnimals = 0;
-            currentFedAnimalsRound = 0;
 
 
         }
 
         internal void LevelAnimalCheck()
         {
-
             animalsLeftUIManager.AdjustBar(feedAnimalsGoal, CurrentFedAnimals + EscapedAnimals);
-//            Debug.Log($"(currentFedAnimalsRound {currentFedAnimalsRound} + escapedAnimalsRound {escapedAnimalsRound}) ==  {LevelAnimalGoal}");
-            if (currentFedAnimalsRound + escapedAnimalsRound == LevelAnimalGoal)
-            {
 
-                spawnManager.StopSpawning();
+            if ((CurrentFedAnimals + EscapedAnimals) % LevelAnimalGoal == 0)
+            {
                 if ((int)CurrentLevel != Enum.GetNames(typeof(Levels)).Length)
                 {
-                    currentFedAnimalsRound = 0;
-                    escapedAnimalsRound = 0;
                     worldManager.NextRound();
                 }
             }
@@ -162,12 +143,8 @@ namespace FeedTheBeasts.Scripts
         internal void NextRound()
         {
             CurrentLevel++;
-            if ((int)CurrentLevel != Enum.GetNames(typeof(Levels)).Length)
-            {
-                GetAnimalsLevel();
-            }
+            GetAnimalsLevel();
             difficultyManager.AddDifficultyLevel();
-
         }
 
     }

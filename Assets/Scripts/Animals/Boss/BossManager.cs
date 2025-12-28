@@ -105,13 +105,14 @@ namespace FeedTheBeasts.Scripts
             StopAllCoroutines();
         }
         
-         private void OnPointsGainedCallBack(int points, AnimalHunger animalHunger, bool isFed)
+         private void OnPointsGainedCallBack(int points, Transform transform, bool isFed)
         {
+            Debug.Log($"IsFed: {isFed}");
             scoreManager.Score += points;
             if (isFed)
             {
-               // levelManager.LevelAnimalCheck();
-                particleSystemManager.SpawnParticles(animalHunger.transform);
+                levelManager.LevelAnimalCheck();
+                particleSystemManager.SpawnParticles(transform);
             }
 
 

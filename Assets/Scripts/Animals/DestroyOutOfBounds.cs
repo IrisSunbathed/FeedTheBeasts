@@ -7,14 +7,13 @@ using RangeAttribute = UnityEngine.RangeAttribute;
 namespace FeedTheBeasts.Scripts
 {
     [RequireComponent(typeof(MeshRenderer))]
-    [RequireComponent(typeof(Animal))]
     public class DestroyOutOfBounds : MonoBehaviour
     {
 
         [SerializeField, Range(0.5f, 2f)] float offset;
         CamerasManager camerasManager;
-        Animal animal;
 
+        float bounds;
         public event Action<bool> OnLoseLifeEvent;
         bool flag;
 
@@ -24,14 +23,12 @@ namespace FeedTheBeasts.Scripts
         }
         void Awake()
         {
-            animal = GetComponent<Animal>();
             flag = false;
           
         }
         void Update()
         {
-            
-            if (transform.position.z + offset < -camerasManager.OrthographicSize & !flag & !animal.navMeshAgent.isStopped)
+            if (transform.position.z + offset< -camerasManager.OrthographicSize  & !flag)
             {
                 flag = true;
                 OnLoseLifeEvent?.Invoke(true);

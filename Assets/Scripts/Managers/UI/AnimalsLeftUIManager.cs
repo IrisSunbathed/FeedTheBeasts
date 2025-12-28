@@ -79,6 +79,7 @@ namespace FeedTheBeasts.Scripts
 
         internal void SetBossHungerBar(float progress)
         {
+            Debug.Log("SetBossHungerBar");
             animalsLeftBar.fillAmount = 1 * progress;
             
         }

@@ -93,6 +93,7 @@ namespace FeedTheBeasts.Scripts
                 newBone.transform.SetPositionAndRotation(playerPosition.position, playerPosition.rotation);
                 ThrowableController throwable = newBone.GetComponent<ThrowableController>();
                 throwable.SimulateProjectile(position);
+                Debug.Log(position);
                 ConfigureAudio();
 
                 if (shootCount == projectilesPerRecharge)

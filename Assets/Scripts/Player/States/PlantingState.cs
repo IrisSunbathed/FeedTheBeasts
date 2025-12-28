@@ -51,6 +51,7 @@ namespace FeedTheBeasts.Scripts
 
         public override void Exit()
         {
+            Debug.Log("Exiting Plating state");
             //  animator.SetFloat(Constants.ANIM_BODY_VERTICAL, 0);
             StartCoroutine(LookingUpCoroutine(animator.GetFloat(Constants.ANIM_BODY_VERTICAL)));
             animator.SetInteger(Constants.ANIM_INT_IDLE, 0);

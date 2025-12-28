@@ -129,6 +129,7 @@ namespace FeedTheBeasts.Scripts
             scoreManager.Init();
             difficultyManager.Init();
             levelManager.Init();
+            spawnManager.Init();
         }
 
         private void OnLoseLivePlayerActionCallback(int lives)
@@ -180,15 +181,14 @@ namespace FeedTheBeasts.Scripts
 
         }
 
-        private void OnPointsGainedCallBack(int points, AnimalHunger animalHunger, bool isFed)
+        private void OnPointsGainedCallBack(int points, Transform transform, bool isFed)
         {
             scoreManager.Score += points;
             if (isFed)
             {
                 levelManager.CurrentFedAnimals++;
                 levelManager.LevelAnimalCheck();
-                particleSystemManager.SpawnParticles(animalHunger.transform);
-                animalHunger.OnPointsGainedEvent -= OnPointsGainedCallBack;
+                particleSystemManager.SpawnParticles(transform);
             }
 
 
@@ -197,13 +197,13 @@ namespace FeedTheBeasts.Scripts
         internal void NextRound()
 
         {
-            uIManager.InGameWarning(4f, "Round Completed!");
+            uIManager.InGameWarning(2f, "Round Completed!");
+            spawnManager.StopSpawning();
             consecutiveShootsManager.CalculatePoints();
             if (uIManager.CheckPointsCalc())
             {
                 //UI Round completed
                 levelManager.NextRound();
-                StartCoroutine(spawnManager.StartCouroutines());
             }
             else
             {

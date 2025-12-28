@@ -10,7 +10,6 @@ using RangeAttribute = UnityEngine.RangeAttribute;
 namespace FeedTheBeasts.Scripts
 {
     [RequireComponent(typeof(UIAnimalScoreController), typeof(Collider), typeof(AnimalDisappearManager))]
-    [RequireComponent(typeof(Animal))]
     public class AnimalHunger : MonoBehaviour
     {
 
@@ -31,11 +30,10 @@ namespace FeedTheBeasts.Scripts
         [SerializeField] bool isBoss;
         AnimalDisappearManager animalDisapearManager;
         UIAnimalScoreController uIAnimalScoreController;
-        Collider colAnimal;
 
         public event Action<float> OnBossFeedEvent;
 
-        public event Action<int, AnimalHunger, bool> OnPointsGainedEvent;
+        public event Action<int, Transform, bool> OnPointsGainedEvent;
         void Awake()
         {
             #region ASSERTIONS
@@ -45,7 +43,6 @@ namespace FeedTheBeasts.Scripts
             #region VARIABLES
             uIAnimalScoreController = GetComponent<UIAnimalScoreController>();
             animalDisapearManager = GetComponent<AnimalDisappearManager>();
-            colAnimal = GetComponent<Collider>();
 
             CurrentHunger = hungerTotal;
             #endregion
@@ -56,20 +53,15 @@ namespace FeedTheBeasts.Scripts
         {
             IsPreferred = fedFood == preferredFood.ToString();
 
+
             if (CurrentHunger > 0f)
             {
+
 
                 if (IsPreferred)
                 {
                     CurrentHunger -= 2f;
                     Vector3 addedScale = new Vector3(scaleEffectMax, scaleEffectMax, scaleEffectMax);
-                    if (CurrentHunger <= 0 & !isBoss)
-                    {
-                        Animal animal = GetComponent<Animal>();
-                        animal.navMeshAgent.isStopped = true;
-                        colAnimal.enabled = false;
-                    }
-
                     transform.DOScale(transform.localScale + addedScale, scaleTime).OnComplete(OnDoScaleComplete);
                 }
                 else
@@ -78,7 +70,7 @@ namespace FeedTheBeasts.Scripts
                     if (CurrentHunger <= 0 & !isBoss)
                     {
                         animalDisapearManager.Disappear();
-                        OnPointsGainedEvent?.Invoke(points, this, true);
+                        OnPointsGainedEvent?.Invoke(points, transform, true);
 
                     }
                 }
@@ -109,13 +101,13 @@ namespace FeedTheBeasts.Scripts
 
                 animalDisapearManager.Disappear();
                 isCompleted = true;
-                OnPointsGainedEvent?.Invoke(points, this, true);
+                OnPointsGainedEvent?.Invoke(points, transform, true);
 
             }
             else
             {
                 transform.DOScale(defualtScale, scaleTime);
-                OnPointsGainedEvent?.Invoke(points, this, false);
+                OnPointsGainedEvent?.Invoke(points, transform, false);
 
             }
         }

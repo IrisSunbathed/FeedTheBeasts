@@ -94,7 +94,6 @@ namespace FeedTheBeasts.Scripts
 
                 if (doesEatBasket && !TryEatBasket() & coroutine == null)
                 {
-//                    Debug.Log($"doesEatBasket: {doesEatBasket} !TryEatBasket() {!TryEatBasket()} coroutine == null {coroutine == null}");
                     coroutine = StartCoroutine(SetDestinationCoroutine(currentDestinion));
                 }
 
