@@ -97,6 +97,25 @@ namespace FeedTheBeasts.Scripts
             }
         }
 
+<<<<<<< Updated upstream
+=======
+        internal void GameOver()
+        {
+            StopAllCoroutines();
+        }
+        
+         private void OnPointsGainedCallBack(int points, AnimalHunger animalHunger, bool isFed)
+        {
+            scoreManager.Score += points;
+            if (isFed)
+            {
+               // levelManager.LevelAnimalCheck();
+                particleSystemManager.SpawnFedParticles(animalHunger.transform);
+            }
+
+
+        }
+>>>>>>> Stashed changes
     }
 
 }

@@ -11,10 +11,18 @@ namespace FeedTheBeasts.Scripts
         public bool IsRecharging { get; set; }
         public AudioSource AudioSourceShoot { get; set; }
 
-        public event Action<float> OnRechargeEvent;
 
         GameCatalog gameCatalog;
 
+<<<<<<< Updated upstream
+=======
+        CarrotObjectPool carrotObjectPool;
+
+        [SerializeField] ConsecutiveShootsManager consecutiveShootsManager;
+
+        public event Action<float> OnRechargeEvent;
+
+>>>>>>> Stashed changes
         void Start()
         {
             gameCatalog = GameCatalog.Instance;

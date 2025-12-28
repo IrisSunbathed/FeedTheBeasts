@@ -9,7 +9,18 @@ namespace FeedTheBeasts.Scripts
     public class FruitProvider : FoodProvider, IRechargeable, IPlantable
     {
         [SerializeField] float plantingTime;
+<<<<<<< Updated upstream
         [SerializeField] GameObject fruitBasket;
+=======
+        [SerializeField] UnityEngine.GameObject fruitBasket;
+        
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
         public float PlantingTime { get => plantingTime; set { plantingTime = value; } }
         public bool IsRecharging { get; set; }
 
@@ -27,6 +38,7 @@ namespace FeedTheBeasts.Scripts
             StopAllCoroutines();
             canShoot = true;
             shootCount = 0;
+            IsRecharging = false;
         }
 
         public int GetBullets()
@@ -62,6 +74,7 @@ namespace FeedTheBeasts.Scripts
 
         public void TryPlant()
         {
+            Debug.Log($"!IsRecharging {!IsRecharging}");
             if (!IsRecharging)
             {
                 OnPlantEvent?.Invoke(PlantingTime);

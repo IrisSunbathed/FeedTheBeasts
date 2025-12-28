@@ -20,6 +20,23 @@ namespace FeedTheBeasts.Scripts
         MeshRenderer meshRenderer;
         Collider colAnimal;
 
+<<<<<<< Updated upstream
+=======
+        float pitch;
+
+        Vector3 projectileBounds;
+
+        public event Action<GameObject> OnInvisible;
+        public event Action<DetectCollisions, bool> OnHitAction;
+        public event Action<DetectCollisions> OnFedAction;
+
+        public event Action<DetectCollisions> OnMissAction;
+
+        void Start()
+        {
+            camerasManager = CamerasManager.Instance;
+        }
+>>>>>>> Stashed changes
         void Awake()
         {
             audioSource = GetComponent<AudioSource>();
@@ -40,12 +57,46 @@ namespace FeedTheBeasts.Scripts
             }
         }
 
+<<<<<<< Updated upstream
         
+=======
+        void Update()
+        {
+          
+            var result = camerasManager.IsOutOfBounds(transform.position, projectileBounds);
+            if (result.Item1 | result.Item2 | result.Item3 | result.Item4)
+            {
+                OnMissAction?.Invoke(this);
+                InvokeAction();
+            }
+
+        }
+
+        internal void InvokeAction()
+        {
+            OnInvisible?.Invoke(gameObject);
+        }
+
+>>>>>>> Stashed changes
 
         IEnumerator AudioCoroutine(Collider other)
         {
             AnimalHunger feedPoints = other.GetComponent<AnimalHunger>();
             feedPoints.FeedAnimal(tag);
+<<<<<<< Updated upstream
+=======
+            if (feedPoints.CurrentHunger <= 0)
+            {
+                OnHitAction?.Invoke(this, true);
+                OnFedAction?.Invoke(this);
+            }
+            else
+            {
+
+                OnHitAction?.Invoke(this, false);
+
+            }
+>>>>>>> Stashed changes
             ConfigureAudio(feedPoints.IsPreferred);
             meshRenderer.enabled = false;
             colAnimal.enabled = false;

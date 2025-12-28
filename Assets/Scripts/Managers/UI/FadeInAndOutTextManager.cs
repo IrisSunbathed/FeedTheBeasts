@@ -15,7 +15,6 @@ namespace FeedTheBeasts.Scripts
         }
         void OnBecameVisible()
         {
-            Debug.Log("test");
             StartCoroutine(FadeInAndOut());
         }
 

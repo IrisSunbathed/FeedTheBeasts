@@ -10,36 +10,80 @@ namespace FeedTheBeasts.Scripts
     public class ParticleSystemManager : MonoBehaviour
     {
 
+<<<<<<< Updated upstream
         [SerializeField] GameObject smokeWhenFed;
+=======
+        [SerializeField] UnityEngine.GameObject smokeWhenFed;
+        [SerializeField] GameObject smokeHit;
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
         [SerializeField] Transform objectPool;
 
 
         int canvasIndex;
         [SerializeField] int smokeWhenFedPoolLimit;
+        [SerializeField] int smokeWhenHitPoolLimit;
 
+<<<<<<< Updated upstream
         List<GameObject> listSmokeWhenFed;
+=======
+        List<UnityEngine.GameObject> listSmokeWhenFed;
+        List<UnityEngine.GameObject> listHitWhenFed;
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 
         void Awake()
         {
             Assert.IsNotNull(smokeWhenFed, "ERROR: particle system not added");
 
+<<<<<<< Updated upstream
             listSmokeWhenFed = new List<GameObject>();
             canvasIndex = 0;
+=======
+            listSmokeWhenFed = new List<UnityEngine.GameObject>();
+            listHitWhenFed = new List<GameObject>();
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
             for (int i = 1; i <= smokeWhenFedPoolLimit; i++)
             {
-                AddParticleToPool();
+                AddSmokeParticleToPool();
+            }
+            for (int i = 1; i <= smokeWhenHitPoolLimit; i++)
+            {
+                AddHitParticleToPool();
             }
 
         }
 
-        private void AddParticleToPool()
+        private void AddSmokeParticleToPool()
         {
             GameObject newParticle = Instantiate(smokeWhenFed, objectPool); ;
             newParticle.SetActive(false);
             listSmokeWhenFed.Add(newParticle);
         }
+        private void AddHitParticleToPool()
+        {
+            UnityEngine.GameObject newParticle = Instantiate(smokeHit, objectPool); ;
+            newParticle.SetActive(false);
+            listHitWhenFed.Add(newParticle);
+        }
 
-        internal void SpawnParticles(Transform animalTransform)
+        internal void SpawnFedParticles(Transform animalTransform)
         {
             int activeParticles = -1;
             foreach (var smoke in listSmokeWhenFed)
@@ -62,10 +106,100 @@ namespace FeedTheBeasts.Scripts
             }
             if (activeParticles == listSmokeWhenFed.Count)
             {
-                AddParticleToPool();
-                SpawnParticles(animalTransform);
+                AddSmokeParticleToPool();
+                SpawnFedParticles(animalTransform);
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
             }
         }
+          internal void SpawnHitParticles(Transform bulletTransform)
+        {
+            int activeParticles = -1;
+            foreach (var smoke in listHitWhenFed)
+            {
+                if (!smoke.activeSelf)
+                {
+                    smoke.SetActive(true);
+                    Vector3 newPosition = new Vector3(bulletTransform.position.x,
+                                                      smokeWhenFed.transform.position.y,
+                                                      bulletTransform.position.z);
+                    smoke.transform.position = newPosition;
+                    smoke.transform.Rotate(0, bulletTransform.rotation.y - 180, 0);
+                    StartCoroutine(SetInactiveCorroutime(smoke));
+                    break;
+                }
+                else
+                {
+                    activeParticles++;
+                }
+            }
+            if (activeParticles == listSmokeWhenFed.Count)
+            {
+                AddSmokeParticleToPool();
+                SpawnFedParticles(bulletTransform);
+=======
+>>>>>>> Stashed changes
+            }
+        }
+          internal void SpawnHitParticles(Transform bulletTransform)
+        {
+            int activeParticles = -1;
+            foreach (var smoke in listHitWhenFed)
+            {
+                if (!smoke.activeSelf)
+                {
+                    smoke.SetActive(true);
+                    Vector3 newPosition = new Vector3(bulletTransform.position.x,
+                                                      smokeWhenFed.transform.position.y,
+                                                      bulletTransform.position.z);
+                    smoke.transform.position = newPosition;
+                    smoke.transform.Rotate(0, bulletTransform.rotation.y - 180, 0);
+                    StartCoroutine(SetInactiveCorroutime(smoke));
+                    break;
+                }
+                else
+                {
+                    activeParticles++;
+                }
+            }
+            if (activeParticles == listSmokeWhenFed.Count)
+            {
+                AddSmokeParticleToPool();
+                SpawnFedParticles(bulletTransform);
+=======
+>>>>>>> Stashed changes
+            }
+        }
+          internal void SpawnHitParticles(Transform bulletTransform)
+        {
+            int activeParticles = -1;
+            foreach (var smoke in listHitWhenFed)
+            {
+                if (!smoke.activeSelf)
+                {
+                    smoke.SetActive(true);
+                    Vector3 newPosition = new Vector3(bulletTransform.position.x,
+                                                      smokeWhenFed.transform.position.y,
+                                                      bulletTransform.position.z);
+                    smoke.transform.position = newPosition;
+                    smoke.transform.Rotate(0, bulletTransform.rotation.y - 180, 0);
+                    StartCoroutine(SetInactiveCorroutime(smoke));
+                    break;
+                }
+                else
+                {
+                    activeParticles++;
+                }
+            }
+            if (activeParticles == listSmokeWhenFed.Count)
+            {
+                AddSmokeParticleToPool();
+                SpawnFedParticles(bulletTransform);
+            }
+        }
+
+
+
 
 
         IEnumerator SetInactiveCorroutime(GameObject smoke)

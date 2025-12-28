@@ -92,7 +92,19 @@ namespace FeedTheBeasts.Scripts
         Shot,
         LoseLife,
         DogBone,
+<<<<<<< Updated upstream
         WrongFood
+=======
+        WrongFood,
+        Points,
+        SelectItem
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
         // Wolf,
         // Cow,
         //Chicken

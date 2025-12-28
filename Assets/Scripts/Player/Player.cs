@@ -32,6 +32,9 @@ namespace FeedTheBeasts.Scripts
             get => lives;
             set
             {
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
                 lives = value;
                 if (lives >= previousNumberOfLifes)
                 {
@@ -40,6 +43,20 @@ namespace FeedTheBeasts.Scripts
                 else
                 {
                     if (!isInvincible)
+=======
+                if (lives < maxLifes)
+                {
+=======
+                if (lives < maxLifes)
+                {
+>>>>>>> Stashed changes
+=======
+                if (lives < maxLifes)
+                {
+>>>>>>> Stashed changes
+                    lives = value;
+                    if (lives >= previousNumberOfLifes)
+>>>>>>> Stashed changes
                     {
                         OnLoseLivePlayerAction?.Invoke(Lives);
                         StartCoroutine(InvencibilityTime());

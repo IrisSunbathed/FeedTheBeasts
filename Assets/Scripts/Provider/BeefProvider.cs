@@ -5,6 +5,17 @@ using UnityEngine;
 namespace FeedTheBeasts.Scripts
 {
     [RequireComponent(typeof(AudioSource))]
+<<<<<<< Updated upstream
+=======
+    [RequireComponent(typeof(BeefObjectPool))]
+    [RequireComponent(typeof(RectTransform))]
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
     public class BeefProvider : FoodProvider, IRechargeable, IShootable
 
     {
@@ -15,6 +26,14 @@ namespace FeedTheBeasts.Scripts
 
         GameCatalog gameCatalog;
 
+<<<<<<< Updated upstream
+=======
+        BeefObjectPool beefObjectPool;
+
+        [SerializeField] ConsecutiveShootsManager consecutiveShootsManager;
+
+
+>>>>>>> Stashed changes
         void Start()
         {
             gameCatalog = GameCatalog.Instance;
@@ -39,6 +58,8 @@ namespace FeedTheBeasts.Scripts
             yield return new WaitForSeconds(rechargingTime);
             IsRecharging = false;
         }
+
+
 
         public void TryShoot()
         {

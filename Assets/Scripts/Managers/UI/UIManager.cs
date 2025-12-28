@@ -2,13 +2,27 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using NUnit.Framework;
 using TMPro;
 using Unity.Burst.CompilerServices;
 using Unity.VisualScripting;
 using UnityEditor;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.UI;
+<<<<<<< Updated upstream
+=======
+using UnityEngine.UIElements;
+using Image = UnityEngine.UI.Image;
+using RangeAttribute = UnityEngine.RangeAttribute;
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 
 namespace FeedTheBeasts.Scripts
 {
@@ -16,16 +30,29 @@ namespace FeedTheBeasts.Scripts
     public class UIManager : MonoBehaviour
     {
         [Header("Lifes and Points UI references")]
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
         [SerializeField] LivesAndPointsUIManager livesAndPointsUIManager;
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+        [SerializeField] ScoreUIManager scoreUIManager;
+        [SerializeField] LivesUIManager livesUIManager;
+>>>>>>> Stashed changes
 
         [Header("Start/Game Over Menu references")]
         [SerializeField] MenuUI menuUI;
         [SerializeField] Canvas canvas;
         CamerasManager camerasManager;
-        [Header("Food Selector references")]
+        [Header("Food Selector configuration")]
         [SerializeField] Image[] imagesFoodSelector;
-        [SerializeField] Sprite selectedItemImage;
-        [SerializeField] Sprite unselectedItemImage;
+        [SerializeField, Range(45f, 180f)] float inventoryMaxRotation;
+        [SerializeField, Range(0.001f, 0.25f)] float timeTweenRotation;
+        int selectedIndex;
+
         string lastKeyPressed;
         [Header("Recharge configuration")]
         [SerializeField] Image[] imgRechargeBar;
@@ -43,24 +70,38 @@ namespace FeedTheBeasts.Scripts
         [SerializeField] TMP_Text txtInGameNotification;
         Coroutine stampedeCoroutine;
 
+        [Header("Sound Managers references")]
+
         [SerializeField] MusicManager musicManager;
+        [SerializeField] FXSoundsManager fXSoundsManager;
 
 
         void Start()
         {
             camerasManager = CamerasManager.Instance;
-           
+
         }
         void Awake()
         {
             #region ASSERTIONS
             Assert.IsTrue(imagesFoodSelector.Length > 0, "ERROR: image food selector is empty on UIManager");
-            Assert.IsNotNull(selectedItemImage, "ERROR: SelectedItemImage is empty on UIManager");
-            Assert.IsNotNull(unselectedItemImage, "ERROR: UnselectedItemImage is empty on UIManager");
-            Assert.IsNotNull(livesAndPointsUIManager, "ERROR: livesAndPointsUIManager is empty on UIManager");
+            // Assert.IsNotNull(selectedItemImage, "ERROR: SelectedItemImage is empty on UIManager");
+            // Assert.IsNotNull(unselectedItemImage, "ERROR: UnselectedItemImage is empty on UIManager");
+            Assert.IsNotNull(scoreUIManager, "ERROR: livesAndPointsUIManager is empty on UIManager");
             Assert.IsNotNull(menuUI, "ERROR: Menu UI is empty on UIManager");
             Assert.IsNotNull(animalsLeftUIManager, "ERROR: animalsLeftUIManager is empty on UIManager");
             Assert.IsNotNull(musicManager, "ERROR: musicManager is empty on UIManager");
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+            Assert.IsNotNull(fXSoundsManager, "ERROR: fXSoundsManager is empty on UIManager");
+            Assert.IsNotNull(livesUIManager, "ERROR: livesUIManager is empty on UIManager");
+>>>>>>> Stashed changes
             Assert.IsTrue(imgRechargeBar.Length > 0, "ERROR: rechargeBar is empty on UIManager");
             #endregion
             menuUI.StartGameEvent += StartGame;
@@ -76,7 +117,8 @@ namespace FeedTheBeasts.Scripts
             }
             StopAllCoroutines();
             ActivateElementsOnMenu(isActive: false);
-            InventorySelect(1);
+            selectedIndex = -1;
+            InventorySelect(1, false);
             StopAllCoroutines();
             menuUI.Init();
             animalsLeftUIManager.Init();
@@ -92,6 +134,7 @@ namespace FeedTheBeasts.Scripts
             camerasManager.SwitchCameras(isGameplayCamera: true);
             canvas.renderMode = RenderMode.ScreenSpaceCamera;
             animalsLeftUIManager.StartGame();
+            scoreUIManager.StartGame();
             RestartGameEvent?.Invoke();
             foreach (var item in imgRechargeBar)
             {
@@ -102,7 +145,18 @@ namespace FeedTheBeasts.Scripts
         }
         internal void ManageLives(int lives)
         {
+<<<<<<< Updated upstream
             livesAndPointsUIManager.ManageLives(lives);
+=======
+            livesUIManager.ManageLives(lives);
+
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
         }
 
         internal void ManagePoints(int points)
@@ -135,21 +189,36 @@ namespace FeedTheBeasts.Scripts
             Input.GetKeyDown(KeyCode.Alpha4);
         }
 
-        private void InventorySelect(int result)
+        private void InventorySelect(int result, bool playSound = true)
         {
-            for (int i = 0; i < imagesFoodSelector.Length; i++)
+
+            int newIndex = result - 1;
+            // Si es el mismo elemento, no hacemos nada
+            if (selectedIndex == newIndex)
+                return;
+
+            // Desrotar el anterior
+            if (selectedIndex != -1)
             {
-                if (i == result - 1)
-                {
-                    imagesFoodSelector[i].sprite = selectedItemImage;
-                    OnSelectedItemInventoryEvent?.Invoke(i);
-                }
-                else
-                {
-                    imagesFoodSelector[i].sprite = unselectedItemImage;
-                }
+                RectTransform prev = imagesFoodSelector[selectedIndex].GetComponent<RectTransform>();
+                prev.DOKill();
+                prev.DOLocalRotate(Vector3.zero, timeTweenRotation);
             }
+
+            // Rotar el nuevo
+            RectTransform current = imagesFoodSelector[newIndex].GetComponent<RectTransform>();
+            current.DOKill();
+            current.DOLocalRotate(new Vector3(0, 0, inventoryMaxRotation), timeTweenRotation);
+            if (playSound)
+            {
+                fXSoundsManager.PlayFX(FXTypes.SelectItem, pitch: 1, volumne: 0.3f);
+            }
+
+            selectedIndex = newIndex;
+            OnSelectedItemInventoryEvent?.Invoke(newIndex);
         }
+
+
 
         internal void GameOver()
         {
@@ -167,7 +236,18 @@ namespace FeedTheBeasts.Scripts
                 sprite.gameObject.SetActive(isActive);
             }
 
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
             livesAndPointsUIManager.ActivateElementsOnMenu(isActive);
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+            scoreUIManager.ActivateElementsOnMenu(isActive);
+            livesUIManager.ActivateElementsOnMenu(isActive);
+>>>>>>> Stashed changes
 
             foreach (var item in imgRechargeBar)
             {
@@ -183,12 +263,13 @@ namespace FeedTheBeasts.Scripts
         IEnumerator RechargeCoroutine(float rechargeTime)
         {
             float time = 0f;
+            
             int currentReloadProjectile = CurrentProjectile;
-         
+
             while (time <= rechargeTime + .1f)
             {
                 time += Time.deltaTime;
-              
+
                 float progress = Mathf.Clamp01(time / rechargeTime);
                 imgRechargeBar[currentReloadProjectile].fillAmount = 1 * progress;
                 yield return null;
@@ -199,8 +280,6 @@ namespace FeedTheBeasts.Scripts
         internal void Win()
         {
             ActivateElementsOnMenu(false);
-            //menuUI.Win();
-            //canvas.renderMode = RenderMode.ScreenSpaceOverlay;
             StopWarningEffect();
         }
 
@@ -225,7 +304,7 @@ namespace FeedTheBeasts.Scripts
                 stampedeCoroutine = null;
             }
             txtInGameNotification.text = "";
-            
+
         }
 
         IEnumerator TextTransparentEffect(TMP_Text txtToEffect)
@@ -257,6 +336,18 @@ namespace FeedTheBeasts.Scripts
             stampedeCoroutine = StartCoroutine(TextTransparentEffect(txtToEffect));
 
 
+<<<<<<< Updated upstream
+=======
+        internal bool CheckPointsCalc()
+        {
+            return scoreUIManager.IsScoreCalc;
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
         }
     }
 }

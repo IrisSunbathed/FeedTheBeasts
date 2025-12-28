@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using DG.Tweening;
 using NUnit.Framework;
 using TMPro;
 using Unity.VisualScripting;
@@ -24,18 +25,45 @@ namespace FeedTheBeasts.Scripts
         [SerializeField, Range(1f, 10f), Tooltip("The offset associated to the max vertical movement when a item is selected")] float offset;
 
 
+        [SerializeField] TMP_Text[] txtBulletsLeft;
+        [SerializeField, Range(-45f, -180f)] float bulletMaxRotation;
+        [SerializeField, Range(0.001f, 0.25f)] float timeTweenRotation;
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
 
+        int selectedIndex;
+>>>>>>> Stashed changes
+
+        int selectedIndex;
+>>>>>>> Stashed changes
+
+<<<<<<< Updated upstream
+        int selectedIndex;
+
+<<<<<<< Updated upstream
         GameObject selectedGameObject;
 
-        float pointObjective;
-
-        float originalPositionY;
         int currentIndex;
 
+<<<<<<< Updated upstream
         public event Action<int, GameObject> OnChangeEquippedItemEvent;
         [SerializeField] TMP_Text[] txtBulletsLeft;
+=======
+        public event Action<int, UnityEngine.GameObject> OnChangeEquippedItemEvent;
+>>>>>>> Stashed changes
+=======
+        int currentIndex;
 
-        RectTransform rectTransform;
+        public event Action<int, UnityEngine.GameObject> OnChangeEquippedItemEvent;
+>>>>>>> Stashed changes
+=======
+        int currentIndex;
+
+        public event Action<int, UnityEngine.GameObject> OnChangeEquippedItemEvent;
+>>>>>>> Stashed changes
+
 
 
         void Awake()
@@ -46,9 +74,7 @@ namespace FeedTheBeasts.Scripts
             Assert.IsTrue(itemsPosition.Length > 0, "ERROR: items position is empty");
             Assert.IsNotNull(uIManager, "ERROR: UIManager not added to FoodSelectorManager");
             #endregion
-            uIManager.OnRechargeCompleteEvent += OnRechargeCompleCallBack;
-            rectTransform = itemsInventory[0].GetComponent<RectTransform>();
-            originalPositionY = rectTransform.localPosition.y;
+            itemsInventory[0].GetComponent<RectTransform>();
             Init();
 
         }
@@ -56,7 +82,7 @@ namespace FeedTheBeasts.Scripts
         internal void Init()
         {
 
-            OnSelectedItemInventoryCallBack(0);
+            //OnSelectedItemInventoryCallBack(0);
 
             DestroyObjectsInScene();
 
@@ -75,6 +101,7 @@ namespace FeedTheBeasts.Scripts
                 txtBulletsLeft[i].text = bulletsLeft.ToString();
             }
 
+            uIManager.OnRechargeCompleteEvent += OnRechargeCompleCallBack;
             uIManager.OnSelectedItemInventoryEvent += OnSelectedItemInventoryCallBack;
         }
 
@@ -106,59 +133,38 @@ namespace FeedTheBeasts.Scripts
             {
                 item.SetActive(true);
             }
-            OnSelectedItemInventoryCallBack(0);
+            //OnSelectedItemInventoryCallBack(0);
 
         }
 
         private void OnSelectedItemInventoryCallBack(int index)
         {
             currentIndex = index;
-            OnChangeEquippedItemEvent?.Invoke(currentIndex, itemsProjectile[currentIndex]);
+            int newIndex = index;
             selectedGameObject = itemsInventory[currentIndex];
-            StartCoroutine(SelectionEffectCoroutine());
-        }
-
-        IEnumerator SelectionEffectCoroutine()
-        {
-            RectTransform rectTransform = selectedGameObject.GetComponent<RectTransform>();
-
-            pointObjective = originalPositionY + offset;
-            float newYPosition = 0;
 
 
-            while (rectTransform.anchoredPosition.y < pointObjective)
+            // Si es el mismo elemento, no hacemos nada
+            if (selectedIndex == newIndex)
+                return;
+
+            // Desrotar el anterior
+            if (selectedIndex != -1)
             {
-                newYPosition += 0.01f;
-                rectTransform.anchoredPosition = new Vector3(
-                   rectTransform.anchoredPosition.x, rectTransform.anchoredPosition.y + newYPosition,
-                     rectTransform.localPosition.z);
-                yield return null;
-
-            }
-            rectTransform.anchoredPosition = new Vector3(
-                   rectTransform.anchoredPosition.x, pointObjective,
-                  rectTransform.localPosition.z);
-            while (rectTransform.anchoredPosition.y > originalPositionY)
-            {
-                newYPosition -= 0.01f;
-                rectTransform.anchoredPosition = new Vector3(
-                     rectTransform.anchoredPosition.x, rectTransform.anchoredPosition.y + newYPosition,
-                    rectTransform.localPosition.z);
-                yield return null;
-
+                RectTransform prev = txtBulletsLeft[selectedIndex].GetComponent<RectTransform>();
+                prev.DOKill();
+                prev.DOLocalRotate(Vector3.zero, timeTweenRotation);
             }
 
-            rectTransform.anchoredPosition = new Vector3(
-                  rectTransform.anchoredPosition.x, originalPositionY,
-                   rectTransform.localPosition.z);
-        }
+            // Rotar el nuevo
+            RectTransform current = txtBulletsLeft[newIndex].GetComponent<RectTransform>();
+            current.DOKill();
+            current.DOLocalRotate(new Vector3(0, 0, bulletMaxRotation), timeTweenRotation);
 
-        void Update()
-        {
-            if (selectedGameObject != null)
-            {
-                selectedGameObject.transform.Rotate(0, 0, rotationSpeed * Time.deltaTime);
-            }
+            OnChangeEquippedItemEvent?.Invoke(currentIndex, itemsProjectile[currentIndex]);
+            selectedIndex = newIndex;
+
+            //Efecto
         }
 
 
@@ -201,8 +207,28 @@ namespace FeedTheBeasts.Scripts
         {
             IRechargeable rechargeable = selectedGameObject.GetComponent<IRechargeable>();
             rechargeable.TryReload();
+            txtBulletsLeft[currentIndex].text = 0.ToString();
         }
 
+<<<<<<< Updated upstream
+=======
+        internal void EndGame()
+        {
+            DestroyObjectsInScene();
+
+            for (int i = 0; i < itemsInventory.Length; i++)
+            {
+                itemsInventory[i].SetActive(false);
+
+                if (itemsInventory[i].TryGetComponent(out FoodProvider foodProvider))
+                {
+                    foodProvider = itemsInventory[i].GetComponent<FoodProvider>();
+                    foodProvider.Init();
+                }
+            }
+
+        }
+>>>>>>> Stashed changes
     }
 
 }
