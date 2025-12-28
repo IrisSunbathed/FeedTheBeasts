@@ -14,6 +14,8 @@ namespace FeedTheBeasts.Scripts
         [SerializeField] Player player;
         [SerializeField] AnimalsLeftUIManager animalsLeftUIManager;
         [SerializeField] MusicManager musicManager;
+        [SerializeField] ScoreManager scoreManager;
+        [SerializeField] ParticleSystemManager particleSystemManager;
          BossController bossController;
 
         LevelManager levelManager;
@@ -97,8 +99,7 @@ namespace FeedTheBeasts.Scripts
             }
         }
 
-<<<<<<< Updated upstream
-=======
+
         internal void GameOver()
         {
             StopAllCoroutines();
@@ -115,7 +116,7 @@ namespace FeedTheBeasts.Scripts
 
 
         }
->>>>>>> Stashed changes
+
     }
 
 }

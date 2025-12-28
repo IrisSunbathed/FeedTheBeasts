@@ -86,7 +86,7 @@ namespace FeedTheBeasts.Scripts
 
         }
 
-        internal void AnimalFed()
+        internal void LevelAnimalCheck()
         {
             currentFedAnimals++;
             animalsLeftUIManager.AdjustBar(feedAnimalsGoal, currentFedAnimals + EscapedAnimals);

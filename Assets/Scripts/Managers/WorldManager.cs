@@ -137,17 +137,7 @@ namespace FeedTheBeasts.Scripts
         private void OnLoseLivePlayerActionCallback(int lives)
         {
             uIManager.ManageLives(lives);
-<<<<<<< Updated upstream
-=======
-            //consecutiveShootsManager.Reset();
-            Debug.Log(lives);
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
             if (lives <= 0)
             {
                 uIManager.GameOver();
@@ -167,31 +157,12 @@ namespace FeedTheBeasts.Scripts
 
         private static void DestroyAnimals()
         {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
             GameObject[] animals = GameObject.FindGameObjectsWithTag(Constants.ANIMAL_TAG);
             foreach (var animal in animals)
             {
                 animal.SetActive(false);
-=======
-            GameObject[] animals = UnityEngine.GameObject.FindGameObjectsWithTag(Constants.ANIMAL_TAG);
-            foreach (var animal in animals)
-            {
-                Destroy(animal);
->>>>>>> Stashed changes
-=======
-            GameObject[] animals = UnityEngine.GameObject.FindGameObjectsWithTag(Constants.ANIMAL_TAG);
-            foreach (var animal in animals)
-            {
-                Destroy(animal);
->>>>>>> Stashed changes
-=======
-            GameObject[] animals = UnityEngine.GameObject.FindGameObjectsWithTag(Constants.ANIMAL_TAG);
-            foreach (var animal in animals)
-            {
-                Destroy(animal);
->>>>>>> Stashed changes
+
             }
         }
 
@@ -217,15 +188,10 @@ namespace FeedTheBeasts.Scripts
             player.Score += points;
             if (isFed)
             {
-<<<<<<< Updated upstream
-                levelManager.AnimalFed();
-                particleSystemManager.SpawnParticles(transform);
-=======
-                levelManager.CurrentFedAnimals++;
+
                 levelManager.LevelAnimalCheck();
-                particleSystemManager.SpawnFedParticles(animalHunger.transform);
-                animalHunger.OnPointsGainedEvent -= OnPointsGainedCallBack;
->>>>>>> Stashed changes
+                particleSystemManager.SpawnFedParticles(transform);
+            //    animalHunger.OnPointsGainedEvent -= OnPointsGainedCallBack;
             }
 
 
@@ -239,7 +205,7 @@ namespace FeedTheBeasts.Scripts
             animalsLeftUIManager.Init();
             foodSelectorManager.Init();
             //DestroyAnimals();
-            musicManager.FadeCurrentMusic(0, 0.5f);;
+            musicManager.FadeCurrentMusic(0, 0.5f); ;
             playerUIManager.CancelFill();
         }
 
@@ -247,7 +213,7 @@ namespace FeedTheBeasts.Scripts
         {
             if (hasScaped)
             {
-                levelManager.AnimalFed();
+                levelManager.LevelAnimalCheck();
                 levelManager.EscapedAnimals++;
             }
             player.Lives--;

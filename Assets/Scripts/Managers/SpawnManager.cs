@@ -189,15 +189,12 @@ namespace FeedTheBeasts.Scripts
                 yield return new WaitForSeconds(interval);
                 myMethodDelegate();
             }
-<<<<<<< Updated upstream
             numberSpawnAnimals++;
             levelManager.AnimalsLeft = levelManager.feedAnimalsGoal - numberSpawnAnimals;
             if (numberSpawnAnimals <= levelManager.feedAnimalsGoal + 1)
-=======
 
             // levelManager.AnimalsLeft = levelManager.LevelAnimalGoal - numberSpawnAnimals;
-            if (numberSpawnAnimals < levelManager.LevelAnimalGoal)
->>>>>>> Stashed changes
+            if (numberSpawnAnimals < levelManager.AnimalGoalPerLevel)
             {
                 StartCoroutine(SpawnRandomAnimalCoroutine(0, intervalMin, intervalMax, SpawnRandomAnimal, true));
             }

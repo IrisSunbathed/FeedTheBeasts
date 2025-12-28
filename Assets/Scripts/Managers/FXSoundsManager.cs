@@ -1,11 +1,17 @@
+using System.Collections;
 using FeedTheBeasts.Scripts;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class FXSoundsManager : MonoBehaviour
 {
     GameCatalog gameCatalog;
+    AudioSource audioSource;
 
- 
+    void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
     void Start()
     {
         gameCatalog = GameCatalog.Instance;
@@ -15,8 +21,7 @@ public class FXSoundsManager : MonoBehaviour
     {
         return gameCatalog.GetFXClip(FXTypes.ClickOnButton);
     }
-<<<<<<< Updated upstream
-=======
+
 
     internal bool PlayFX(FXTypes fXTypes, float pitch = 1, float volumne = 1, bool waitPreviosToEnd = false)
     {
@@ -64,5 +69,4 @@ public class FXSoundsManager : MonoBehaviour
 
 
 
->>>>>>> Stashed changes
 }

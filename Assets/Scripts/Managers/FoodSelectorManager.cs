@@ -28,41 +28,19 @@ namespace FeedTheBeasts.Scripts
         [SerializeField] TMP_Text[] txtBulletsLeft;
         [SerializeField, Range(-45f, -180f)] float bulletMaxRotation;
         [SerializeField, Range(0.001f, 0.25f)] float timeTweenRotation;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
+
 
         int selectedIndex;
->>>>>>> Stashed changes
 
-        int selectedIndex;
->>>>>>> Stashed changes
-
-<<<<<<< Updated upstream
-        int selectedIndex;
-
-<<<<<<< Updated upstream
         GameObject selectedGameObject;
 
         int currentIndex;
 
-<<<<<<< Updated upstream
+
         public event Action<int, GameObject> OnChangeEquippedItemEvent;
-        [SerializeField] TMP_Text[] txtBulletsLeft;
-=======
-        public event Action<int, UnityEngine.GameObject> OnChangeEquippedItemEvent;
->>>>>>> Stashed changes
-=======
-        int currentIndex;
 
-        public event Action<int, UnityEngine.GameObject> OnChangeEquippedItemEvent;
->>>>>>> Stashed changes
-=======
-        int currentIndex;
 
-        public event Action<int, UnityEngine.GameObject> OnChangeEquippedItemEvent;
->>>>>>> Stashed changes
+      
 
 
 
@@ -210,8 +188,7 @@ namespace FeedTheBeasts.Scripts
             txtBulletsLeft[currentIndex].text = 0.ToString();
         }
 
-<<<<<<< Updated upstream
-=======
+
         internal void EndGame()
         {
             DestroyObjectsInScene();
@@ -228,7 +205,6 @@ namespace FeedTheBeasts.Scripts
             }
 
         }
->>>>>>> Stashed changes
     }
 
 }
