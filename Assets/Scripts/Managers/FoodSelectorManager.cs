@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using DG.Tweening;
 using NUnit.Framework;
 using TMPro;
 using Unity.VisualScripting;
@@ -15,8 +14,8 @@ namespace FeedTheBeasts.Scripts
     public class FoodSelectorManager : MonoBehaviour
     {
         [Header("Game Object lists")]
-        [SerializeField] GameObject[] itemsInventory;
-        [SerializeField] GameObject[] itemsProjectile;
+        [SerializeField] UnityEngine.GameObject[] itemsInventory;
+        [SerializeField] UnityEngine.GameObject[] itemsProjectile;
         [SerializeField] RectTransform[] itemsPosition;
         [Header("References")]
         [SerializeField] UIManager uIManager;
@@ -25,23 +24,18 @@ namespace FeedTheBeasts.Scripts
         [SerializeField, Range(1f, 10f), Tooltip("The offset associated to the max vertical movement when a item is selected")] float offset;
 
 
-        [SerializeField] TMP_Text[] txtBulletsLeft;
-        [SerializeField, Range(-45f, -180f)] float bulletMaxRotation;
-        [SerializeField, Range(0.001f, 0.25f)] float timeTweenRotation;
 
+        UnityEngine.GameObject selectedGameObject;
 
-        int selectedIndex;
+        float pointObjective;
 
-        GameObject selectedGameObject;
-
+        float originalPositionY;
         int currentIndex;
 
+        public event Action<int, UnityEngine.GameObject> OnChangeEquippedItemEvent;
+        [SerializeField] TMP_Text[] txtBulletsLeft;
 
-        public event Action<int, GameObject> OnChangeEquippedItemEvent;
-
-
-      
-
+        RectTransform rectTransform;
 
 
         void Awake()
@@ -52,7 +46,9 @@ namespace FeedTheBeasts.Scripts
             Assert.IsTrue(itemsPosition.Length > 0, "ERROR: items position is empty");
             Assert.IsNotNull(uIManager, "ERROR: UIManager not added to FoodSelectorManager");
             #endregion
-            itemsInventory[0].GetComponent<RectTransform>();
+            uIManager.OnRechargeCompleteEvent += OnRechargeCompleCallBack;
+            rectTransform = itemsInventory[0].GetComponent<RectTransform>();
+            originalPositionY = rectTransform.localPosition.y;
             Init();
 
         }
@@ -60,7 +56,7 @@ namespace FeedTheBeasts.Scripts
         internal void Init()
         {
 
-            //OnSelectedItemInventoryCallBack(0);
+            OnSelectedItemInventoryCallBack(0);
 
             DestroyObjectsInScene();
 
@@ -68,28 +64,21 @@ namespace FeedTheBeasts.Scripts
             {
                 itemsInventory[i].SetActive(false);
 
-                if (itemsInventory[i].TryGetComponent(out FoodProvider foodProvider))
-                {
-                    foodProvider = itemsInventory[i].GetComponent<FoodProvider>();
-                    foodProvider.Init();
-                }
-
                 int bulletsLeft = GetBullets(itemsInventory[i]);
 
                 txtBulletsLeft[i].text = bulletsLeft.ToString();
             }
 
-            uIManager.OnRechargeCompleteEvent += OnRechargeCompleCallBack;
             uIManager.OnSelectedItemInventoryEvent += OnSelectedItemInventoryCallBack;
         }
 
         private static void DestroyObjectsInScene()
         {
-            foreach (var item in GameObject.FindGameObjectsWithTag(Constants.THROWABLE_TAG))
+            foreach (var item in UnityEngine.GameObject.FindGameObjectsWithTag(Constants.THROWABLE_TAG))
             {
                 Destroy(item);
             }
-            foreach (var item in GameObject.FindGameObjectsWithTag(Constants.PLANTABLE_TAG))
+            foreach (var item in UnityEngine.GameObject.FindGameObjectsWithTag(Constants.PLANTABLE_TAG))
             {
                 Destroy(item);
             }
@@ -111,43 +100,64 @@ namespace FeedTheBeasts.Scripts
             {
                 item.SetActive(true);
             }
-            //OnSelectedItemInventoryCallBack(0);
+            OnSelectedItemInventoryCallBack(0);
 
         }
 
         private void OnSelectedItemInventoryCallBack(int index)
         {
             currentIndex = index;
-            int newIndex = index;
+            OnChangeEquippedItemEvent?.Invoke(currentIndex, itemsProjectile[currentIndex]);
             selectedGameObject = itemsInventory[currentIndex];
+            StartCoroutine(SelectionEffectCoroutine());
+        }
+
+        IEnumerator SelectionEffectCoroutine()
+        {
+            RectTransform rectTransform = selectedGameObject.GetComponent<RectTransform>();
+
+            pointObjective = originalPositionY + offset;
+            float newYPosition = 0;
 
 
-            // Si es el mismo elemento, no hacemos nada
-            if (selectedIndex == newIndex)
-                return;
-
-            // Desrotar el anterior
-            if (selectedIndex != -1)
+            while (rectTransform.anchoredPosition.y < pointObjective)
             {
-                RectTransform prev = txtBulletsLeft[selectedIndex].GetComponent<RectTransform>();
-                prev.DOKill();
-                prev.DOLocalRotate(Vector3.zero, timeTweenRotation);
+                newYPosition += 0.01f;
+                rectTransform.anchoredPosition = new Vector3(
+                   rectTransform.anchoredPosition.x, rectTransform.anchoredPosition.y + newYPosition,
+                     rectTransform.localPosition.z);
+                yield return null;
+
+            }
+            rectTransform.anchoredPosition = new Vector3(
+                   rectTransform.anchoredPosition.x, pointObjective,
+                  rectTransform.localPosition.z);
+            while (rectTransform.anchoredPosition.y > originalPositionY)
+            {
+                newYPosition -= 0.01f;
+                rectTransform.anchoredPosition = new Vector3(
+                     rectTransform.anchoredPosition.x, rectTransform.anchoredPosition.y + newYPosition,
+                    rectTransform.localPosition.z);
+                yield return null;
+
             }
 
-            // Rotar el nuevo
-            RectTransform current = txtBulletsLeft[newIndex].GetComponent<RectTransform>();
-            current.DOKill();
-            current.DOLocalRotate(new Vector3(0, 0, bulletMaxRotation), timeTweenRotation);
+            rectTransform.anchoredPosition = new Vector3(
+                  rectTransform.anchoredPosition.x, originalPositionY,
+                   rectTransform.localPosition.z);
+        }
 
-            OnChangeEquippedItemEvent?.Invoke(currentIndex, itemsProjectile[currentIndex]);
-            selectedIndex = newIndex;
-
-            //Efecto
+        void Update()
+        {
+            if (selectedGameObject != null)
+            {
+                selectedGameObject.transform.Rotate(0, 0, rotationSpeed * Time.deltaTime);
+            }
         }
 
 
 
-        private int GetBullets(GameObject goProvider)
+        private int GetBullets(UnityEngine.GameObject goProvider)
         {
             IRechargeable rechargeable = goProvider.GetComponent<IRechargeable>();
             int bulletsLeft = rechargeable.GetBullets();
@@ -170,7 +180,7 @@ namespace FeedTheBeasts.Scripts
             {
                 plantable.TryPlant();
                 SetBulletsToText();
-        
+
             }
 
         }
@@ -185,9 +195,7 @@ namespace FeedTheBeasts.Scripts
         {
             IRechargeable rechargeable = selectedGameObject.GetComponent<IRechargeable>();
             rechargeable.TryReload();
-            txtBulletsLeft[currentIndex].text = 0.ToString();
         }
-
 
         internal void EndGame()
         {
@@ -202,6 +210,10 @@ namespace FeedTheBeasts.Scripts
                     foodProvider = itemsInventory[i].GetComponent<FoodProvider>();
                     foodProvider.Init();
                 }
+
+                // int bulletsLeft = GetBullets(itemsInventory[i]);
+
+                // txtBulletsLeft[i].text = bulletsLeft.ToString();
             }
 
         }

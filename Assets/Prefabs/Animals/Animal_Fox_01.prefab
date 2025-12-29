@@ -568,7 +568,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 5
+  m_StoppingDistance: 3.5
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 0
@@ -737,7 +737,10 @@ MonoBehaviour:
   doesAnimalStop: 0
   doesFetch: 1
   doesEatBasket: 0
+  doesTurn: 0
   timeTransitionMovement: 1
+  destinationOffset: 10
+  timeWaitNewLocation: 5
 --- !u!114 &-9078734462562591292
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -751,9 +754,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   preferredFood: 1
-  hungerTotal: 2
   hungerBar: {fileID: 7185234042605109072}
+  hungerTotal: 4
   feedPoints: 25
+  scaleEffectMax: 2
+  scaleTime: 0.1
+  isBoss: 0
 --- !u!114 &-794962192512779354
 MonoBehaviour:
   m_ObjectHideFlags: 0

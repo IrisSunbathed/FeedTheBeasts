@@ -1,32 +1,37 @@
 using System;
 using System.Collections;
+using DG.Tweening;
 using NUnit.Framework;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
+using RangeAttribute = UnityEngine.RangeAttribute;
 
 namespace FeedTheBeasts.Scripts
 {
     [RequireComponent(typeof(UIAnimalScoreController), typeof(Collider), typeof(AnimalDisappearManager))]
+    [RequireComponent(typeof(Animal))]
     public class AnimalHunger : MonoBehaviour
     {
 
+        [Header("Food configuration")]
+
         [SerializeField] FoodTypes preferredFood;
-        public float hungerTotal;
-        AnimalDisappearManager animalDisapearManager;
-        UIAnimalScoreController uIAnimalScoreController;
-
-
-        internal bool IsPreferred { get; private set; }
-        internal float CurrentHunger { get; private set; }
-
-        // [SerializeField] Transform hungerBar;
         [SerializeField] Image hungerBar;
-
-        [SerializeField] bool isBoss;
+        internal float CurrentHunger { get; private set; }
+        public float hungerTotal;
         public int feedPoints;
         int points;
-        int multiplyier;
+        internal bool IsPreferred { get; private set; }
+        [Header("Feed effect configuration")]
+        [SerializeField] float scaleEffectMax;
+        [SerializeField, Range(0.01f, .5f)] float scaleTime;
+        Vector3 defualtScale;
+        [Header("Other")]
+        [SerializeField] bool isBoss;
+        AnimalDisappearManager animalDisapearManager;
+        UIAnimalScoreController uIAnimalScoreController;
+        Collider colAnimal;
 
         public event Action<float> OnBossFeedEvent;
 
@@ -40,26 +45,56 @@ namespace FeedTheBeasts.Scripts
             #region VARIABLES
             uIAnimalScoreController = GetComponent<UIAnimalScoreController>();
             animalDisapearManager = GetComponent<AnimalDisappearManager>();
+            colAnimal = GetComponent<Collider>();
 
-            multiplyier = 1;
             CurrentHunger = hungerTotal;
             #endregion
-
+            defualtScale = transform.localScale;
         }
 
         internal void FeedAnimal(string fedFood)
         {
             IsPreferred = fedFood == preferredFood.ToString();
 
-            if (IsPreferred)
+            if (CurrentHunger > 0f)
             {
-                CurrentHunger -= 2f;
-                multiplyier++;
+
+                if (IsPreferred)
+                {
+                    CurrentHunger -= 2f;
+                    if (CurrentHunger <= 0 & !isBoss)
+                    {
+                        Animal animal = GetComponent<Animal>();
+                        animal.navMeshAgent.isStopped = true;
+                        colAnimal.enabled = false;
+                        Vector3 addedScale = new Vector3(scaleEffectMax, scaleEffectMax, scaleEffectMax);
+                        transform.DOScale(transform.localScale + addedScale, scaleTime).OnComplete(OnDoScaleCompleteFed);
+                    }
+                    if (CurrentHunger > 0)
+                    {
+                        Vector3 addedScale = new Vector3(scaleEffectMax, scaleEffectMax, scaleEffectMax);
+                        transform.DOScale(transform.localScale + addedScale, scaleTime).OnComplete(OnDoScaleCompleteHit);
+                    }
+
+                }
+                else
+                {
+                    CurrentHunger -= 0.25f;
+                    if (CurrentHunger <= 0 & !isBoss)
+                    {
+                        animalDisapearManager.Disappear();
+                        OnPointsGainedEvent?.Invoke(points, transform, true);
+
+                    }
+                }
+                HungerBarManagement();
+                points += feedPoints;
+                uIAnimalScoreController.AddMarker(points, IsPreferred);
             }
-            else
-            {
-                CurrentHunger -= 0.5f;
-            }
+        }
+
+        private void HungerBarManagement()
+        {
             float progress = Mathf.Clamp01(CurrentHunger / hungerTotal);
             if (isBoss)
             {
@@ -69,16 +104,19 @@ namespace FeedTheBeasts.Scripts
             {
                 hungerBar.fillAmount = 1 * progress;
             }
-            points += feedPoints * multiplyier;
-            OnPointsGainedEvent?.Invoke(points, transform, false);
-            uIAnimalScoreController.AddMarker(points, IsPreferred);
-            if (CurrentHunger <= 0 & !isBoss)
-            {
-                animalDisapearManager.Disappear();
-    
-                OnPointsGainedEvent?.Invoke(points, transform, true);
+        }
 
-            }
+        private void OnDoScaleCompleteHit()
+        {
+            transform.DOScale(defualtScale, scaleTime);
+            OnPointsGainedEvent?.Invoke(points, transform, false);
+        }
+        private void OnDoScaleCompleteFed()
+        {
+            Debug.Log($"Destroyed animal: {GetInstanceID()}");
+            animalDisapearManager.Disappear();
+            OnPointsGainedEvent?.Invoke(points, transform, true);
+
         }
 
         internal FoodTypes GetPreferredFood()

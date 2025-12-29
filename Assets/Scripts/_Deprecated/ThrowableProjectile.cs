@@ -16,14 +16,14 @@ namespace FeedTheBeasts.Scripts
             meshRenderer = GetComponent<MeshRenderer>();
         }
 
-        protected override void OnTriggerEnter(Collider other)
-        {
-            if (other.CompareTag(Constants.ANIMAL_TAG))
-            {
-                Debug.Log("Animal interaction with it");
+        // protected override void OnTriggerEnter(Collider other)
+        // {
+        //     if (other.CompareTag(Constants.ANIMAL_TAG))
+        //     {
+        //         Debug.Log("Animal interaction with it");
 
-            }
-        }
+        //     }
+        // }
 
         internal void SimulateProjectile(Vector3 target, Transform origin)
         {

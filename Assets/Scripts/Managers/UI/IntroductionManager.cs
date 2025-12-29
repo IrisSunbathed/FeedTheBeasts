@@ -45,7 +45,7 @@ public class IntroductionManager : MonoBehaviour
     {
 
         background.SetActive(true);
-
+        canBeClickedAway = true;
         SetUpTexts();
         StartCoroutine(TextEffectCourutine());
         Debug.Log(index);
@@ -94,7 +94,6 @@ public class IntroductionManager : MonoBehaviour
         else
         {
             StartCoroutine(FadeInAndOut());
-            canBeClickedAway = true;
         }
     }
     IEnumerator FadeInAndOut()

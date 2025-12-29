@@ -23,11 +23,8 @@ namespace FeedTheBeasts.Scripts
 
         float pitch;
 
-        float lengthCam;
-        float orthographicSize;
 
         Vector3 projectileBounds;
-        float projectileXBoundsSign;
 
         public event Action<GameObject> OnInvisible;
         public event Action<DetectCollisions, bool> OnHitAction;
@@ -38,8 +35,6 @@ namespace FeedTheBeasts.Scripts
         void Start()
         {
             camerasManager = CamerasManager.Instance;
-            lengthCam = camerasManager.GetCameraLength();
-            orthographicSize = camerasManager.OrthographicSize;
         }
         void Awake()
         {
@@ -69,30 +64,10 @@ namespace FeedTheBeasts.Scripts
                 OnMissAction?.Invoke(this);
                 InvokeAction();
             }
-            // GetXBounds();
-            // GetZBounds();
+        
         }
 
-        // private void GetZBounds()
-        // {
-        //     if (transform.position.z < -orthographicSize
-        //       | transform.position.z > orthographicSize)
-        //     {
-        //         OnMissAction?.Invoke(this);
-        //         InvokeAction();
-        //     }
-        // }
 
-        // private void GetXBounds()
-        // {
-        //     projectileXBoundsSign = projectileXBounds * Mathf.Sign(transform.position.x);
-        //     if (transform.position.x < -lengthCam + projectileXBoundsSign
-        //         | transform.position.x > lengthCam + projectileXBoundsSign)
-        //     {
-        //         OnMissAction?.Invoke(this);
-        //         InvokeAction();
-        //     }
-        // }
 
         internal void InvokeAction()
         {
@@ -102,6 +77,7 @@ namespace FeedTheBeasts.Scripts
 
         IEnumerator AudioCoroutine(Collider other)
         {
+            Debug.Log("Hit animal: " + other.GetInstanceID());
             AnimalHunger feedPoints = other.GetComponent<AnimalHunger>();
             feedPoints.FeedAnimal(tag);
             if (feedPoints.CurrentHunger <= 0)
@@ -112,7 +88,6 @@ namespace FeedTheBeasts.Scripts
             else
             {
                 OnHitAction?.Invoke(this, false);
-
             }
             ConfigureAudio(feedPoints.IsPreferred);
             meshRenderer.enabled = false;

@@ -29,7 +29,6 @@ namespace FeedTheBeasts.Scripts
 
         void Awake()
         {
-
             Assert.IsNotNull(consecutiveShootsManager, "ERROR: consecutiveShootsManager not added");
             AudioSourceShoot = GetComponent<AudioSource>();
             carrotObjectPool = GetComponent<CarrotObjectPool>();
@@ -39,9 +38,9 @@ namespace FeedTheBeasts.Scripts
         public override void Init()
         {
             StopAllCoroutines();
-            carrotObjectPool.StopAllCoroutines();
             canShoot = true;
             shootCount = 0;
+            carrotObjectPool.StopAllCoroutines();
         }
 
         public void IncreaseShootCount()

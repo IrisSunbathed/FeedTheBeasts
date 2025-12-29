@@ -19,7 +19,7 @@ public class FXSoundsManager : MonoBehaviour
 
     internal AudioClip GetFXSound(FXTypes fXTypes)
     {
-        return gameCatalog.GetFXClip(FXTypes.ClickOnButton);
+        return gameCatalog.GetFXClip(fXTypes);
     }
 
 

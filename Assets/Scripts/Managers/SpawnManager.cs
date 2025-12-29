@@ -11,6 +11,9 @@ namespace FeedTheBeasts.Scripts
 
     public class SpawnManager : MonoBehaviour
     {
+        [Header("Configuration")]
+        [SerializeField] bool spawnAnimals;
+        [SerializeField] float stampedeTime;
         [Header("Prefabs to spawn")]
         [SerializeField] UnityEngine.GameObject[] goPrefabs;
         [SerializeField] UnityEngine.GameObject goAggresiveAnimal;
@@ -19,8 +22,6 @@ namespace FeedTheBeasts.Scripts
         [SerializeField] UIManager uIManager;
         LevelManager levelManager;
 
-        [SerializeField] bool spawnAnimals;
-        [SerializeField] float stampedeTime;
 
         int numberSpawnAnimals;
 
@@ -138,6 +139,7 @@ namespace FeedTheBeasts.Scripts
 
         internal void Stampede(int numberOfAnimals)
         {
+            Debug.Log("Stampede");
             StopAllCoroutines();
             StartCoroutine(StampedeWarningCoroutine(numberOfAnimals));
         }

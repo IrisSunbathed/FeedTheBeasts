@@ -34,7 +34,6 @@ namespace FeedTheBeasts.Scripts
             while (currentTime <= totalTime)
             {
                 currentTime += Time.deltaTime;
-                Debug.Log($"currentTime {currentTime}");
                 float progress = Mathf.Clamp01(currentTime / totalTime);
                 progressBar.fillAmount = 1 - progress;
                 yield return null;

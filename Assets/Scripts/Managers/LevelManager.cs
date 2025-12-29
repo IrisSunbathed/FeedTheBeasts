@@ -145,7 +145,7 @@ namespace FeedTheBeasts.Scripts
         {
 
             animalsLeftUIManager.AdjustBar(feedAnimalsGoal, CurrentFedAnimals + EscapedAnimals);
-//            Debug.Log($"(currentFedAnimalsRound {currentFedAnimalsRound} + escapedAnimalsRound {escapedAnimalsRound}) ==  {LevelAnimalGoal}");
+           Debug.Log($"(currentFedAnimalsRound {currentFedAnimalsRound} + escapedAnimalsRound {escapedAnimalsRound}) ==  {LevelAnimalGoal}");
             if (currentFedAnimalsRound + escapedAnimalsRound == LevelAnimalGoal)
             {
 

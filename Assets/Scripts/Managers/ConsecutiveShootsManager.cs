@@ -52,13 +52,13 @@ namespace FeedTheBeasts
 
         private void OnHitAction(DetectCollisions collisions, bool isLastHit)
         {
-            Debug.Log($"Position: {collisions.transform.position} Rotation: {collisions.transform.rotation}");
             particleSystemManager.SpawnHitParticles(collisions.transform);
 
             if (isLastHit)
             {
                 collisions.OnMissAction -= OnMissCallBack;
                 collisions.OnHitAction -= OnHitAction;
+                
             }
             else
             {

@@ -8,14 +8,19 @@ namespace FeedTheBeasts.Scripts
         public float speed;
 
         internal float currentSpeed;
-        protected abstract void Awake();
 
-        protected abstract void OnTriggerEnter(Collider other);
 
         protected GameCatalog gameCatalog;
         protected AudioSource audioSource;
 
         protected MeshRenderer meshRenderer;
+
+        protected TrailRenderer trailRenderer;
+
+
+        protected FoodTypes foodTypes;
+
+        protected abstract void Awake();
 
     }
 }
