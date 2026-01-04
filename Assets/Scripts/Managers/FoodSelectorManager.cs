@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using DG.Tweening;
 using NUnit.Framework;
 using TMPro;
 using Unity.VisualScripting;
@@ -20,17 +21,15 @@ namespace FeedTheBeasts.Scripts
         [Header("References")]
         [SerializeField] UIManager uIManager;
         [Header("Configuration")]
-        [SerializeField, Range(10f, 40f), Tooltip("Rotation of the selected item when it is selected")] float rotationSpeed = 20f;
         [SerializeField, Range(1f, 10f), Tooltip("The offset associated to the max vertical movement when a item is selected")] float offset;
 
 
 
         UnityEngine.GameObject selectedGameObject;
 
-        float pointObjective;
 
-        float originalPositionY;
         int currentIndex;
+
 
         public event Action<int, UnityEngine.GameObject> OnChangeEquippedItemEvent;
         [SerializeField] TMP_Text[] txtBulletsLeft;
@@ -48,7 +47,6 @@ namespace FeedTheBeasts.Scripts
             #endregion
             uIManager.OnRechargeCompleteEvent += OnRechargeCompleCallBack;
             rectTransform = itemsInventory[0].GetComponent<RectTransform>();
-            originalPositionY = rectTransform.localPosition.y;
             Init();
 
         }
@@ -56,7 +54,7 @@ namespace FeedTheBeasts.Scripts
         internal void Init()
         {
 
-            OnSelectedItemInventoryCallBack(0);
+            //OnSelectedItemInventoryCallBack(0);
 
             DestroyObjectsInScene();
 
@@ -100,62 +98,38 @@ namespace FeedTheBeasts.Scripts
             {
                 item.SetActive(true);
             }
-            OnSelectedItemInventoryCallBack(0);
+              selectedGameObject = itemsInventory[0];
+            //OnSelectedItemInventoryCallBack(0);
 
         }
 
-        private void OnSelectedItemInventoryCallBack(int index)
+        private void OnSelectedItemInventoryCallBack(int index, float timeTweenRotation, float inventoryMaxRotation)
         {
+               int newIndex = index;
+            // Si es el mismo elemento, no hacemos nada
+            if (currentIndex == newIndex)
+                return;
+
+            // Desrotar el anterior
+            if (currentIndex != -1)
+            {
+                RectTransform prev = txtBulletsLeft[currentIndex].GetComponent<RectTransform>();
+                prev.DOKill();
+                prev.DOLocalRotate(Vector3.zero, timeTweenRotation);
+            }
+
+            // Rotar el nuevo
+            RectTransform current = txtBulletsLeft[newIndex].GetComponent<RectTransform>();
+            current.DOKill();
+            current.DOLocalRotate(new Vector3(0, 0, -inventoryMaxRotation), timeTweenRotation);
+            
+
+            selectedGameObject = itemsInventory[newIndex];
             currentIndex = index;
-            OnChangeEquippedItemEvent?.Invoke(currentIndex, itemsProjectile[currentIndex]);
-            selectedGameObject = itemsInventory[currentIndex];
-            StartCoroutine(SelectionEffectCoroutine());
+
+            //OnChangeEquippedItemEvent?.Invoke(currentIndex, itemsProjectile[currentIndex]);
+           // StartCoroutine(SelectionEffectCoroutine());
         }
-
-        IEnumerator SelectionEffectCoroutine()
-        {
-            RectTransform rectTransform = selectedGameObject.GetComponent<RectTransform>();
-
-            pointObjective = originalPositionY + offset;
-            float newYPosition = 0;
-
-
-            while (rectTransform.anchoredPosition.y < pointObjective)
-            {
-                newYPosition += 0.01f;
-                rectTransform.anchoredPosition = new Vector3(
-                   rectTransform.anchoredPosition.x, rectTransform.anchoredPosition.y + newYPosition,
-                     rectTransform.localPosition.z);
-                yield return null;
-
-            }
-            rectTransform.anchoredPosition = new Vector3(
-                   rectTransform.anchoredPosition.x, pointObjective,
-                  rectTransform.localPosition.z);
-            while (rectTransform.anchoredPosition.y > originalPositionY)
-            {
-                newYPosition -= 0.01f;
-                rectTransform.anchoredPosition = new Vector3(
-                     rectTransform.anchoredPosition.x, rectTransform.anchoredPosition.y + newYPosition,
-                    rectTransform.localPosition.z);
-                yield return null;
-
-            }
-
-            rectTransform.anchoredPosition = new Vector3(
-                  rectTransform.anchoredPosition.x, originalPositionY,
-                   rectTransform.localPosition.z);
-        }
-
-        void Update()
-        {
-            if (selectedGameObject != null)
-            {
-                selectedGameObject.transform.Rotate(0, 0, rotationSpeed * Time.deltaTime);
-            }
-        }
-
-
 
         private int GetBullets(UnityEngine.GameObject goProvider)
         {

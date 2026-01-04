@@ -47,7 +47,7 @@ namespace FeedTheBeasts.Scripts
 
         [SerializeField] AnimalsLeftUIManager animalsLeftUIManager;
         public event Action RestartGameEvent;
-        public event Action<int> OnSelectedItemInventoryEvent;
+        public event Action<int, float, float> OnSelectedItemInventoryEvent;
         public event Action<int> OnRechargeCompleteEvent;
 
         [Header("Stampede elements")]
@@ -118,6 +118,7 @@ namespace FeedTheBeasts.Scripts
                 item.fillAmount = 0;
             }
             StopAllCoroutines();
+            InventorySelect(1, false);
             txtInGameNotification.text = string.Empty;
         }
         internal void ManageLives(int lives)
@@ -178,7 +179,8 @@ namespace FeedTheBeasts.Scripts
             }
 
             selectedIndex = newIndex;
-            OnSelectedItemInventoryEvent?.Invoke(newIndex);
+            OnSelectedItemInventoryEvent?.Invoke(newIndex, timeTweenRotation, inventoryMaxRotation);
+            CurrentProjectile = newIndex;
         }
 
 

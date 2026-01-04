@@ -71,7 +71,7 @@ namespace FeedTheBeasts.Scripts
             plantingState.OnCancelledAction += OnCacelledActionCallback;
             // player.OnMaxScoreReached += OnDifficultyAddCallback;
             uIManager.RestartGameEvent += RestartGameCallBack;
-            foodSelectorManager.OnChangeEquippedItemEvent += OnChangeEquippedItemCallback;
+            //foodSelectorManager.OnChangeEquippedItemEvent += OnChangeEquippedItemCallback;
             fruitProvider.OnPlantEvent += OnPlantCallBack;
             playerUIManager.OnCompletionEvent += OnCompletionEventCallback;
             foreach (var item in foodProviders)
@@ -104,10 +104,10 @@ namespace FeedTheBeasts.Scripts
 
         }
 
-        private void OnChangeEquippedItemCallback(int index, UnityEngine.GameObject projectile)
-        {
-            uIManager.CurrentProjectile = index;
-        }
+        // private void OnChangeEquippedItemCallback(int index, UnityEngine.GameObject projectile)
+        // {
+        //     uIManager.CurrentProjectile = index;
+        // }
 
         private void OnRechargeCallBack(float rechargeTime)
         {
