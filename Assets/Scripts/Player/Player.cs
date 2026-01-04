@@ -34,24 +34,22 @@ namespace FeedTheBeasts.Scripts
             get => lives;
             set
             {
-                if (lives <= maxLifes)
+                lives = value;
+                if (lives >= previousNumberOfLifes & lives <= maxLifes)
                 {
-                    lives = value;
-                    if (lives >= previousNumberOfLifes)
-                    {
-                        OnGainedLivePlayerAction?.Invoke(Lives);
-                    }
-                    else
-                    {
-                        if (!isInvincible)
-                        {
-                            OnLoseLivePlayerAction?.Invoke(Lives);
-                            StartCoroutine(InvencibilityTime());
-                            StartCoroutine(HitIndicator());
-                        }
-                    }
-                    previousNumberOfLifes = lives;
+                    OnGainedLivePlayerAction?.Invoke(Lives);
                 }
+                if (lives < previousNumberOfLifes)
+                {
+                    if (!isInvincible)
+                    {
+                        OnLoseLivePlayerAction?.Invoke(Lives);
+                        StartCoroutine(InvencibilityTime());
+                        StartCoroutine(HitIndicator());
+                    }
+                }
+                
+                previousNumberOfLifes = lives;
 
             }
         }
