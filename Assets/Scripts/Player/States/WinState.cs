@@ -10,6 +10,7 @@ public class WinState : States
     }
     public override void Do()
     {
+        base.Do();
         input.SetOriginalPosition();
        
         if (input.CanMove)

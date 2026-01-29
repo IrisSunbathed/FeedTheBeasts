@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DG.Tweening;
 using NUnit.Framework;
 using TMPro;
@@ -14,12 +15,13 @@ namespace FeedTheBeasts.Scripts
 
     public class FoodSelectorManager : MonoBehaviour
     {
-        [Header("Game Object lists")]
+        [Header("Selectors elements")]
         [SerializeField] UnityEngine.GameObject[] itemsInventory;
         [SerializeField] UnityEngine.GameObject[] itemsProjectile;
-        [SerializeField] RectTransform[] itemsPosition;
+        List<GameObject> activeInventoryItems;
+        [SerializeField] TMP_Text[] txtBulletsLeft;
         [Header("References")]
-        [SerializeField] UIManager uIManager;
+        [SerializeField] InventoryUIManager inventoryUIManager;
         [Header("Configuration")]
         [SerializeField, Range(1f, 10f), Tooltip("The offset associated to the max vertical movement when a item is selected")] float offset;
 
@@ -32,9 +34,9 @@ namespace FeedTheBeasts.Scripts
 
 
         public event Action<int, UnityEngine.GameObject> OnChangeEquippedItemEvent;
-        [SerializeField] TMP_Text[] txtBulletsLeft;
 
-        RectTransform rectTransform;
+
+        //RectTransform rectTransform;
 
 
         void Awake()
@@ -42,11 +44,16 @@ namespace FeedTheBeasts.Scripts
             #region ASSERTIONS
             Assert.IsTrue(itemsInventory.Length > 0, "ERROR: items in inventory is empty");
             Assert.IsTrue(itemsProjectile.Length > 0, "ERROR: items projectiles is empty");
-            Assert.IsTrue(itemsPosition.Length > 0, "ERROR: items position is empty");
-            Assert.IsNotNull(uIManager, "ERROR: UIManager not added to FoodSelectorManager");
+            Assert.IsNotNull(inventoryUIManager, "ERROR: UIManager not added to FoodSelectorManager");
             #endregion
-            uIManager.OnRechargeCompleteEvent += OnRechargeCompleCallBack;
-            rectTransform = itemsInventory[0].GetComponent<RectTransform>();
+            inventoryUIManager.OnRechargeCompleteEvent += OnRechargeCompleCallBack;
+            activeInventoryItems = new List<GameObject>();
+            //rectTransform = itemsInventory[0].GetComponent<RectTransform>();
+
+
+            //Instanciar
+            //
+            //SetHerarchyIndex
             Init();
 
         }
@@ -54,9 +61,6 @@ namespace FeedTheBeasts.Scripts
         internal void Init()
         {
 
-            //OnSelectedItemInventoryCallBack(0);
-
-            DestroyObjectsInScene();
 
             for (int i = 0; i < itemsInventory.Length; i++)
             {
@@ -67,45 +71,51 @@ namespace FeedTheBeasts.Scripts
                 txtBulletsLeft[i].text = bulletsLeft.ToString();
             }
 
-            uIManager.OnSelectedItemInventoryEvent += OnSelectedItemInventoryCallBack;
+
+            inventoryUIManager.OnSelectedItemInventoryEvent += OnSelectedItemInventoryCallBack;
         }
 
-        private static void DestroyObjectsInScene()
-        {
-            foreach (var item in UnityEngine.GameObject.FindGameObjectsWithTag(Constants.THROWABLE_TAG))
-            {
-                Destroy(item);
-            }
-            foreach (var item in UnityEngine.GameObject.FindGameObjectsWithTag(Constants.PLANTABLE_TAG))
-            {
-                Destroy(item);
-            }
-        }
+
 
         private void OnRechargeCompleCallBack(int currentProjectile)
         {
-            IRechargeable rechargeable = itemsInventory[currentProjectile].GetComponent<IRechargeable>();
-            int bulletsLeft = GetBullets(itemsInventory[currentProjectile]);
-            rechargeable.IsRecharging = false;
-            txtBulletsLeft[currentProjectile].text = bulletsLeft.ToString();
+            if (activeInventoryItems[currentProjectile].TryGetComponent(out IRechargeable rechargeable))
+            {
+                int bulletsLeft = GetBullets(activeInventoryItems[currentProjectile]);
+                rechargeable.IsRecharging = false;
+                txtBulletsLeft[currentProjectile].text = bulletsLeft.ToString();
+
+            }
         }
 
 
         internal void StartGame()
         {
 
-            foreach (var item in itemsInventory)
+            // foreach (var item in itemsInventory)
+            // {
+            //     item.SetActive(true);
+            // }
+
+            for (int i = 0; i < inventoryUIManager.initialNumberWeapons; i++)
             {
-                item.SetActive(true);
+                itemsInventory[i].SetActive(true);
+                // activeInventoryItems.Add(itemsInventory[i]);
+                if (activeInventoryItems.Count <= inventoryUIManager.initialNumberWeapons)
+                {
+                    activeInventoryItems.Add(itemsInventory[i]);
+                }
+
             }
-              selectedGameObject = itemsInventory[0];
+
+            selectedGameObject = activeInventoryItems[0];
             //OnSelectedItemInventoryCallBack(0);
 
         }
 
         private void OnSelectedItemInventoryCallBack(int index, float timeTweenRotation, float inventoryMaxRotation)
         {
-               int newIndex = index;
+            int newIndex = index;
             // Si es el mismo elemento, no hacemos nada
             if (currentIndex == newIndex)
                 return;
@@ -114,34 +124,46 @@ namespace FeedTheBeasts.Scripts
             if (currentIndex != -1)
             {
                 RectTransform prev = txtBulletsLeft[currentIndex].GetComponent<RectTransform>();
+                // RectTransform prev2 = itemsProjectile[currentIndex].GetComponent<RectTransform>();
+
                 prev.DOKill();
                 prev.DOLocalRotate(Vector3.zero, timeTweenRotation);
+
+                // prev2.DOKill();
+                // prev2.DOLocalRotate(Vector3.zero, timeTweenRotation);
             }
 
             // Rotar el nuevo
             RectTransform current = txtBulletsLeft[newIndex].GetComponent<RectTransform>();
+            // RectTransform current2 = itemsProjectile[newIndex].GetComponent<RectTransform>();
             current.DOKill();
             current.DOLocalRotate(new Vector3(0, 0, -inventoryMaxRotation), timeTweenRotation);
-            
+            // current2.DOKill();
+            // current2.DOLocalRotate(new Vector3(0, 0, -inventoryMaxRotation), timeTweenRotation);
 
-            selectedGameObject = itemsInventory[newIndex];
+            selectedGameObject = activeInventoryItems[newIndex];
             currentIndex = index;
 
             //OnChangeEquippedItemEvent?.Invoke(currentIndex, itemsProjectile[currentIndex]);
-           // StartCoroutine(SelectionEffectCoroutine());
+            // StartCoroutine(SelectionEffectCoroutine());
         }
 
         private int GetBullets(UnityEngine.GameObject goProvider)
         {
-            IRechargeable rechargeable = goProvider.GetComponent<IRechargeable>();
-            int bulletsLeft = rechargeable.GetBullets();
-            return bulletsLeft;
+            if (goProvider.TryGetComponent(out IRechargeable rechargeable))
+            {
+
+                int bulletsLeft = rechargeable.GetBullets();
+                return bulletsLeft;
+            }
+            return 1;
         }
 
         internal void TryShootCurrentWeapon(Vector3 position)
         {
             if (selectedGameObject.TryGetComponent(out IThrowable throwable))
             {
+                Debug.Log("Throwing");
                 throwable.TryThrow(position);
                 SetBulletsToText();
             }
@@ -152,6 +174,7 @@ namespace FeedTheBeasts.Scripts
             }
             if (selectedGameObject.TryGetComponent(out IPlantable plantable))
             {
+                Debug.Log("Planting");
                 plantable.TryPlant();
                 SetBulletsToText();
 
@@ -173,7 +196,7 @@ namespace FeedTheBeasts.Scripts
 
         internal void EndGame()
         {
-            DestroyObjectsInScene();
+
 
             for (int i = 0; i < itemsInventory.Length; i++)
             {
@@ -185,11 +208,23 @@ namespace FeedTheBeasts.Scripts
                     foodProvider.Init();
                 }
 
-                // int bulletsLeft = GetBullets(itemsInventory[i]);
-
-                // txtBulletsLeft[i].text = bulletsLeft.ToString();
             }
+            activeInventoryItems.Clear();
 
+        }
+
+        internal void UnlockWeapon(int provIndex)
+        {
+            itemsInventory[provIndex].SetActive(true);
+            activeInventoryItems.Add(itemsInventory[provIndex]);
+        }
+
+        internal void RefreshBullets()
+        {
+            for (int i = 0; i < activeInventoryItems.Count; i++)
+            {
+                OnRechargeCompleCallBack(i);
+            }
         }
     }
 

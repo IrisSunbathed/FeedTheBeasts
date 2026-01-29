@@ -15,7 +15,7 @@ namespace FeedTheBeasts.Scripts
         protected Rigidbody rb;
         protected float startTime;
         float CurrentTime => Time.time - startTime;
-      
+
 
 
         public void Setup(Rigidbody rb, Animator animator, PlayerController input)
@@ -30,7 +30,17 @@ namespace FeedTheBeasts.Scripts
         }
         public virtual void Do()
         {
-            
+            Debug.Log($"Animator paused. Speed: {animator.speed}");
+            if (GameStage.gameStageEnum == GameStageEnum.Paused)
+            {
+                animator.speed = 0;
+                return;
+            }
+            if (GameStage.gameStageEnum != GameStageEnum.Paused)
+            {
+                animator.speed = 1;
+                return;
+            }
 
         }
         public virtual void FixedDo()
@@ -39,7 +49,7 @@ namespace FeedTheBeasts.Scripts
         }
         public virtual void Exit()
         {
-          
+
         }
 
     }

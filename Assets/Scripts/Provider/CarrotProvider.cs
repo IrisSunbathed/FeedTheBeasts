@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using NUnit.Framework;
 using UnityEngine;
+using RangeAttribute = UnityEngine.RangeAttribute;
 
 namespace FeedTheBeasts.Scripts
 {
@@ -18,9 +19,11 @@ namespace FeedTheBeasts.Scripts
         GameCatalog gameCatalog;
 
         CarrotObjectPool carrotObjectPool;
+        internal bool doesTrackAnimal;
 
         [SerializeField] ConsecutiveShootsManager consecutiveShootsManager;
 
+        
 
         void Start()
         {
@@ -37,10 +40,11 @@ namespace FeedTheBeasts.Scripts
 
         public override void Init()
         {
-            StopAllCoroutines();
+           StopAllCoroutines();
             canShoot = true;
+
             shootCount = 0;
-            carrotObjectPool.StopAllCoroutines();
+            // carrotObjectPool.StopAllCoroutines();
         }
 
         public void IncreaseShootCount()
@@ -48,10 +52,15 @@ namespace FeedTheBeasts.Scripts
             shootCount++;
             if (shootCount == projectilesPerRecharge)
             {
-                StartCoroutine(ReloadCoroutine());
-                OnRechargeEvent?.Invoke(rechargingTime);
-                shootCount = 0;
+                Reload();
             }
+        }
+
+        private void Reload()
+        {
+            StartCoroutine(ReloadCoroutine());
+            OnRechargeEvent?.Invoke(rechargingTime);
+            shootCount = 0;
         }
 
         public IEnumerator ReloadCoroutine()
@@ -66,9 +75,9 @@ namespace FeedTheBeasts.Scripts
         {
             if (canShoot & !IsRecharging)
             {
-
+                carrotObjectPool.doesTrackAnimals = doesTrackAnimal;
                 GameObject newPro = carrotObjectPool.opStraightProjectile.Get();
-
+                
                 newPro.transform.SetPositionAndRotation(playerPosition.position, playerPosition.rotation);
                 DetectCollisions detectCollisions = newPro.GetComponent<DetectCollisions>();
                 consecutiveShootsManager.SubscribeToEvents(detectCollisions);
@@ -117,12 +126,9 @@ namespace FeedTheBeasts.Scripts
         {
             if (!IsRecharging)
             {
-                OnRechargeEvent?.Invoke(rechargingTime);
-                StartCoroutine(ReloadCoroutine());
-                shootCount = 0;
+                 Reload();
             }
         }
-
 
     }
 

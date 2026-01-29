@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1103084441129745946}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: PlaceHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -51,7 +51,10 @@ GameObject:
   - component: {fileID: -9205733764317325220}
   - component: {fileID: 1173454677168886381}
   - component: {fileID: 3453309883161113966}
-  m_Layer: 0
+  - component: {fileID: 7874514692185957705}
+  - component: {fileID: 4090540836116662675}
+  - component: {fileID: 8412214885866007422}
+  m_Layer: 8
   m_Name: Animal_Chick
   m_TagString: Animal
   m_Icon: {fileID: 0}
@@ -299,6 +302,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   preferredFood: 0
   hungerBar: {fileID: 2361194256300507770}
+  destroyOutOfBounds: {fileID: 2143656088526842797}
   hungerTotal: 4
   feedPoints: 5
   scaleEffectMax: 0.025
@@ -389,6 +393,41 @@ MonoBehaviour:
   canvas: {fileID: 1327254923844389896}
   meshRendererAnimal: {fileID: 502646364120384858}
   timeDisappear: 1.5
+--- !u!33 &7874514692185957705
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1878929137101019789}
+  m_Mesh: {fileID: 0}
+--- !u!114 &4090540836116662675
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1878929137101019789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1175a2ae2021244384b6595734d746b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 0
+  nearbyAnimalCheck: 0.5
+  sphereRadius: 5
+--- !u!114 &8412214885866007422
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1878929137101019789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9aedbbc997e399342ba466d5c283598d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2513922939171625700
 GameObject:
   m_ObjectHideFlags: 0
@@ -398,7 +437,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9158353189030299445}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ChickRig_ROOTSHJnt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -433,7 +472,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4533813991032916423}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ChickRig_Tail_AuxSHJnt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -464,7 +503,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3894886877460957008}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ChickRig_FootR_AuxSHJnt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -495,7 +534,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7997229319148672895}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Container
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -531,7 +570,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5640446459752024050}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ChickRig_SHJntGrp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -564,7 +603,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6816560713128512383}
   - component: {fileID: 502646364120384858}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SA_Animal_Chick
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -658,7 +697,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4788667737243041073}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Placeholder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -694,7 +733,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5512812060699806384}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ChickRig_l_Leg_AuxSHJnt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -726,7 +765,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6584695346173676945}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ChickRig_FootL_AuxSHJnt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -757,7 +796,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8888098564079968508}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ChickRig_Head_AuxSHJnt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -788,7 +827,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6091361939836331884}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ChickRig_r_Leg_AuxSHJnt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -820,6 +859,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 1104858821552136158}
     m_Modifications:
     - target: {fileID: 232242604720280036, guid: 2743ea295ce4e274aa69f196de48749e, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 232242604720280036, guid: 2743ea295ce4e274aa69f196de48749e, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
@@ -836,8 +879,16 @@ PrefabInstance:
       value: AnimalMarker
       objectReference: {fileID: 0}
     - target: {fileID: 2872154628990361560, guid: 2743ea295ce4e274aa69f196de48749e, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2872154628990361560, guid: 2743ea295ce4e274aa69f196de48749e, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4082251826958315854, guid: 2743ea295ce4e274aa69f196de48749e, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4599728819300344503, guid: 2743ea295ce4e274aa69f196de48749e, type: 3}
       propertyPath: m_SizeDelta.x
@@ -846,6 +897,10 @@ PrefabInstance:
     - target: {fileID: 4599728819300344503, guid: 2743ea295ce4e274aa69f196de48749e, type: 3}
       propertyPath: m_SizeDelta.y
       value: 825
+      objectReference: {fileID: 0}
+    - target: {fileID: 6090833738447828196, guid: 2743ea295ce4e274aa69f196de48749e, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 7911710272135290690, guid: 2743ea295ce4e274aa69f196de48749e, type: 3}
       propertyPath: m_Pivot.x
@@ -989,6 +1044,10 @@ PrefabInstance:
     - target: {fileID: 3032862633986404171, guid: f6abfe419056b1f40b73e5ed9dc9a8f8, type: 3}
       propertyPath: m_Name
       value: CarrotFoodInventory
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032862633986404171, guid: f6abfe419056b1f40b73e5ed9dc9a8f8, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4320497380410622876, guid: f6abfe419056b1f40b73e5ed9dc9a8f8, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1137,8 +1196,16 @@ PrefabInstance:
       value: Canvas
       objectReference: {fileID: 0}
     - target: {fileID: 8273616959812219698, guid: 80683cbae89e8fc46bb60d2c3a74e0a7, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273616959812219698, guid: 80683cbae89e8fc46bb60d2c3a74e0a7, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8690506956800910232, guid: 80683cbae89e8fc46bb60d2c3a74e0a7, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -1170,6 +1237,10 @@ PrefabInstance:
     - target: {fileID: 1598162968093878366, guid: 555646dd18ba3344283ccdf959ab7d4a, type: 3}
       propertyPath: m_AdditionalShaderChannelsFlag
       value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 2029262196290803890, guid: 555646dd18ba3344283ccdf959ab7d4a, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 2692768848055931788, guid: 555646dd18ba3344283ccdf959ab7d4a, type: 3}
       propertyPath: m_Pivot.x
@@ -1251,9 +1322,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7278503348861944764, guid: 555646dd18ba3344283ccdf959ab7d4a, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 8019038442174583574, guid: 555646dd18ba3344283ccdf959ab7d4a, type: 3}
       propertyPath: m_Name
       value: HungerBar
+      objectReference: {fileID: 0}
+    - target: {fileID: 8019038442174583574, guid: 555646dd18ba3344283ccdf959ab7d4a, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

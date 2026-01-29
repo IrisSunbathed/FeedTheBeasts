@@ -35,7 +35,7 @@ namespace FeedTheBeasts.Scripts
             StopAllCoroutines();
             canShoot = true;
             shootCount = 0;
-            boneObjectPool.StopAllCoroutines();
+            //boneObjectPool.StopAllCoroutines();
         }
 
         public IEnumerator ReloadCoroutine()
@@ -108,6 +108,8 @@ namespace FeedTheBeasts.Scripts
                 StartCoroutine(ShootDelay());
             }
         }
+
+       
     }
 
 

@@ -75,7 +75,6 @@ namespace FeedTheBeasts.Scripts
 
             DestroyAnimals();
 
-
         }
 
         private void SpawnRandomAnimal()
@@ -128,7 +127,7 @@ namespace FeedTheBeasts.Scripts
         {
             foreach (var animal in UnityEngine.GameObject.FindGameObjectsWithTag(Constants.ANIMAL_TAG))
             {
-                Vector3 bounds = animal.GetComponent<MeshRenderer>().bounds.max;
+                Vector3 bounds = animal.GetComponentInChildren<MeshRenderer>().bounds.max;
                 var result = camerasManager.IsOutOfBounds(animal.transform.position, bounds);
                 if (result.Item2)
                 {
@@ -139,22 +138,19 @@ namespace FeedTheBeasts.Scripts
 
         internal void Stampede(int numberOfAnimals)
         {
-            Debug.Log("Stampede");
             StopAllCoroutines();
             StartCoroutine(StampedeWarningCoroutine(numberOfAnimals));
         }
 
         IEnumerator StampedeWarningCoroutine(int numberOfAnimals)
         {
-            uIManager.InGameWarning(stampedeTime, Constants.STAMPEDE_TEXT);
+            yield return new WaitUntil(
+                      () => { return GameStage.gameStageEnum == GameStageEnum.NotPaused; }
+                  );
+            uIManager.InGameNotification(stampedeTime, Constants.STAMPEDE_TEXT, true, NotificationType.Warnining);
             yield return new WaitForSeconds(stampedeTime);
             coroutineAnimals = null;
             coroutineAggressiveAnimals = null;
-
-            // if (numberOfAnimals > levelManager.AnimalsLeft)
-            // {
-            //     numberOfAnimals = levelManager.AnimalsLeft;
-            // }
 
             for (int i = 1; i <= numberOfAnimals; i++)
             {
@@ -169,6 +165,10 @@ namespace FeedTheBeasts.Scripts
         {
             yield return timeToWait;
 
+            yield return new WaitUntil(
+                       () => { return GameStage.gameStageEnum == GameStageEnum.NotPaused; }
+                   );
+
             coroutineAnimals ??= StartCoroutine(SpawnRandomAnimalCoroutine(difficultyManager.StartDelay,
                                                                       difficultyManager.IntervalSpawnMin,
                                                                       difficultyManager.IntervalSpawnMax,
@@ -177,6 +177,7 @@ namespace FeedTheBeasts.Scripts
                                                       difficultyManager.IntervalSpawnAggressiveMin,
                                                       difficultyManager.IntervalSpawnAggressiveMin,
                                                       SpawnAggresiveAnimal));
+
         }
 
         IEnumerator SpawnRandomAnimalCoroutine(float startDelay, float intervalMin, float intervalMax, MyMethodDelegate myMethodDelegate, bool startInizilized = false)
@@ -195,8 +196,6 @@ namespace FeedTheBeasts.Scripts
                 myMethodDelegate();
             }
 
-            // levelManager.AnimalsLeft = levelManager.LevelAnimalGoal - numberSpawnAnimals;
-            Debug.Log($"spawn animals: {numberSpawnAnimals} spawn animals per level: {levelManager.LevelAnimalGoal}");
             if (numberSpawnAnimals < levelManager.LevelAnimalGoal)
             {
                 if (levelManager.LevelAnimalGoal - numberSpawnAnimals == Mathf.FloorToInt(levelManager.LevelAnimalGoal / 4))
@@ -207,6 +206,9 @@ namespace FeedTheBeasts.Scripts
                 }
                 else
                 {
+                    yield return new WaitUntil(
+                        () => { return GameStage.gameStageEnum == GameStageEnum.NotPaused; }
+                    );
                     StartCoroutine(SpawnRandomAnimalCoroutine(0, intervalMin, intervalMax, SpawnRandomAnimal, true));
                 }
             }

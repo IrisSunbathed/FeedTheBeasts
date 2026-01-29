@@ -16,6 +16,7 @@ namespace FeedTheBeasts.Scripts
         }
         public override void Do()
         {
+            base.Do();
             input.SetOriginalPosition();
             if (input.CanMove)
             {
@@ -24,6 +25,7 @@ namespace FeedTheBeasts.Scripts
         }
         public override void Exit()
         {
+            animator.SetBool(Constants.ANIM_BOOL_DEATH, false);
         }
 
     }

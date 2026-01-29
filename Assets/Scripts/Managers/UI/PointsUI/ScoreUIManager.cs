@@ -27,11 +27,12 @@ namespace FeedTheBeasts.Scripts
         [SerializeField] TMP_Text txtRoundModH;
         [SerializeField] TMP_Text txtScoreH;
         [SerializeField] internal TMP_Text txtScore;
-        [SerializeField] TMP_Text extraScoreH;
         [SerializeField] internal TMP_Text extraScore;
-        [SerializeField] TMP_Text scoreMultH;
         [SerializeField] internal TMP_Text scoreMult;
         internal int currentExtraScore;
+        // DEPRACATED
+        // [SerializeField] TMP_Text extraScoreH;
+        // [SerializeField] TMP_Text scoreMultH;
 
         [Header("Testing")]
         [SerializeField] TMP_InputField inpExtra;
@@ -55,9 +56,9 @@ namespace FeedTheBeasts.Scripts
             Assert.IsNotNull(txtRoundModH, "ERROR: txtRoundModH is empty on UIManager");
             Assert.IsNotNull(txtScoreH, "ERROR: txtScoreStr is empty on UIManager");
             Assert.IsNotNull(txtScore, "ERROR: txtScore is empty on UIManager");
-            Assert.IsNotNull(extraScoreH, "ERROR: extraScoreH is empty on UIManager");
+            // Assert.IsNotNull(extraScoreH, "ERROR: extraScoreH is empty on UIManager");
             Assert.IsNotNull(extraScore, "ERROR: extraScore is empty on UIManager");
-            Assert.IsNotNull(scoreMultH, "ERROR: extraScoreH is empty on UIManager");
+            // Assert.IsNotNull(scoreMultH, "ERROR: extraScoreH is empty on UIManager");
             Assert.IsNotNull(scoreMult, "ERROR: extraScoreH is empty on UIManager");
             Assert.IsNotNull(calculateScoreHelper, "ERROR: calculateScoreHelper is empty on UIManager");
             Assert.IsNotNull(fXSoundsManager, "ERROR: fXSoundsManager game object is empty on UIManager");
@@ -89,23 +90,22 @@ namespace FeedTheBeasts.Scripts
         internal void StartGame()
         {
             txtScore.text = 0.ToString();
-            extraScore.text = 0.ToString();
+            extraScore.text = "+0";
             scoreMult.text = "x1";
             currentExtraScore = 0;
         }
-
-        // Update is called once per frame
 
 
         internal void ActivateElementsOnMenu(bool isActive)
         {
             txtScoreH.gameObject.SetActive(isActive);
             txtScore.gameObject.SetActive(isActive);
-            scoreMultH.gameObject.SetActive(isActive);
             scoreMult.gameObject.SetActive(isActive);
-            extraScoreH.gameObject.SetActive(isActive);
             extraScore.gameObject.SetActive(isActive);
             txtRoundModH.gameObject.SetActive(isActive);
+            ///DEPRACATED
+            // scoreMultH.gameObject.SetActive(isActive);
+            // extraScoreH.gameObject.SetActive(isActive);
 
 
         }
@@ -152,6 +152,11 @@ namespace FeedTheBeasts.Scripts
             currentExtraScore += consecutiveShootsCurrent;
 
             extraScore.text = $"+{currentExtraScore}";
+        }
+
+        internal void GameOver()
+        {
+            calculateScoreHelper.StopAllCoroutines();
         }
     }
 

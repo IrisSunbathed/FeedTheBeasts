@@ -13,6 +13,7 @@ namespace FeedTheBeasts.Scripts
         }
         public override void Do()
         {
+            base.Do();
             if (input.HorizontalInput != 0 | input.VerticalInput != 0)
             {
                 animator.SetInteger(Constants.ANIM_INT_IDLE, 0);

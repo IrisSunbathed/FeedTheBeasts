@@ -6,24 +6,21 @@ using UnityEngine.AI;
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(NavMeshAgent))]
-public class BossController : MonoBehaviour
+public class BossController : Animal
 {
 
-    BossStates bossStates;
+    internal BossStates bossStates;
     public RunStateBoss runStateBoss;
     public IdleStateBoss idleStateBoss;
     //  public CallStateBoss callStateBoss;
-    Rigidbody rbBoss;
     Animator animBoss;
 
-    NavMeshAgent navMeshAgent;
     bool isFed;
 
 
 
     void Awake()
     {
-        rbBoss = GetComponent<Rigidbody>();
         animBoss = GetComponent<Animator>();
         navMeshAgent = GetComponent<NavMeshAgent>();
         SetUpStates();
@@ -31,15 +28,15 @@ public class BossController : MonoBehaviour
 
     private void SetUpStates()
     {
-        runStateBoss.Setup(rbBoss, animBoss, navMeshAgent);
-        idleStateBoss.Setup(rbBoss, animBoss, navMeshAgent);
+        runStateBoss.Setup( animBoss, navMeshAgent);
+        idleStateBoss.Setup( animBoss, navMeshAgent);
         bossStates = runStateBoss;
         bossStates.Enter();
     }
 
 
     // Update is called once per frame
-    void Update()
+    public override void Update()
     {
 
         if (bossStates.IsStateComplete)
@@ -47,6 +44,8 @@ public class BossController : MonoBehaviour
             SelectState();
         }
         bossStates.Do();
+
+        Debug.Log(bossStates.name);
 
     }
 

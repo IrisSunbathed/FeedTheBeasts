@@ -9,6 +9,8 @@ TagManager:
   - Beef
   - Throwable
   - Plantable
+  - PlantableUI
+  - ThrowableUI
   layers:
   - Default
   - TransparentFX
@@ -18,7 +20,7 @@ TagManager:
   - UI
   - Ground
   - Inmovable
-  - 
+  - Animal
   - 
   - 
   - 
@@ -45,6 +47,9 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: FX
+    uniqueID: 1648993971
     locked: 0
   m_RenderingLayers:
   - Default

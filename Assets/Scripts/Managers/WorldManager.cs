@@ -29,6 +29,9 @@ namespace FeedTheBeasts.Scripts
         [SerializeField] ScoreManager scoreManager;
         [SerializeField] ConsecutiveShootsManager consecutiveShootsManager;
         [SerializeField] OutroController outroController;
+        [SerializeField] InventoryUIManager inventoryUIManager;
+        [SerializeField] UpdateMenuUIManager updateMenuUIManager;
+        [SerializeField] PowerUpsManager powerUpsManager;
         [Header("Others")]
         [SerializeField] GameObject[] foodProviders;
         [SerializeField] CameraShaker cameraShaker;
@@ -40,7 +43,6 @@ namespace FeedTheBeasts.Scripts
         void Start()
         {
             levelManager = LevelManager.Instance;
-            // musicManager.PlayMusic(MusicThemes.MainMenu);
         }
         void Awake()
         {
@@ -62,16 +64,16 @@ namespace FeedTheBeasts.Scripts
             Assert.IsNotNull(fruitProvider, "ERROR: fruitProvider is not added to FoodSelectorManager");
             Assert.IsNotNull(playerUIManager, "ERROR: playerUIManager is not added to FoodSelectorManager");
             Assert.IsNotNull(outroController, "ERROR: outroController is not added to FoodSelectorManager");
+            Assert.IsNotNull(inventoryUIManager, "ERROR: inventoryUIManager is not added to FoodSelectorManager");
             Assert.IsNotNull(consecutiveShootsManager, "ERROR: consecutiveShootsManager is not added to FoodSelectorManager");
+            Assert.IsNotNull(powerUpsManager, "ERROR: powerUpsManager is not added to FoodSelectorManager");
             Assert.IsTrue(foodProviders.Length > 0, "ERROR: providers is empty in FoodSelectorManager");
             #endregion
             spawnManager.OnAnimalSpawnEvent += OnAnimalSpawnCallBack;
             player.OnLoseLivePlayerAction += OnLoseLivePlayerActionCallback;
             player.OnGainedLivePlayerAction += OnGainedLiveCallBack;
             plantingState.OnCancelledAction += OnCacelledActionCallback;
-            // player.OnMaxScoreReached += OnDifficultyAddCallback;
             uIManager.RestartGameEvent += RestartGameCallBack;
-            //foodSelectorManager.OnChangeEquippedItemEvent += OnChangeEquippedItemCallback;
             fruitProvider.OnPlantEvent += OnPlantCallBack;
             playerUIManager.OnCompletionEvent += OnCompletionEventCallback;
             foreach (var item in foodProviders)
@@ -83,11 +85,13 @@ namespace FeedTheBeasts.Scripts
 
                 }
             }
+            DestroyObjectsInScene();
         }
 
         private void OnCompletionEventCallback()
         {
-            Vector3 position = playerController.GetFontPosition();
+            Vector3 position = playerController.GetFrontPosition();
+
             fruitProvider.Plant(position);
 
         }
@@ -104,14 +108,22 @@ namespace FeedTheBeasts.Scripts
 
         }
 
-        // private void OnChangeEquippedItemCallback(int index, UnityEngine.GameObject projectile)
-        // {
-        //     uIManager.CurrentProjectile = index;
-        // }
+        private static void DestroyObjectsInScene()
+        {
+            foreach (var item in UnityEngine.GameObject.FindGameObjectsWithTag(Constants.THROWABLE_TAG))
+            {
+                Destroy(item);
+            }
+            foreach (var item in UnityEngine.GameObject.FindGameObjectsWithTag(Constants.PLANTABLE_TAG))
+            {
+                Destroy(item);
+            }
+        }
+
 
         private void OnRechargeCallBack(float rechargeTime)
         {
-            uIManager.RechargeBar(rechargeTime);
+            inventoryUIManager.RechargeBar(rechargeTime);
         }
 
         private void OnGainedLiveCallBack(int lives)
@@ -121,6 +133,7 @@ namespace FeedTheBeasts.Scripts
 
         private void RestartGameCallBack()
         {
+
             musicManager.PlayMusic(MusicThemes.InGame);
             playerController.Init();
             spawnManager.Init();
@@ -130,23 +143,70 @@ namespace FeedTheBeasts.Scripts
             difficultyManager.Init();
             levelManager.Init();
             spawnManager.Init();
+            GameStage.gameStageEnum = GameStageEnum.NotPaused;
+
+        }
+        private void GameOver()
+        {
+            GameStage.gameStageEnum = GameStageEnum.NotPausable;
+            foodSelectorManager.EndGame();
+            uIManager.GameOver();
+            playerController.SetDeathState();
+            spawnManager.StopSpawning();
+            StopAllCoroutines();
+            DestroyObjectsInScene();
+            DestroyAnimals();
+            bossManager.GameOver();
+            musicManager.PlayMusic(MusicThemes.Lose);
+            animalsLeftUIManager.Init();
+            playerUIManager.CancelFill();
+
         }
 
+        
+        internal void Win()
+        {
+
+            playerController.CanMove = false;
+            if (uIManager.CheckPointsCalc())
+            {
+                outroController.OutroStart();
+                foodSelectorManager.EndGame();
+                uIManager.Win();
+                animalsLeftUIManager.Init();
+                musicManager.FadeCurrentMusic(0, 0.5f); ;
+                playerUIManager.CancelFill();
+                GameStage.gameStageEnum = GameStageEnum.NotPausable;
+
+            }
+            else
+            {
+                StartCoroutine(WaitForPointsCalcCoroutine());
+            }
+        }
+
+        internal void EndRound()
+        {
+            uIManager.InGameNotification(2f, Constants.ROUND_COMPLETED_TEXT, false, NotificationType.Success);
+            spawnManager.StopSpawning();
+            consecutiveShootsManager.CalculatePoints();
+            StartCoroutine(WaitForPointsCalcCoroutine());
+        }
+
+        internal void NextRound()
+
+        {
+            uIManager.InGameNotification(2f, Constants.NEW_WAVE_TEXT, false, NotificationType.Warnining);
+            levelManager.NextRound();
+            playerController.CanMove = true;
+        }
         private void OnLoseLivePlayerActionCallback(int lives)
         {
             uIManager.ManageLives(lives);
             //consecutiveShootsManager.Reset();
-            if (lives <= 0)
+            if (lives == 0)
             {
-                uIManager.GameOver();
-                playerController.SetDeathState();
-                spawnManager.StopSpawning();
-                foodSelectorManager.EndGame();
-                DestroyAnimals();
-                bossManager.GameOver();
-                musicManager.PlayMusic(MusicThemes.Lose);
-                animalsLeftUIManager.Init();
-                playerUIManager.CancelFill();
+                GameOver();
             }
             else
             {
@@ -154,9 +214,11 @@ namespace FeedTheBeasts.Scripts
             }
         }
 
+
+
         private static void DestroyAnimals()
         {
-            UnityEngine.GameObject[] animals = UnityEngine.GameObject.FindGameObjectsWithTag(Constants.ANIMAL_TAG);
+            GameObject[] animals = GameObject.FindGameObjectsWithTag(Constants.ANIMAL_TAG);
             foreach (var animal in animals)
             {
                 //Add if animal is outside of bounds
@@ -190,53 +252,19 @@ namespace FeedTheBeasts.Scripts
                 levelManager.LevelAnimalCheck();
                 particleSystemManager.SpawnFedParticles(transform);
             }
-
-
         }
 
-        internal void NextRound()
 
-        {
-            uIManager.InGameWarning(2f, "Round Completed!");
-            spawnManager.StopSpawning();
-            consecutiveShootsManager.CalculatePoints();
-            if (uIManager.CheckPointsCalc())
-            {
-                //UI Round completed
-                levelManager.NextRound();
-            }
-            else
-            {
-                StartCoroutine(WaitForPointsCalcCoroutine());
-            }
-        }
 
-        internal void Win()
-        {
-
-            if (uIManager.CheckPointsCalc())
-            {
-                outroController.OutroStart();
-                foodSelectorManager.EndGame();
-                playerController.CanMove = false;
-                uIManager.Win();
-                animalsLeftUIManager.Init();
-                musicManager.FadeCurrentMusic(0, 0.5f); ;
-                playerUIManager.CancelFill();
-            }
-            else
-            {
-                StartCoroutine(WaitForPointsCalcCoroutine());
-            }
-        }
 
         IEnumerator WaitForPointsCalcCoroutine()
         {
 
             if (uIManager.CheckPointsCalc())
             {
-                yield return new WaitForSeconds(2f);
-                levelManager.NextRound();
+                yield return new WaitForSeconds(.5f);
+                updateMenuUIManager.SetActivePowerUpMenu();
+                playerController.CanMove = false;
             }
             else
             {

@@ -262,6 +262,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 10
+  nearbyAnimalCheck: 0.5
+  sphereRadius: 7
 --- !u!1001 &7404867050456251352
 PrefabInstance:
   m_ObjectHideFlags: 0

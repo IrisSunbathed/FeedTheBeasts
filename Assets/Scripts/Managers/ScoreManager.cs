@@ -9,10 +9,11 @@ namespace FeedTheBeasts.Scripts
     public class ScoreManager : MonoBehaviour
     {
         [Header("Score Properties")]
-        int score;
         [SerializeField, Range(100, 1000)] int scoreNewLife;
+        int score;
         int scoreNextLevel;
         int scorePreviousLife;
+        int lifesObtained = 1;
 
         public int Score
         {
@@ -21,12 +22,11 @@ namespace FeedTheBeasts.Scripts
             set
             {
                 score = value;
-
                 livesAndPointsUIManager.ManageScore(Score);
                 if (score - scorePreviousLife >= scoreNextLevel)
 
                 {
-                    player.Lives++;
+                    player.Lives += lifesObtained;
                     scoreNextLevel += scoreNewLife;
                     scorePreviousLife = value;
 
@@ -54,9 +54,14 @@ namespace FeedTheBeasts.Scripts
         {
             scoreNextLevel = scoreNewLife;
             Score = 0;
+            lifesObtained = 1;
         }
 
-       
+        internal void ScorePowerUp()
+        {
+            scoreNextLevel /= 2;
+            lifesObtained += 2;
+        }
     }
 
 }

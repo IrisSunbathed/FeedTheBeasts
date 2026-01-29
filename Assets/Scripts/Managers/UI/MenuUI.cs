@@ -21,10 +21,15 @@ namespace FeedTheBeasts.Scripts
         [SerializeField] GameObject scrollArea;
         [SerializeField] Button bttReturn;
         [SerializeField] Scrollbar scrollbar;
+
         AudioSource audioSource;
         GameCatalog gameCatalog;
 
+        string lastButtonText;
+        Button[] buttons;
+
         public event Action StartGameEvent;
+        public event Action UnPauseGame;
 
         void Start()
         {
@@ -42,28 +47,26 @@ namespace FeedTheBeasts.Scripts
 
             audioSource = GetComponent<AudioSource>();
 
-        }
-
-        internal void Init()
-        {
-            txtHeader.text = Constants.GAME_TITLE;
-            //xtHeader.color = new Color(0.04405483f, 0.8490566f, 0.6523646f);
-            TMP_Text tMP_Text = bttStartOver.GetComponentInChildren<TMP_Text>();
-            tMP_Text.text = Constants.START_BUTTON_TEXT;
-            Button[] buttons = new Button[3]
+            buttons = new Button[3]
             {
                 bttStartOver,
                 bttExitGame,
                 bttCredits
             };
+        }
+
+        internal void Init()
+        {
+
             SetElementsInvisible(buttons);
-            SetActiveUIElements(true);
+            SetActiveUIElements(true, Constants.GAME_TITLE, Constants.START_BUTTON_TEXT);
             FadeInUIElements(buttons);
             SetCreditsUIElements(false);
             bttStartOver.onClick.AddListener(StartGame);
             bttCredits.onClick.AddListener(ShowCredits);
             bttExitGame.onClick.AddListener(Exit);
             bttReturn.onClick.AddListener(Return);
+
 
         }
 
@@ -140,8 +143,12 @@ namespace FeedTheBeasts.Scripts
 
         }
 
-        private void Return()
+        internal void Return()
         {
+            if (GameStage.gameStageEnum == GameStageEnum.Credits)
+            {
+                GameStage.gameStageEnum = GameStageEnum.Paused;
+            }
             audioSource.PlayOneShot(gameCatalog.GetFXClip(FXTypes.ClickOnButton));
             SetActiveUIElements(true);
             SetCreditsUIElements(false);
@@ -149,6 +156,11 @@ namespace FeedTheBeasts.Scripts
 
         private void ShowCredits()
         {
+            if (GameStage.gameStageEnum == GameStageEnum.Paused)
+            {
+                GameStage.gameStageEnum = GameStageEnum.Credits;
+
+            }
             audioSource.PlayOneShot(gameCatalog.GetFXClip(FXTypes.ClickOnButton));
             SetActiveUIElements(false);
             SetCreditsUIElements(true);
@@ -156,11 +168,28 @@ namespace FeedTheBeasts.Scripts
 
         }
 
-        internal void SetActiveUIElements(bool isActive)
+        internal void SetActiveUIElements(bool isActive, string headerText = null, string buttonText = null)
         {
-            bttStartOver.gameObject.SetActive(isActive);
-            bttCredits.gameObject.SetActive(isActive);
-            bttExitGame.gameObject.SetActive(isActive);
+            if (isActive)
+            {
+                if (buttonText != null)
+                {
+
+                    TMP_Text tMP_Text = bttStartOver.GetComponentInChildren<TMP_Text>();
+                    tMP_Text.text = buttonText;
+                    lastButtonText = tMP_Text.text;
+                }
+                if (headerText != null)
+                {
+                    txtHeader.text = headerText;
+                }
+            }
+
+            foreach (var item in buttons)
+            {
+                item.gameObject.SetActive(isActive);
+            }
+
             txtHeader.enabled = isActive;
         }
 
@@ -178,25 +207,28 @@ namespace FeedTheBeasts.Scripts
         {
             audioSource.PlayOneShot(gameCatalog.GetFXClip(FXTypes.ClickOnButton));
             SetActiveUIElements(false);
-            StartGameEvent?.Invoke();
+            if (GameStage.gameStageEnum == GameStageEnum.Paused)
+            {
+                UnPauseGame?.Invoke();
+            }
+            else
+            {
+                StartGameEvent?.Invoke();
+            }
         }
 
 
         internal void GameOver()
         {
-            SetActiveUIElements(true);
-            txtHeader.text = Constants.GAMEOVER_TEXT;
-            TMP_Text tMP_Text = bttStartOver.GetComponentInChildren<TMP_Text>();
-            tMP_Text.text = Constants.GAMEOVER_BUTTON_TEXT;
+            SetCreditsUIElements(false);
+            SetActiveUIElements(true, Constants.GAMEOVER_TEXT, Constants.GAMEOVER_BUTTON_TEXT);
             bttStartOver.onClick.AddListener(StartGame);
         }
 
         internal void Win()
         {
-            SetActiveUIElements(true);
-            txtHeader.text = Constants.VICTORY_TEXT;
-            TMP_Text tMP_Text = bttStartOver.GetComponentInChildren<TMP_Text>();
-            tMP_Text.text = Constants.VICTORY_BUTTON_TEXT;
+            SetCreditsUIElements(false);
+            SetActiveUIElements(true, Constants.VICTORY_TEXT, Constants.VICTORY_BUTTON_TEXT);
             bttStartOver.onClick.AddListener(StartGame);
         }
     }

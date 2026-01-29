@@ -27,6 +27,8 @@ namespace FeedTheBeasts.Scripts
         [SerializeField] internal bool doesEatBasket;
         [SerializeField] internal bool doesTurn;
         [SerializeField, Range(1f, 5f)] float timeTransitionMovement;
+        [SerializeField,Range(5f, 10f)] float destinationOffset = 4f;
+        [SerializeField, Range(5f, 60f)] float timeWaitNewLocation;
 
         AudioSource audioSource;
 
@@ -38,7 +40,6 @@ namespace FeedTheBeasts.Scripts
 
         Animator animator;
 
-        [SerializeField,Range(5f, 10f)] float destinationOffset = 4f;
         internal NavMeshAgent navMeshAgent;
 
         Vector3 destination;
@@ -47,7 +48,6 @@ namespace FeedTheBeasts.Scripts
         Coroutine coroutine;
 
 
-        [SerializeField, Range(5f, 60f)] float timeWaitNewLocation;
 
 
         CamerasManager camerasManager;
@@ -82,6 +82,18 @@ namespace FeedTheBeasts.Scripts
 
         public virtual void Update()
         {
+          
+            if (GameStage.gameStageEnum == GameStageEnum.Paused | GameStage.gameStageEnum == GameStageEnum.Credits)
+            {
+                navMeshAgent.isStopped = true;
+                animator.speed = 0;
+                return;
+            }
+            else
+            {
+                navMeshAgent.isStopped = false;
+                animator.speed = 1;
+            }
 
             if (animalStatus != AnimalStatus.Returning)
             {
@@ -94,7 +106,7 @@ namespace FeedTheBeasts.Scripts
 
                 if (doesEatBasket && !TryEatBasket() & coroutine == null)
                 {
-//                    Debug.Log($"doesEatBasket: {doesEatBasket} !TryEatBasket() {!TryEatBasket()} coroutine == null {coroutine == null}");
+                    //                    Debug.Log($"doesEatBasket: {doesEatBasket} !TryEatBasket() {!TryEatBasket()} coroutine == null {coroutine == null}");
                     coroutine = StartCoroutine(SetDestinationCoroutine(currentDestinion));
                 }
 
@@ -115,6 +127,8 @@ namespace FeedTheBeasts.Scripts
                 }
             }
         }
+
+
         IEnumerator SetDestinationCoroutine(Vector3 newDestination)
         {
             SetDestination(newDestination.x, newDestination.y, newDestination.z);

@@ -13,13 +13,12 @@ public class RunStateBoss : BossStates
         IsStateComplete = false;
         navMeshAgent.isStopped = false;
         indexPositions++;
-         animator.SetBool(Constants.ANIM_BOOL_EAT, false);
+        animator.SetBool(Constants.ANIM_BOOL_EAT, false);
         animator.SetFloat(Constants.ANIM_FLOAT_SPEED, 1);
         if (indexPositions > stopPoints.Length - 1)
         {
             indexPositions = stopPoints.Length - 1;
         }
-        Debug.Log(indexPositions);
         foreach (var item in stopPoints)
         {
             item.parent = null;

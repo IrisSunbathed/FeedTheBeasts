@@ -10,6 +10,7 @@ using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
+using UnityEngine.Playables;
 using UnityEngine.UI;
 
 using UnityEngine.UIElements;
@@ -22,45 +23,39 @@ namespace FeedTheBeasts.Scripts
 
     public class UIManager : MonoBehaviour
     {
-        [Header("Lifes and Points UI references")]
-
-        [SerializeField] ScoreUIManager scoreUIManager;
-        [SerializeField] LivesUIManager livesUIManager;
 
 
-        [Header("Start/Game Over Menu references")]
+        [Header("Menu references")]
         [SerializeField] MenuUI menuUI;
         [SerializeField] Canvas canvas;
         CamerasManager camerasManager;
-        [Header("Food Selector configuration")]
-        [SerializeField] Image[] imagesFoodSelector;
-        [SerializeField, Range(45f, 180f)] float inventoryMaxRotation;
-        [SerializeField, Range(0.001f, 0.25f)] float timeTweenRotation;
-        int selectedIndex;
 
-        string lastKeyPressed;
-        [Header("Recharge configuration")]
-        [SerializeField] Image[] imgRechargeBar;
-        internal int CurrentProjectile { get; set; }
 
-        [Header("AnimalsLeftUI Reference")]
+        [Header("In Game Notifictations", order = 1)]
+        [Header("In Game Notifictations Configuration", order = 2)]
+        [SerializeField] Color warningColor;
+        [SerializeField] Color successColor;
+        [SerializeField] Color deafaultColor;
 
-        [SerializeField] AnimalsLeftUIManager animalsLeftUIManager;
-        public event Action RestartGameEvent;
-        public event Action<int, float, float> OnSelectedItemInventoryEvent;
-        public event Action<int> OnRechargeCompleteEvent;
-
-        [Header("Stampede elements")]
+        [Header("In Game Notifictations References", order = 2)]
 
         [SerializeField] TMP_Text txtInGameNotification;
         Coroutine stampedeCoroutine;
 
-        [Header("Sound Managers references")]
+
+        [Header("UI references")]
+
+        [SerializeField] ScoreUIManager scoreUIManager;
+        [SerializeField] LivesUIManager livesUIManager;
+
+        [SerializeField] AnimalsLeftUIManager animalsLeftUIManager;
+        [SerializeField] InventoryUIManager inventoryUIManager;
+        [Header("Other references")]
 
         [SerializeField] MusicManager musicManager;
-        [SerializeField] FXSoundsManager fXSoundsManager;
 
 
+        public event Action RestartGameEvent;
         void Start()
         {
             camerasManager = CamerasManager.Instance;
@@ -69,33 +64,22 @@ namespace FeedTheBeasts.Scripts
         void Awake()
         {
             #region ASSERTIONS
-            Assert.IsTrue(imagesFoodSelector.Length > 0, "ERROR: image food selector is empty on UIManager");
-            // Assert.IsNotNull(selectedItemImage, "ERROR: SelectedItemImage is empty on UIManager");
-            // Assert.IsNotNull(unselectedItemImage, "ERROR: UnselectedItemImage is empty on UIManager");
             Assert.IsNotNull(scoreUIManager, "ERROR: livesAndPointsUIManager is empty on UIManager");
             Assert.IsNotNull(menuUI, "ERROR: Menu UI is empty on UIManager");
             Assert.IsNotNull(animalsLeftUIManager, "ERROR: animalsLeftUIManager is empty on UIManager");
             Assert.IsNotNull(musicManager, "ERROR: musicManager is empty on UIManager");
-
-            Assert.IsNotNull(fXSoundsManager, "ERROR: fXSoundsManager is empty on UIManager");
+            Assert.IsNotNull(inventoryUIManager, "ERROR: inventoryUIManager is empty on UIManager");
             Assert.IsNotNull(livesUIManager, "ERROR: livesUIManager is empty on UIManager");
-            Assert.IsTrue(imgRechargeBar.Length > 0, "ERROR: rechargeBar is empty on UIManager");
             #endregion
             menuUI.StartGameEvent += StartGame;
         }
         internal void Init()
         {
-            Debug.Log("UImanager");
             camerasManager.SwitchCameras(isGameplayCamera: false);
-            CurrentProjectile = 0;
-            foreach (var item in imgRechargeBar)
-            {
-                item.fillAmount = 0;
-            }
+
             StopAllCoroutines();
             ActivateElementsOnMenu(isActive: false);
-            selectedIndex = -1;
-            InventorySelect(1, false);
+            inventoryUIManager.Init();
             StopAllCoroutines();
             menuUI.Init();
             animalsLeftUIManager.Init();
@@ -113,12 +97,9 @@ namespace FeedTheBeasts.Scripts
             animalsLeftUIManager.StartGame();
             scoreUIManager.StartGame();
             RestartGameEvent?.Invoke();
-            foreach (var item in imgRechargeBar)
-            {
-                item.fillAmount = 0;
-            }
+
             StopAllCoroutines();
-            InventorySelect(1, false);
+            inventoryUIManager.StartGame();
             txtInGameNotification.text = string.Empty;
         }
         internal void ManageLives(int lives)
@@ -127,156 +108,76 @@ namespace FeedTheBeasts.Scripts
             livesUIManager.ManageLives(lives);
         }
 
-
-        void Update()
-        {
-
-            if (IsValidKey())
-            {
-                lastKeyPressed = Input.inputString;
-                if (int.TryParse(lastKeyPressed, out int result))
-                {
-                    if (imagesFoodSelector.Length >= result)
-                    {
-                        InventorySelect(result);
-                    }
-                }
-            }
-
-        }
-
-        private bool IsValidKey()
-        {
-            return Input.GetKeyDown(KeyCode.Alpha1) |
-            Input.GetKeyDown(KeyCode.Alpha2) |
-            Input.GetKeyDown(KeyCode.Alpha3) |
-            Input.GetKeyDown(KeyCode.Alpha4);
-        }
-
-        private void InventorySelect(int result, bool playSound = true)
-        {
-
-            int newIndex = result - 1;
-            // Si es el mismo elemento, no hacemos nada
-            if (selectedIndex == newIndex)
-                return;
-
-            // Desrotar el anterior
-            if (selectedIndex != -1)
-            {
-                RectTransform prev = imagesFoodSelector[selectedIndex].GetComponent<RectTransform>();
-                prev.DOKill();
-                prev.DOLocalRotate(Vector3.zero, timeTweenRotation);
-            }
-
-            // Rotar el nuevo
-            RectTransform current = imagesFoodSelector[newIndex].GetComponent<RectTransform>();
-            current.DOKill();
-            current.DOLocalRotate(new Vector3(0, 0, inventoryMaxRotation), timeTweenRotation);
-            if (playSound)
-            {
-                fXSoundsManager.PlayFX(FXTypes.SelectItem, pitch: 1, volumne: 0.3f);
-            }
-
-            selectedIndex = newIndex;
-            OnSelectedItemInventoryEvent?.Invoke(newIndex, timeTweenRotation, inventoryMaxRotation);
-            CurrentProjectile = newIndex;
-        }
-
-
-
         internal void GameOver()
         {
             ActivateElementsOnMenu(false);
             menuUI.GameOver();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
             camerasManager.SwitchCameras(isGameplayCamera: false);
-            StopWarningEffect();
+            inventoryUIManager.StopAllCoroutines();
+            scoreUIManager.GameOver();
+            StopWarningEffect(txtInGameNotification);
         }
 
         internal void ActivateElementsOnMenu(bool isActive)
         {
-            foreach (var sprite in imagesFoodSelector)
-            {
-                sprite.gameObject.SetActive(isActive);
-            }
+            inventoryUIManager.ActivateElementsOnMenu(isActive);
             scoreUIManager.ActivateElementsOnMenu(isActive);
             livesUIManager.ActivateElementsOnMenu(isActive);
 
-
-            foreach (var item in imgRechargeBar)
-            {
-                item.gameObject.SetActive(isActive);
-            }
-
         }
 
-        internal void RechargeBar(float rechargeTime)
-        {
-            StartCoroutine(RechargeCoroutine(rechargeTime));
-        }
-        IEnumerator RechargeCoroutine(float rechargeTime)
-        {
-            float time = 0f;
-
-            int currentReloadProjectile = CurrentProjectile;
-
-            while (time <= rechargeTime + .1f)
-            {
-                time += Time.deltaTime;
-
-                float progress = Mathf.Clamp01(time / rechargeTime);
-                imgRechargeBar[currentReloadProjectile].fillAmount = 1 * progress;
-                yield return null;
-            }
-            OnRechargeCompleteEvent?.Invoke(currentReloadProjectile);
-            imgRechargeBar[currentReloadProjectile].fillAmount = 0;
-        }
         internal void Win()
         {
             ActivateElementsOnMenu(false);
-            StopWarningEffect();
+            StopWarningEffect(txtInGameNotification);
         }
 
-        internal void InGameWarning(float stampedeTime, string textWarning)
+        internal void InGameNotification(float warningTime, string textWarning, bool doesBlink = false, NotificationType notificationType = NotificationType.Default)
         {
-            StartCoroutine(InGameWarningWarningCoroutine(stampedeTime, textWarning));
+            StartCoroutine(InGameWarningWarningCoroutine(warningTime, textWarning, doesBlink, notificationType));
         }
 
-        IEnumerator InGameWarningWarningCoroutine(float textTime, string textWarning)
+        IEnumerator InGameWarningWarningCoroutine(float textTime, string textWarning, bool doesBlink = false, NotificationType notificationType = NotificationType.Default)
         {
+            switch (notificationType)
+            {
+                case NotificationType.Warnining:
+                    txtInGameNotification.color = warningColor;
+                    break;
+                case NotificationType.Success:
+                    txtInGameNotification.color = successColor;
+                    break;
+                case NotificationType.Default:
+                    txtInGameNotification.color = deafaultColor;
+                    break;
+            }
             txtInGameNotification.text = textWarning;
-            stampedeCoroutine ??= StartCoroutine(TextTransparentEffect(txtInGameNotification));
+            stampedeCoroutine ??= StartCoroutine(TextBlinkEffect(txtInGameNotification, doesBlink));
             yield return new WaitForSeconds(textTime);
-            StopWarningEffect();
+            StopWarningEffect(txtInGameNotification);
         }
 
-        private void StopWarningEffect()
+        private void StopWarningEffect(TMP_Text txtToEffect)
         {
             if (stampedeCoroutine != null)
             {
                 StopCoroutine(stampedeCoroutine);
                 stampedeCoroutine = null;
             }
-            txtInGameNotification.text = "";
+            if (txtToEffect.color.a != 0)
+            {
+                Color endColor = new Color(txtToEffect.color.r, txtToEffect.color.g, txtToEffect.color.b, 0);
+                txtToEffect.DOColor(endColor, 0.5f);
+            }
 
         }
 
-        IEnumerator TextTransparentEffect(TMP_Text txtToEffect)
+        IEnumerator TextBlinkEffect(TMP_Text txtToEffect, bool doesBlink)
         {
             Color originalColor = txtToEffect.color; //temp
             float temp_a = originalColor.a; //okay
             Color temp = txtToEffect.color;
-            while (txtToEffect.color.a >= 0f)
-            {
-                temp_a -= 0.007f;
-                temp.a = temp_a;
-                txtToEffect.color = temp;
-                yield return null;
-            }
-            temp_a = 0f;
-            temp.a = temp_a;
-            txtToEffect.color = temp;
 
             while (txtToEffect.color.a <= 1f)
             {
@@ -288,7 +189,20 @@ namespace FeedTheBeasts.Scripts
             temp_a = 1f;
             temp.a = temp_a;
             txtToEffect.color = temp;
-            stampedeCoroutine = StartCoroutine(TextTransparentEffect(txtToEffect));
+            if (doesBlink)
+            {
+                while (txtToEffect.color.a >= 0f)
+                {
+                    temp_a -= 0.007f;
+                    temp.a = temp_a;
+                    txtToEffect.color = temp;
+                    yield return null;
+                }
+                temp_a = 0f;
+                temp.a = temp_a;
+                txtToEffect.color = temp;
+                stampedeCoroutine = StartCoroutine(TextBlinkEffect(txtToEffect, doesBlink));
+            }
         }
 
 
@@ -296,7 +210,6 @@ namespace FeedTheBeasts.Scripts
         internal bool CheckPointsCalc()
         {
             return scoreUIManager.IsScoreCalc;
-
         }
     }
 }

@@ -49,7 +49,7 @@ namespace FeedTheBeasts.Scripts
 
         void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag(Constants.ANIMAL_TAG))
+            if (gameObject.TryGetComponent(out StraightProjectile _) && other.CompareTag(Constants.ANIMAL_TAG) )
             {
                 StartCoroutine(AudioCoroutine(other));
             }
@@ -77,7 +77,6 @@ namespace FeedTheBeasts.Scripts
 
         IEnumerator AudioCoroutine(Collider other)
         {
-            Debug.Log("Hit animal: " + other.GetInstanceID());
             AnimalHunger feedPoints = other.GetComponent<AnimalHunger>();
             feedPoints.FeedAnimal(tag);
             if (feedPoints.CurrentHunger <= 0)

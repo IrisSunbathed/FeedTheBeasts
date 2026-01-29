@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Unity.Mathematics;
 using UnityEngine;
@@ -10,6 +11,11 @@ namespace FeedTheBeasts.Scripts
 
         [SerializeField] GameObject goBeef;
         internal ObjectPool<GameObject> opStraightProjectile;
+
+        [SerializeField, Range(10, 20)] float projectileSpeed;
+        [SerializeField, Range(5, 10)] float addedPowerUpSpeed;
+        internal bool doesTrackAnimals;
+
 
         void Awake()
         {
@@ -24,13 +30,15 @@ namespace FeedTheBeasts.Scripts
         private void OnRelease(GameObject projectile)
         {
             EnableComponents(projectile, false);
-            projectile.GetComponent<StraightProjectile>().currentSpeed = 0;
+            StraightProjectile strProj = projectile.GetComponent<StraightProjectile>();
+            strProj.followedAnimal = null;
+            strProj.currentSpeed = 0;
         }
 
         private void OnActionGet(GameObject projectile)
         {
             EnableComponents(projectile, true);
-            projectile.GetComponent<StraightProjectile>().SetUpSpeed();
+            projectile.GetComponent<StraightProjectile>().SetUp(projectileSpeed, playerTransform, doesTrackAnimals);
             //projectile.transform.SetParent(transform, true);
         }
 
@@ -62,6 +70,11 @@ namespace FeedTheBeasts.Scripts
         private void ReturnToObjectPool(GameObject instance)
         {
             opStraightProjectile.Release(instance);
+        }
+
+        internal void SetSpeedPowerUp()
+        {
+            projectileSpeed += addedPowerUpSpeed;
         }
     }
 }

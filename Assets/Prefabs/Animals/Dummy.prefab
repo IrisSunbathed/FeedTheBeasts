@@ -804,6 +804,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   preferredFood: 0
   hungerBar: {fileID: 9109823140604654567}
+  destroyOutOfBounds: {fileID: 7846792379734030962}
   hungerTotal: 1e+11
   feedPoints: 6
   scaleEffectMax: 0.025

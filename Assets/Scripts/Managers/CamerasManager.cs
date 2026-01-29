@@ -62,7 +62,6 @@ namespace FeedTheBeasts.Scripts
         {
             var boundsX = bounds.x * Mathf.Sign(position.x);
             var boundsZ = bounds.z * Mathf.Sign(position.z);
-            
             return (position.z < -OrthographicSize + boundsZ, position.z > OrthographicSize + boundsZ,
             position.x < -GetCameraLength() + boundsX, position.x > GetCameraLength() + boundsX);
 

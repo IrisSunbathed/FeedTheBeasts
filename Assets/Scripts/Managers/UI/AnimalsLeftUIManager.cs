@@ -16,6 +16,8 @@ namespace FeedTheBeasts.Scripts
 
         float totalBar;
 
+        internal bool hasCoroutineEnded;
+
 
 
 
@@ -33,11 +35,12 @@ namespace FeedTheBeasts.Scripts
             animalsLeftText.gameObject.SetActive(false);
         }
 
-        internal void AdjustBar(int totalAnimals, int currentFedAnimals)
+        internal void AdjustBar(int totalAnimals, int currentFedAnimals, bool clearText = false)
         {
+            hasCoroutineEnded = false;
             float progress = Mathf.Clamp01((float)currentFedAnimals / (float)totalAnimals);
             animalsLeftBar.fillAmount = totalBar - progress;
-            if (animalsLeftBar.fillAmount == 0)
+            if (animalsLeftBar.fillAmount == 0 && clearText)
             {
                 animalsLeftText.text = string.Empty;
             }
@@ -55,25 +58,31 @@ namespace FeedTheBeasts.Scripts
         internal void BossHungerSetUp(AnimalHunger animalHunger)
         {
             animalsLeftText.text = Constants.BOSS_BAR_TEXT;
-            StartCoroutine(FillBossHungerBar());
+            StartCoroutine(FillBarCoroutine(1f));
             animalHunger.OnBossFeedEvent += SetBossHungerBar;
         }
-        IEnumerator FillBossHungerBar()
+        IEnumerator FillBarCoroutine(float multSpeed)
         {
             float progress = 0;
             while (animalsLeftBar.fillAmount < 1)
             {
-                progress += 0.0015f;
+                progress += 0.0015f * multSpeed * Time.deltaTime;
                 animalsLeftBar.fillAmount = progress;
                 yield return null;
             }
             animalsLeftBar.fillAmount = 1;
+            hasCoroutineEnded = true;
         }
 
         internal void SetBossHungerBar(float progress)
         {
             animalsLeftBar.fillAmount = 1 * progress;
-            
+
+        }
+
+        internal void NextRound()
+        {
+            StartCoroutine(FillBarCoroutine(10f));
         }
     }
 }

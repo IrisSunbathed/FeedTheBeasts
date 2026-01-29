@@ -10,7 +10,7 @@ namespace FeedTheBeasts.Scripts
         [Header("Health Properties")]
 
         [SerializeField, Range(1, 9)]
-        int initialLives;
+        internal int initialLives;
         [SerializeField, Range(5, 9)]
         int maxLifes;
         [SerializeField, Range(0.5f, 5f), Tooltip("The amount of time that the characters is invencible")]
@@ -34,21 +34,23 @@ namespace FeedTheBeasts.Scripts
             get => lives;
             set
             {
-                lives = value;
-                if (lives >= previousNumberOfLifes & lives <= maxLifes)
+                if (value >= previousNumberOfLifes & value <= maxLifes)
                 {
+                    lives = value;
                     OnGainedLivePlayerAction?.Invoke(Lives);
                 }
-                if (lives < previousNumberOfLifes)
+                if (value < previousNumberOfLifes)
                 {
                     if (!isInvincible)
                     {
+                        lives = value;
                         OnLoseLivePlayerAction?.Invoke(Lives);
                         StartCoroutine(InvencibilityTime());
                         StartCoroutine(HitIndicator());
                     }
                 }
-                
+
+
                 previousNumberOfLifes = lives;
 
             }

@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2845944622809951573}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Placeholder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45,7 +45,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3797763825505968554}
   - component: {fileID: 3059011885191770271}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SM_Skunk_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -133,7 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2032784770841286218}
   - component: {fileID: 2982006542304019139}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SM_Fox_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -221,7 +221,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3695962512402563803}
   - component: {fileID: 1940014984658738089}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SM_Raccoon_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -309,7 +309,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7308466430476893537}
   - component: {fileID: 171235338589602747}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SM_Fox_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -397,7 +397,7 @@ GameObject:
   m_Component:
   - component: {fileID: 201358589469572625}
   - component: {fileID: 4069396916163595064}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SM_Fox_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -495,7 +495,7 @@ GameObject:
   - component: {fileID: 3839099477045964616}
   - component: {fileID: 3726604271410488692}
   - component: {fileID: 6642462564701034778}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Animal_Fox_01
   m_TagString: Animal
   m_Icon: {fileID: 0}
@@ -867,7 +867,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4893153549432046026}
   - component: {fileID: 1016109380057416026}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SM_Wolf_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -955,7 +955,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1964947270995326878}
   - component: {fileID: 1850595630997730445}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SM_Skunk_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1043,7 +1043,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2746233376912904143}
   - component: {fileID: 5796891103441536442}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SM_Skunk_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1130,7 +1130,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3975238494805285719}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Container
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1167,7 +1167,7 @@ GameObject:
   m_Component:
   - component: {fileID: 507018316554203144}
   - component: {fileID: 3964882507520928068}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SM_Wolf_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1254,7 +1254,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7216009443013017991}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: PlaceHolder (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1286,7 +1286,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5886956800085736448}
   - component: {fileID: 7642006344424439679}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SM_Raccoon_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1374,7 +1374,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2977421776291207923}
   - component: {fileID: 6489371428545528759}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SM_Wolf_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1462,7 +1462,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8188869756771131814}
   - component: {fileID: 6974727811809471000}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SM_Raccoon_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1551,6 +1551,10 @@ PrefabInstance:
     - target: {fileID: 1598162968093878366, guid: 555646dd18ba3344283ccdf959ab7d4a, type: 3}
       propertyPath: m_AdditionalShaderChannelsFlag
       value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 2029262196290803890, guid: 555646dd18ba3344283ccdf959ab7d4a, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 2692768848055931788, guid: 555646dd18ba3344283ccdf959ab7d4a, type: 3}
       propertyPath: m_Pivot.x
@@ -1648,9 +1652,17 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7278503348861944764, guid: 555646dd18ba3344283ccdf959ab7d4a, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 8019038442174583574, guid: 555646dd18ba3344283ccdf959ab7d4a, type: 3}
       propertyPath: m_Name
       value: HungerBar
+      objectReference: {fileID: 0}
+    - target: {fileID: 8019038442174583574, guid: 555646dd18ba3344283ccdf959ab7d4a, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1690,6 +1702,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 1675598601630008566}
     m_Modifications:
     - target: {fileID: 232242604720280036, guid: 2743ea295ce4e274aa69f196de48749e, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 232242604720280036, guid: 2743ea295ce4e274aa69f196de48749e, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -1721,6 +1737,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: AnimalMarker
       objectReference: {fileID: 0}
+    - target: {fileID: 2872154628990361560, guid: 2743ea295ce4e274aa69f196de48749e, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4082251826958315854, guid: 2743ea295ce4e274aa69f196de48749e, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 4082251826958315854, guid: 2743ea295ce4e274aa69f196de48749e, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -1740,6 +1764,10 @@ PrefabInstance:
     - target: {fileID: 4599728819300344503, guid: 2743ea295ce4e274aa69f196de48749e, type: 3}
       propertyPath: m_SizeDelta.y
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6090833738447828196, guid: 2743ea295ce4e274aa69f196de48749e, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 6090833738447828196, guid: 2743ea295ce4e274aa69f196de48749e, type: 3}
       propertyPath: m_IsActive
@@ -1985,8 +2013,16 @@ PrefabInstance:
       value: Canvas
       objectReference: {fileID: 0}
     - target: {fileID: 8273616959812219698, guid: 80683cbae89e8fc46bb60d2c3a74e0a7, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8273616959812219698, guid: 80683cbae89e8fc46bb60d2c3a74e0a7, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8690506956800910232, guid: 80683cbae89e8fc46bb60d2c3a74e0a7, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:

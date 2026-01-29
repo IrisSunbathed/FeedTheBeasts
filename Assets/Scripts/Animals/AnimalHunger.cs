@@ -10,14 +10,14 @@ using RangeAttribute = UnityEngine.RangeAttribute;
 namespace FeedTheBeasts.Scripts
 {
     [RequireComponent(typeof(UIAnimalScoreController), typeof(Collider), typeof(AnimalDisappearManager))]
-    [RequireComponent(typeof(Animal))]
     public class AnimalHunger : MonoBehaviour
     {
 
         [Header("Food configuration")]
 
-        [SerializeField] FoodTypes preferredFood;
+        [SerializeField] internal FoodTypes preferredFood;
         [SerializeField] Image hungerBar;
+        [SerializeField] DestroyOutOfBounds destroyOutOfBounds;
         internal float CurrentHunger { get; private set; }
         public float hungerTotal;
         public int feedPoints;
@@ -64,9 +64,13 @@ namespace FeedTheBeasts.Scripts
                     CurrentHunger -= 2f;
                     if (CurrentHunger <= 0 & !isBoss)
                     {
-                        Animal animal = GetComponent<Animal>();
-                        animal.navMeshAgent.isStopped = true;
+                        // Animal animal = GetComponent<Animal>();
+                        // animal.navMeshAgent.isStopped = true;
                         colAnimal.enabled = false;
+                        if (destroyOutOfBounds != null)
+                        {
+                            destroyOutOfBounds.enabled = false;
+                        }
                         Vector3 addedScale = new Vector3(scaleEffectMax, scaleEffectMax, scaleEffectMax);
                         transform.DOScale(transform.localScale + addedScale, scaleTime).OnComplete(OnDoScaleCompleteFed);
                     }
@@ -113,7 +117,6 @@ namespace FeedTheBeasts.Scripts
         }
         private void OnDoScaleCompleteFed()
         {
-            Debug.Log($"Destroyed animal: {GetInstanceID()}");
             animalDisapearManager.Disappear();
             OnPointsGainedEvent?.Invoke(points, transform, true);
 

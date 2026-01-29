@@ -11,6 +11,7 @@ namespace FeedTheBeasts.Scripts
     public class FinalScoreManager : MonoBehaviour
     {
         [Header("Final Score UI references")]
+        [SerializeField] GameObject finalScoreLayout;
         [SerializeField] TMP_Text txtFinalScoreInt;
         [SerializeField] TMP_Text txtTotalFedAnimals;
         [SerializeField] TMP_Text txtEscapedAnimals;
@@ -31,9 +32,11 @@ namespace FeedTheBeasts.Scripts
         {
             Assert.IsNotNull(txtFinalScoreInt, "ERROR: txtScore is not added");
             Assert.IsNotNull(scoreManager, "ERROR: scoreManager is not added");
-            Assert.IsNotNull(levelManager, "ERROR: scoreManager is not added");
+            Assert.IsNotNull(levelManager, "ERROR: levelManager is not added");
+            Assert.IsNotNull(finalScoreLayout, "ERROR: scoreManager is not added");
             audioSource = GetComponent<AudioSource>();
             bttEnd.onClick.AddListener(Exit);
+            finalScoreLayout.SetActive(false);
 
         }
 
@@ -56,14 +59,14 @@ namespace FeedTheBeasts.Scripts
         internal void Init()
         {
 
-
+            finalScoreLayout.SetActive(true);
             txtTotalFedAnimals.text = $"Total Fed Animals: {levelManager.CurrentFedAnimals}";
             txtEscapedAnimals.text = $"Escpaed Animals: {levelManager.EscapedAnimals}";
             //Max consecutive hits
             //Fed animals without throwing out food
             txtFinalScoreInt.text = $"Final score: {scoreManager.Score}";
 
-            
+
             TMP_Text[] texts = new TMP_Text[]
 
             {

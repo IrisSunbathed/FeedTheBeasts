@@ -11,8 +11,7 @@ namespace FeedTheBeasts.Scripts
 
         float currentSpeed;
 
-
-
+        
 
         void Awake()
         {
@@ -33,10 +32,10 @@ namespace FeedTheBeasts.Scripts
             }
         }
 
-        internal void SetSpeed(float speedValue)
-        {
-            currentSpeed = speedValue;
-        }
+        // internal void SetSpeedPowerUp()
+        // {
+        //     currentSpeed += addedPowerUpSpeed;
+        // }
 
         internal void SetSpeed()
         {

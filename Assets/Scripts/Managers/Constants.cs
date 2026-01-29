@@ -12,7 +12,9 @@ namespace FeedTheBeasts.Scripts
         public const string PLAYER_TAG = "Player";
         public const string ANIMAL_TAG = "Animal";
         public const string THROWABLE_TAG = "Throwable";
+        public const string THROWABLE_UI_TAG = "ThrowableUI";
         public const string PLANTABLE_TAG = "Plantable";
+        public const string PLANTABLE_UI_TAG = "PlantableUI";
         public const string UNTAGGED_TAG = "Untagged";
 
 
@@ -21,6 +23,9 @@ namespace FeedTheBeasts.Scripts
         public const string GAME_TITLE = "FEED THOSE \r\nBEASTS!";
         public const string START_BUTTON_TEXT = "PLAY!";
         public const string GAMEOVER_BUTTON_TEXT = "TRY AGAIN";
+        public const string UNPAUSE_BUTTON_TEXT = "CONTINUE";
+        public const string PAUSED_TEXT = "GAME \r\nPAUSED";
+
         public const string GAMEOVER_TEXT = "GAME OVER";
         public const string VICTORY_TEXT = "YOU WIN!";
         public const string VICTORY_BUTTON_TEXT = "PLAY AGAIN!";
@@ -28,6 +33,9 @@ namespace FeedTheBeasts.Scripts
         public const string SPAWN_MOOSE_TEXT = "MOOSE INCOMING";
         public const string ANIMALS_LEFT_TEXT = "ANIMALS LEFT";
         public const string BOSS_BAR_TEXT = "BOSS HUNGER";
+        public const string ROUND_COMPLETED_TEXT = "ROUND COMPLETED";
+        public const string NEW_WAVE_TEXT = "NEW WAVE INCOMING!";
+        public const string POWER_UP_HOVER_EXIT_TEXT = "Click on an upgrade to obtain it!";
 
 
         public const string INTRO_TEXT_1 = "Every day, deforestations leave hundreds of animals without food";
@@ -58,6 +66,20 @@ namespace FeedTheBeasts.Scripts
 
         #endregion
 
+    }
+    public enum GameStageEnum
+    {
+        Paused,
+        NotPaused,
+        NotPausable,
+        Credits
+    }
+
+    public enum NotificationType
+    {
+        Warnining,
+        Success,
+        Default
     }
 
     public enum AnimalStatus
@@ -97,7 +119,9 @@ namespace FeedTheBeasts.Scripts
         DogBone,
         WrongFood,
         Points,
-        SelectItem
+        SelectItem,
+        PowerUpMenu,
+        GetLife,
     }
 
     public enum FoodTypes
@@ -114,6 +138,29 @@ namespace FeedTheBeasts.Scripts
         Level3,
         Level4,
         Level5
+    }
+
+    public enum PowerUps
+    {
+        GetBone,
+        GetFruitBasket,
+        MoreLives,
+        SpeedUp,
+        FoodSpeedUpgrade,
+        AddBullets,
+        TrackAnimals
+
+    }
+
+    [Serializable]
+    public class PowerUpsItem
+    {
+        public PowerUps powerUpItem;
+        //public GameObject goPowerUp;
+        public Sprite sprite;
+        public string description;
+        public bool canBeStacked;
+
     }
     [Serializable]
     public class FoodItemTransparent

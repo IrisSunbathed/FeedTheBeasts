@@ -32,7 +32,7 @@ namespace FeedTheBeasts.Scripts
                 }
                 if (canMove == false)
                 {
-                     runState.currentRunSpeed = runState.runSpeed;
+                    runState.currentRunSpeed = runState.runSpeed;
                 }
             }
         }
@@ -57,7 +57,6 @@ namespace FeedTheBeasts.Scripts
         Animator animator;
         [Header("Shoot Properties")]
         [SerializeField] FoodSelectorManager foodSelectorManager;
-        float pressedKeyTime;
         float lookAngle;
         bool hasShoot;
 
@@ -116,59 +115,14 @@ namespace FeedTheBeasts.Scripts
 
         internal void Init()
         {
-            states = idleState;
+            runState.SetDeafultSpeed();
             CanMove = true;
+            states = idleState;
         }
 
         // Update is called once per frame
         void Update()
         {
-            if (CanMove)
-            {
-                #region Movement
-                GetAxisValues();
-                CheckOutOfBoundsX();
-                CheckOutOfBoundsZ();
-                rbPlayer.linearVelocity = new Vector3(HorizontalInput, 0, VerticalInput) * runState.currentRunSpeed;
-                
-                #endregion
-                #region Shoot
-                LookAtMousePosition();
-                if (Input.GetKey(KeyCode.Mouse0))
-                {
-
-                    pressedKeyTime = 0;
-                    pressedKeyTime += Time.deltaTime;
-
-                    if (!hasShoot)
-                    {
-                        Vector3 screenPoint = camerasManager.GetScreenToWorldPoint(Input.mousePosition);
-                        foodSelectorManager.TryShootCurrentWeapon(screenPoint);
-                        hasShoot = true;
-                    }
-
-                }
-                
-                #endregion
-                #region Reload
-                if (Input.GetKeyDown(KeyCode.R))
-                {
-
-                    foodSelectorManager.ReloadCurrentWeapon();
-
-                }
-                #endregion
-            }
-
-            if (Input.GetKeyUp(KeyCode.Mouse0)/* & states == plantingState*/)
-            {
-                pressedKeyTime = 0;
-                if (states == plantingState)
-                {
-                    plantingState.Exit();
-                }
-                hasShoot = false;
-            }
             #region States
             if (states.IsStateComplete)
             {
@@ -177,6 +131,49 @@ namespace FeedTheBeasts.Scripts
 
             states.Do();
             #endregion
+
+            if (Input.GetKeyUp(KeyCode.Mouse0))
+            {
+                if (states == plantingState)
+                {
+                    plantingState.Exit();
+                }
+                hasShoot = false;
+            }
+            if (!CanMove | GameStage.gameStageEnum != GameStageEnum.NotPaused)
+                return;
+
+            #region Movement
+            GetAxisValues();
+            CheckOutOfBoundsX();
+            CheckOutOfBoundsZ();
+            rbPlayer.linearVelocity = new Vector3(HorizontalInput, 0, VerticalInput) * runState.currentRunSpeed;
+
+            #endregion
+            #region Shoot
+            LookAtMousePosition();
+            if (Input.GetKey(KeyCode.Mouse0))
+            {
+
+
+                if (!hasShoot)
+                {
+                    Vector3 screenPoint = camerasManager.GetScreenToWorldPoint(Input.mousePosition);
+                    foodSelectorManager.TryShootCurrentWeapon(screenPoint);
+                    hasShoot = true;
+                }
+
+            }
+
+            #endregion
+            #region Reload
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                foodSelectorManager.ReloadCurrentWeapon();
+            }
+            #endregion
+
+
 
 
         }
@@ -241,6 +238,7 @@ namespace FeedTheBeasts.Scripts
         private void CheckOutOfBoundsX()
         {
             characterXBoundsSign = characterXBounds * Mathf.Sign(transform.position.x);
+
             if (transform.position.x < -lengthCam + characterXBoundsSign
                 | transform.position.x > lengthCam + characterXBoundsSign)
             {
@@ -273,9 +271,9 @@ namespace FeedTheBeasts.Scripts
             states.Enter();
         }
 
-        internal Vector3 GetFontPosition()
+        internal Vector3 GetFrontPosition()
         {
-            return new Vector3(transform.localPosition.x, transform.localPosition.y, transform.localPosition.z + 1f);
+            return new Vector3(transform.localPosition.x, 0, transform.localPosition.z);
         }
     }
 

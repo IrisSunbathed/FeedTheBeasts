@@ -19,8 +19,13 @@ namespace FeedTheBeasts.Scripts
         GameCatalog gameCatalog;
 
         BeefObjectPool beefObjectPool;
+            internal bool doesTrackAnimal;
+
+        [Header("References")]
 
         [SerializeField] ConsecutiveShootsManager consecutiveShootsManager;
+
+
 
         //ObjectPool<GameObject> objectPool;
 
@@ -31,7 +36,7 @@ namespace FeedTheBeasts.Scripts
 
         void Awake()
         {
-            
+
             Assert.IsNotNull(consecutiveShootsManager, "ERROR: consecutiveShootsManager not added");
             AudioSourceShoot = GetComponent<AudioSource>();
             beefObjectPool = GetComponent<BeefObjectPool>();
@@ -41,7 +46,7 @@ namespace FeedTheBeasts.Scripts
         public override void Init()
         {
             StopAllCoroutines();
-            beefObjectPool.StopAllCoroutines();
+            // beefObjectPool.StopAllCoroutines();
             canShoot = true;
             shootCount = 0;
         }
@@ -57,11 +62,11 @@ namespace FeedTheBeasts.Scripts
         {
             if (canShoot & !IsRecharging)
             {
-                // projectilePool.GetProjectile();
+                beefObjectPool.doesTrackAnimals = doesTrackAnimal;
                 GameObject newPro = beefObjectPool.opStraightProjectile.Get();
+                newPro.transform.SetPositionAndRotation(playerPosition.position, playerPosition.rotation);
                 DetectCollisions detectCollisions = newPro.GetComponent<DetectCollisions>();
                 consecutiveShootsManager.SubscribeToEvents(detectCollisions);
-                newPro.transform.SetPositionAndRotation(playerPosition.position, playerPosition.rotation);
                 AudioClip audioClip = gameCatalog.GetFXClip(FXTypes.Shot);
                 AudioSourceShoot.resource = audioClip;
                 AudioSourceShoot.pitch = .5f;
@@ -113,6 +118,8 @@ namespace FeedTheBeasts.Scripts
         {
             return projectilesPerRecharge - shootCount;
         }
+
+
     }
 
     

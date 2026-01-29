@@ -48,7 +48,6 @@ public class IntroductionManager : MonoBehaviour
         canBeClickedAway = true;
         SetUpTexts();
         StartCoroutine(TextEffectCourutine());
-        Debug.Log(index);
         uiMenu.SetActiveUIElements(false);
     }
 
@@ -170,6 +169,7 @@ public class IntroductionManager : MonoBehaviour
         if (canBeClickedAway && Input.GetMouseButtonDown(0))
         {
                canBeClickedAway = false;
+            StopAllCoroutines();
             StartCoroutine(MainMenuTransitionCoroutine());
 
         }
@@ -185,7 +185,6 @@ public class IntroductionManager : MonoBehaviour
         }
         StartCoroutine(FadeOutBackground());
         yield return new WaitForSeconds(2f);
-        Debug.Log("Introduction manager");
         camerasManager.SwitchCameras(isGameplayCamera: false);
         background.SetActive(false);
         foreach (var item in txtIntroduction)

@@ -25,6 +25,7 @@ public class MusicManager : MonoBehaviour
 
     internal void PlayMusic(MusicThemes musicThemes)
     {
+        StopMusic();
         audioClip = gameCatalog.GetAudioClip(musicThemes);
         audioSource.resource = audioClip;
         audioSource.Play();

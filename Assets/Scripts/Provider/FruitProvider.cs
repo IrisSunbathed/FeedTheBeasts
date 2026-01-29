@@ -68,6 +68,7 @@ namespace FeedTheBeasts.Scripts
             Debug.Log($"!IsRecharging {!IsRecharging}");
             if (!IsRecharging)
             {
+                
                 OnPlantEvent?.Invoke(PlantingTime);
             }
         }

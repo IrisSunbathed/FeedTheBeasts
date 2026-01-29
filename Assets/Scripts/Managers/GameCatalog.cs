@@ -15,10 +15,12 @@ namespace FeedTheBeasts.Scripts
         [SerializeField] FoodItemTransparent[] foodItemTransparent;
         [SerializeField] MusicItem[] musicItems;
         [SerializeField] FXItem[] fxItems;
+        [SerializeField] PowerUpsItem[] powerUpsItems;
 
         Dictionary<FoodTypes, FoodItemTransparent> foodTypeToItem;
         Dictionary<MusicThemes, MusicItem> musicThemeToItem;
         Dictionary<FXTypes, FXItem> fxToItem;
+        Dictionary<PowerUps, PowerUpsItem> powerUpToItem;
 
 
         void Awake()
@@ -35,6 +37,7 @@ namespace FeedTheBeasts.Scripts
             SetUpFoodDictionary();
             SetUpMusicDictionary();
             SetUpFXDictionary();
+            SetUpPowerUpDictionary();
         }
 
         void SetUpFoodDictionary()
@@ -85,7 +88,22 @@ namespace FeedTheBeasts.Scripts
                 }
             }
         }
-
+        void SetUpPowerUpDictionary()
+        {
+            Assert.IsTrue(powerUpsItems.Length > 0, "ERROR:powerUpsItems not added to array");
+            powerUpToItem = new Dictionary<PowerUps, PowerUpsItem>();
+            foreach (var item in powerUpsItems)
+            {
+                if (!powerUpToItem.ContainsKey(item.powerUpItem))
+                {
+                    powerUpToItem.Add(item.powerUpItem, item);
+                }
+                else
+                {
+                    Debug.LogWarning("WARNING: duplicate in the array");
+                }
+            }
+        }
         internal GameObject GetFoodGameObject(FoodTypes preferredFood)
         {
             return foodTypeToItem[preferredFood].goFood;
@@ -100,6 +118,16 @@ namespace FeedTheBeasts.Scripts
         internal AudioClip GetFXClip(FXTypes fxType)
         {
             return fxToItem[fxType].audioClip;
+        }
+
+        internal (string, Sprite) GetPowerUpProperties(PowerUps randomPowerUp)
+        {
+            return (powerUpToItem[randomPowerUp].description, powerUpToItem[randomPowerUp].sprite);
+        }
+
+        internal bool CanPowerUpBeStacked(PowerUps randomPowerUp)
+        {
+            return powerUpToItem[randomPowerUp].canBeStacked;
         }
     }
 

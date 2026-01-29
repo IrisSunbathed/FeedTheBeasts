@@ -21,6 +21,11 @@ namespace FeedTheBeasts.Scripts
             animator.SetInteger(Constants.ANIM_INT_IDLE, 5);
         }
 
+        public override void Do()
+        {
+            base.Do();
+        }
+
         IEnumerator LookingDownCoroutine(float currentPosition)
         {
             while (currentPosition > -1)

@@ -49,18 +49,27 @@ namespace FeedTheBeasts.Scripts
             while (scoreUIManager.scoreMult.fontSize < 20)
             {
                 scoreUIManager.scoreMult.fontSize += initialEffectSpeed;
+                yield return new WaitUntil(
+                      () => { return GameStage.gameStageEnum == GameStageEnum.NotPaused; }
+                  );
                 yield return null;
             }
             fXSoundsManager.PlayFX(FXTypes.ClickOnButton, 2f);
             while (scoreUIManager.scoreMult.fontSize > originalSize)
             {
                 scoreUIManager.scoreMult.fontSize -= initialEffectSpeed;
+                yield return new WaitUntil(
+                      () => { return GameStage.gameStageEnum == GameStageEnum.NotPaused; }
+                  );
                 yield return null;
             }
             yield return new WaitForSeconds(0.15f);
             while (scoreUIManager.extraScore.fontSize < 20)
             {
                 scoreUIManager.extraScore.fontSize += initialEffectSpeed;
+                yield return new WaitUntil(
+                      () => { return GameStage.gameStageEnum == GameStageEnum.NotPaused; }
+                  );
                 yield return null;
             }
             scoreUIManager.scoreMult.fontSize = originalSize;
@@ -70,9 +79,15 @@ namespace FeedTheBeasts.Scripts
             while (scoreUIManager.extraScore.fontSize > originalSize)
             {
                 scoreUIManager.extraScore.fontSize -= initialEffectSpeed;
+                yield return new WaitUntil(
+                      () => { return GameStage.gameStageEnum == GameStageEnum.NotPaused; }
+                  );
                 yield return null;
             }
             scoreUIManager.extraScore.fontSize = originalSize;
+            yield return new WaitUntil(
+                      () => { return GameStage.gameStageEnum == GameStageEnum.NotPaused; }
+                  );
             yield return new WaitForSeconds(0.5f);
             StartCoroutine(AddSumScore(finalResult));
         }
@@ -104,7 +119,10 @@ namespace FeedTheBeasts.Scripts
                     pitch = AudioEffect(pitch);
                     textEffectCoroutine ??= StartCoroutine(TextEffectCoroutine(scoreUIManager.txtScore, 0));
                     scoreUIManager.txtScore.text = result.ToString();
-                     scoreManager.Score = result;
+                    scoreManager.Score = result;
+                    yield return new WaitUntil(
+                      () => { return GameStage.gameStageEnum == GameStageEnum.NotPaused; }
+                  );
                     yield return null;
                 }
                 scoreUIManager.txtScore.text = finalResult.ToString();
@@ -112,8 +130,12 @@ namespace FeedTheBeasts.Scripts
             }
             SetExtraScore(0);
             hasCoroutineEnded = true;
-            StopCoroutine(textEffectCoroutine);
-            textEffectCoroutine = null;
+            if (textEffectCoroutine != null)
+            {
+                StopCoroutine(textEffectCoroutine);
+                textEffectCoroutine = null;
+            }
+            scoreUIManager.txtScore.fontSize = 10;
             scoreUIManager.IsScoreCalc = true;
             rectTransform.localRotation = originalRotation;
             StartCoroutine(CorrectRotationCoroutine(rectTransform, scoreUIManager.txtScore));
@@ -150,17 +172,29 @@ namespace FeedTheBeasts.Scripts
             {
                 tMP_Text.fontSize = 25;
                 tMP_Text.fontSize -= 8f;
+                yield return new WaitUntil(
+                      () => { return GameStage.gameStageEnum == GameStageEnum.NotPaused; }
+                  );
                 yield return new WaitForSeconds(0.05f);
                 tMP_Text.fontSize += 8f;
                 rectTranform.Rotate(0, 0, -randomRotaion);
+                yield return new WaitUntil(
+                      () => { return GameStage.gameStageEnum == GameStageEnum.NotPaused; }
+                  );
                 yield return new WaitForSeconds(0.05f);
             }
             else
             {
                 tMP_Text.fontSize += intensity;
+                yield return new WaitUntil(
+                      () => { return GameStage.gameStageEnum == GameStageEnum.NotPaused; }
+                  );
                 yield return new WaitForSeconds(0.05f);
                 rectTranform.Rotate(0, 0, -randomRotaion);
                 tMP_Text.fontSize -= intensity - effectIntensityIncrease;
+                yield return new WaitUntil(
+                      () => { return GameStage.gameStageEnum == GameStageEnum.NotPaused; }
+                  );
                 yield return new WaitForSeconds(0.05f);
 
             }
@@ -180,6 +214,9 @@ namespace FeedTheBeasts.Scripts
         }
         IEnumerator CorrectRotationCoroutine(RectTransform rectTransform, TMP_Text score)
         {
+            yield return new WaitUntil(
+                      () => { return GameStage.gameStageEnum == GameStageEnum.NotPaused; }
+                  );
             yield return new WaitForSeconds(0.4f);
             if (rectTransform.localRotation != originalRotation && score.fontSize != 10)
             {

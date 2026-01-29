@@ -8,15 +8,17 @@ namespace FeedTheBeasts.Scripts
 {
     public class BossManager : MonoBehaviour
     {
+        [Header("Configuration")]
         [SerializeField] GameObject goBoss;
-        [SerializeField] UIManager uIManager;
         [SerializeField] float spawnTime;
+        [Header("References")]
         [SerializeField] Player player;
+        [SerializeField] UIManager uIManager;
         [SerializeField] AnimalsLeftUIManager animalsLeftUIManager;
         [SerializeField] MusicManager musicManager;
         [SerializeField] ScoreManager scoreManager;
         [SerializeField] ParticleSystemManager particleSystemManager;
-         BossController bossController;
+        BossController bossController;
 
         LevelManager levelManager;
         AnimalHunger animalHunger;
@@ -43,12 +45,12 @@ namespace FeedTheBeasts.Scripts
             Assert.IsNotNull(musicManager, "Error: musicManager not added");
             Assert.IsNotNull(animalsLeftUIManager, "Error: animalsLeftUIManager not added");
             isSpawned = false;
-           
+
         }
         internal void SpawnBoss()
         {
-            musicManager.FadeCurrentMusic(0,2f);
-            uIManager.InGameWarning(spawnTime, Constants.SPAWN_MOOSE_TEXT);
+            musicManager.FadeCurrentMusic(0, 2f);
+            uIManager.InGameNotification(spawnTime, Constants.SPAWN_MOOSE_TEXT, true, NotificationType.Warnining);
             StartCoroutine(SpawningWaitingTime());
         }
 
@@ -80,7 +82,7 @@ namespace FeedTheBeasts.Scripts
 
         private void OnLoseLifeCallBack(bool hasScaped)
         {
-           if (hasScaped)
+            if (hasScaped)
             {
                 levelManager.EscapedAnimals++;
             }
@@ -103,14 +105,20 @@ namespace FeedTheBeasts.Scripts
         internal void GameOver()
         {
             StopAllCoroutines();
+            BossController bossController = goBoss.GetComponent<BossController>();
+            bossController.bossStates = bossController.runStateBoss;
+            if (spawnedBoss != null)
+            {
+                Destroy(spawnedBoss);
+            }
         }
-        
-         private void OnPointsGainedCallBack(int points, AnimalHunger animalHunger, bool isFed)
+
+        private void OnPointsGainedCallBack(int points, AnimalHunger animalHunger, bool isFed)
         {
             scoreManager.Score += points;
             if (isFed)
             {
-               // levelManager.LevelAnimalCheck();
+                // levelManager.LevelAnimalCheck();
                 particleSystemManager.SpawnFedParticles(animalHunger.transform);
             }
 

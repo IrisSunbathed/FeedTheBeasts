@@ -23,9 +23,9 @@ public class FXSoundsManager : MonoBehaviour
     }
 
 
-    internal bool PlayFX(FXTypes fXTypes, float pitch = 1, float volumne = 1, bool waitPreviosToEnd = false)
+    internal bool PlayFX(FXTypes fXTypes, float pitch = 1, float volumne = 1, bool waitPreviosToEnd = false, bool forcedPlay = false)
     {
-       
+
         audioSource.volume = volumne;
 
         if (!audioSource.isPlaying)
@@ -37,6 +37,16 @@ public class FXSoundsManager : MonoBehaviour
             if (waitPreviosToEnd)
             {
                 StartCoroutine(WaitAudioToEnd(fXTypes, pitch));
+            }
+            else
+            {
+              if (forcedPlay)
+              {
+                AudioClip audioClip = GetFXSound(fXTypes);
+                audioSource.PlayOneShot(audioClip);
+              }
+
+
             }
         }
         return audioSource.isPlaying;

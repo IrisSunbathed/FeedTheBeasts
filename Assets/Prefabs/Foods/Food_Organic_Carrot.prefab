@@ -113,7 +113,7 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 1
+  MinDistance: 0.84023553
   MaxDistance: 500
   Pan2D: 0
   rolloffMode: 0
@@ -262,6 +262,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 15
+  nearbyAnimalCheck: 0.5
+  sphereRadius: 5
 --- !u!1001 &6751175702765911112
 PrefabInstance:
   m_ObjectHideFlags: 0

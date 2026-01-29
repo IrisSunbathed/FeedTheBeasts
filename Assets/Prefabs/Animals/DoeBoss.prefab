@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 8112133188120424671}
   - component: {fileID: 4847110373048944030}
   - component: {fileID: 6153063357906279317}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: DoeBoss
   m_TagString: Animal
   m_Icon: {fileID: 0}
@@ -362,6 +362,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   preferredFood: 0
   hungerBar: {fileID: 7128366042297941516}
+  destroyOutOfBounds: {fileID: 6153063357906279317}
   hungerTotal: 4
   feedPoints: 5
   scaleEffectMax: 2
@@ -402,7 +403,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6112035820412826517}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Container
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -439,7 +440,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7331197493635247455}
   - component: {fileID: 7329823285697605696}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SM_Moose_Female_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -527,7 +528,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6126204228308087839}
   - component: {fileID: 3274084806041899999}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SM_Stag_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -615,7 +616,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2514328282683666600}
   - component: {fileID: 7270276778731024759}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SM_Stag_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -703,7 +704,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5069375569880981795}
   - component: {fileID: 8070872914391376962}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SM_Moose_Male_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -791,7 +792,7 @@ GameObject:
   m_Component:
   - component: {fileID: 688431563213272990}
   - component: {fileID: 5541222569415547485}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SM_Doe_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -879,7 +880,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8948489788909963861}
   - component: {fileID: 3902816553628451165}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SM_Doe_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -967,7 +968,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3873059840999151712}
   - component: {fileID: 5405681879935121640}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SM_Moose_Male_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1055,7 +1056,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1833380431971311483}
   - component: {fileID: 1328894843981352590}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SM_Moose_Male_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1142,7 +1143,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3907811184942595864}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Placeholder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1179,7 +1180,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5806134399942137877}
   - component: {fileID: 6459120015247221872}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SM_Stag_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1267,7 +1268,7 @@ GameObject:
   m_Component:
   - component: {fileID: 295166208740111017}
   - component: {fileID: 8384340273825589638}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SM_Moose_Female_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1354,6 +1355,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 7810295697943349171}
     m_Modifications:
     - target: {fileID: 232242604720280036, guid: 2743ea295ce4e274aa69f196de48749e, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 232242604720280036, guid: 2743ea295ce4e274aa69f196de48749e, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
@@ -1386,8 +1391,16 @@ PrefabInstance:
       value: PointsUI
       objectReference: {fileID: 0}
     - target: {fileID: 2872154628990361560, guid: 2743ea295ce4e274aa69f196de48749e, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2872154628990361560, guid: 2743ea295ce4e274aa69f196de48749e, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4082251826958315854, guid: 2743ea295ce4e274aa69f196de48749e, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4347568200741116283, guid: 2743ea295ce4e274aa69f196de48749e, type: 3}
       propertyPath: m_fontSize
@@ -1404,6 +1417,10 @@ PrefabInstance:
     - target: {fileID: 4599728819300344503, guid: 2743ea295ce4e274aa69f196de48749e, type: 3}
       propertyPath: m_SizeDelta.y
       value: 825
+      objectReference: {fileID: 0}
+    - target: {fileID: 6090833738447828196, guid: 2743ea295ce4e274aa69f196de48749e, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 6090833738447828196, guid: 2743ea295ce4e274aa69f196de48749e, type: 3}
       propertyPath: m_IsActive
@@ -1604,6 +1621,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Food_Organic_Carrot (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 2303965107502105636, guid: 57e789c51a5bc504aa52f68771a85f6b, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1625,6 +1646,10 @@ PrefabInstance:
     - target: {fileID: 1598162968093878366, guid: 555646dd18ba3344283ccdf959ab7d4a, type: 3}
       propertyPath: m_VertexColorAlwaysGammaSpace
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2029262196290803890, guid: 555646dd18ba3344283ccdf959ab7d4a, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 2692768848055931788, guid: 555646dd18ba3344283ccdf959ab7d4a, type: 3}
       propertyPath: m_Pivot.x
@@ -1722,9 +1747,17 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7278503348861944764, guid: 555646dd18ba3344283ccdf959ab7d4a, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 8019038442174583574, guid: 555646dd18ba3344283ccdf959ab7d4a, type: 3}
       propertyPath: m_Name
       value: HungerBar
+      objectReference: {fileID: 0}
+    - target: {fileID: 8019038442174583574, guid: 555646dd18ba3344283ccdf959ab7d4a, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
